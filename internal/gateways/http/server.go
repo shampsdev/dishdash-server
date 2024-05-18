@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/tj/go-spin"
 	"net/http"
 	"time"
+
+	"github.com/tj/go-spin"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"

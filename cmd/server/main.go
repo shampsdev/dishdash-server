@@ -2,14 +2,16 @@ package main
 
 import (
 	"context"
-	httpGateway "dishdash.ru/internal/gateways/http"
 	"errors"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
+
+	httpGateway "dishdash.ru/internal/gateways/http"
+
+	"github.com/joho/godotenv"
 )
 
 const (
