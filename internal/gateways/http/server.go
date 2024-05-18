@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	socketio "github.com/googollee/go-socket.io"
+
 	"dishdash.ru/internal/usecase"
 
 	"github.com/tj/go-spin"
@@ -22,19 +24,21 @@ type UseCases struct {
 }
 
 type Server struct {
-	http.Server
+	httpServer http.Server
+	wsServer   *socketio.Server
 }
 
 func NewServer(useCases UseCases, options ...func(*Server)) *Server {
 	r := gin.Default()
-	setupRouter(r, useCases)
 
 	s := &Server{
-		Server: http.Server{
+		httpServer: http.Server{
 			Addr:    fmt.Sprintf(":%d", 8080),
 			Handler: r,
 		},
+		wsServer: socketio.NewServer(nil),
 	}
+	setupRouter(r, s.wsServer, useCases)
 	for _, o := range options {
 		o(s)
 	}
@@ -44,7 +48,7 @@ func NewServer(useCases UseCases, options ...func(*Server)) *Server {
 
 func WithPort(port uint16) func(*Server) {
 	return func(s *Server) {
-		s.Addr = fmt.Sprintf(":%d", port)
+		s.httpServer.Addr = fmt.Sprintf(":%d", port)
 	}
 }
 
@@ -52,11 +56,14 @@ func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}
 
 	eg.Go(func() error {
-		return s.ListenAndServe()
+		return s.httpServer.ListenAndServe()
+	})
+	eg.Go(func() error {
+		return s.wsServer.Serve()
 	})
 
 	<-ctx.Done()
-	err := s.Shutdown(ctx)
+	err := s.httpServer.Shutdown(ctx)
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()
 	return err
