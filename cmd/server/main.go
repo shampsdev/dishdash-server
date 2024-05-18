@@ -7,51 +7,43 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 
+	"dishdash.ru/cmd/server/config"
 	httpGateway "dishdash.ru/internal/gateways/http"
-
-	"github.com/joho/godotenv"
+	"dishdash.ru/internal/repository/pg"
+	"dishdash.ru/internal/usecase"
 )
-
-const (
-	defaultPort = uint16(8000)
-)
-
-var config Config
-
-type Config struct {
-	port uint16
-}
 
 func main() {
+	config.Load()
+
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	loadConfig()
-
 	r := httpGateway.NewServer(
-		httpGateway.WithPort(config.port),
+		setupUseCases(),
+		httpGateway.WithPort(config.C.Port),
 	)
 	if err := r.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)
 	}
 }
 
-func loadConfig() {
-	err := godotenv.Load()
+func setupUseCases() httpGateway.UseCases {
+	db, err := pg.NewPostgresDB(context.Background(), pg.Config{
+		User:     config.C.PG.User,
+		Password: config.C.PG.Password,
+		Host:     config.C.PG.Host,
+		Port:     config.C.PG.Port,
+		Database: config.C.PG.Database,
+	})
 	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	port := defaultPort
-
-	if portEnv, ok := os.LookupEnv("HTTP_PORT"); ok {
-		port64, err := strconv.ParseInt(portEnv, 10, 16)
-		if err != nil {
-			log.Fatalf("Can't parse port: %s", portEnv)
-		}
-		port = uint16(port64)
+		log.Fatalf("can't setup postgres: %s", err)
 	}
 
-	config = Config{port: port}
+	cr := pg.NewCardRepository(db)
+
+	return httpGateway.UseCases{
+		Card: usecase.NewCard(cr),
+	}
 }

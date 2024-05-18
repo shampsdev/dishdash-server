@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"dishdash.ru/internal/usecase"
+
 	"github.com/tj/go-spin"
 
 	"github.com/gin-gonic/gin"
@@ -15,13 +17,17 @@ import (
 
 const shutdownDuration = 1500 * time.Millisecond
 
+type UseCases struct {
+	Card *usecase.Card
+}
+
 type Server struct {
 	http.Server
 }
 
-func NewServer(options ...func(*Server)) *Server {
+func NewServer(useCases UseCases, options ...func(*Server)) *Server {
 	r := gin.Default()
-	setupRouter(r)
+	setupRouter(r, useCases)
 
 	s := &Server{
 		Server: http.Server{

@@ -1,0 +1,167 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/cards": {
+            "get": {
+                "description": "Get a list of cards from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Get cards",
+                "responses": {
+                    "200": {
+                        "description": "List of cards",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.Card"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Save a new card to the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Save a card",
+                "parameters": [
+                    {
+                        "description": "Card data",
+                        "name": "card",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CardToCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saved card",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Card"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.Card": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "short_description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/dto.CardType"
+                }
+            }
+        },
+        "dto.CardToCreate": {
+            "type": "object",
+            "required": [
+                "address",
+                "description",
+                "image",
+                "location",
+                "price",
+                "short_description",
+                "title",
+                "type"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "location": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "short_description": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "type": {
+                    "$ref": "#/definitions/dto.CardType"
+                }
+            }
+        },
+        "dto.CardType": {
+            "type": "string",
+            "enum": [
+                "BAR",
+                "CAFE",
+                "RESTAURANT"
+            ],
+            "x-enum-varnames": [
+                "BAR",
+                "CAFE",
+                "RESTAURANT"
+            ]
+        }
+    }
+}
