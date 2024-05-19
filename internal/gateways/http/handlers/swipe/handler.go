@@ -61,12 +61,14 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		var swipeEvent swipeEvent
 		err := json.Unmarshal([]byte(msg), &swipeEvent)
 		if err != nil {
+			log.Println("wrong swipe event")
 			_ = conn.Close()
 			return
 		}
 
 		u, ok := conn.Context().(*swipe.User)
 		if !ok {
+			log.Println("user not registered, disconnected")
 			_ = conn.Close()
 			return
 		}
