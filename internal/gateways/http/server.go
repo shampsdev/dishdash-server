@@ -75,6 +75,7 @@ func (s *Server) Run(ctx context.Context) error {
 
 	<-ctx.Done()
 	err := s.httpServer.Shutdown(ctx)
+	err = errors.Join(err, s.wsServer.Close())
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()
 	return err

@@ -45,6 +45,7 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase *usecase.Card) (*Lobby, er
 	lobby = &Lobby{
 		id:    lobbyDomain.ID,
 		cards: cards,
+		likes: make(map[*domain.Card]int),
 		users: make(map[*User]bool),
 		lock:  sync.RWMutex{},
 	}
