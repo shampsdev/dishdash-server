@@ -11,7 +11,7 @@ import (
 )
 
 type Lobby struct {
-	id    int64
+	Id    int64
 	cards []*domain.Card
 	likes map[*domain.Card]int
 	users map[*User]bool
@@ -43,7 +43,7 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase *usecase.Card) (*Lobby, er
 		return nil, err
 	}
 	lobby = &Lobby{
-		id:    lobbyDomain.ID,
+		Id:    lobbyDomain.ID,
 		cards: cards,
 		likes: make(map[*domain.Card]int),
 		users: make(map[*User]bool),
@@ -58,17 +58,17 @@ func (lb *Lobby) Register(u *User) {
 	defer lb.lock.Unlock()
 	u.Lobby = lb
 	lb.users[u] = true
-	log.Printf("register user in lobby: %d", lb.id)
+	log.Printf("register user in lobby: %d", lb.Id)
 }
 
 func (lb *Lobby) Unregister(u *User) {
 	lb.lock.Lock()
 	defer lb.lock.Unlock()
 	delete(lb.users, u)
-	log.Printf("unregister user in lobby: %d", lb.id)
+	log.Printf("unregister user in lobby: %d", lb.Id)
 	if len(lb.users) == 0 {
-		delete(lobbies, lb.id)
-		log.Printf("delete lobby: %d", lb.id)
+		delete(lobbies, lb.Id)
+		log.Printf("delete lobby: %d", lb.Id)
 	}
 }
 

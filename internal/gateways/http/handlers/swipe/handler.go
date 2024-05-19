@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"strconv"
 
 	"dishdash.ru/internal/usecase/swipe"
 
@@ -50,6 +51,7 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 
 		u := swipe.NewUser(conn.ID(), useCases.Swipe)
 
+		conn.Join(strconv.FormatInt(domLobby.ID, 10))
 		lobby.Register(u)
 		conn.SetContext(u)
 
@@ -76,6 +78,14 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		card := u.Card()
 		match := u.Swipe(swipeEvent.SwipeType)
 		if match != nil {
+			wsServer.BroadcastToRoom(
+				"",
+				strconv.FormatInt(u.Lobby.Id, 10),
+				eventMatch,
+				matchEvent{
+					Card: card.ToDto(),
+				},
+			)
 			conn.Emit(eventMatch, matchEvent{
 				Card: card.ToDto(),
 			})

@@ -26,7 +26,7 @@ func (u *User) Card() *domain.Card {
 // Swipe returns matched card if was match
 func (u *User) Swipe(swipeType dto.SwipeType) *domain.Card {
 	_ = u.swipeUseCase.SaveSwipe(context.Background(), &domain.Swipe{
-		LobbyID:   u.Lobby.id,
+		LobbyID:   u.Lobby.Id,
 		CardID:    u.Card().ID,
 		UserID:    u.id,
 		SwipeType: swipeType,
