@@ -83,7 +83,7 @@ func (lb *Lobby) like(card *domain.Card) *domain.Card {
 		lb.likes[card] = 0
 	}
 	lb.likes[card]++
-	if lb.likes[card] >= len(lb.users)/2 {
+	if lb.likes[card] > len(lb.users)/2 {
 		return card
 	}
 	return nil
