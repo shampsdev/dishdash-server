@@ -64,6 +64,18 @@ definitions:
     - BAR
     - CAFE
     - RESTAURANT
+  dto.Lobby:
+    properties:
+      id:
+        type: integer
+      location:
+        type: string
+    type: object
+  dto.LobbyToCreate:
+    properties:
+      location:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -111,4 +123,30 @@ paths:
       summary: Save a card
       tags:
       - cards
+  /lobby:
+    post:
+      consumes:
+      - application/json
+      description: Save a new lobby to the database
+      parameters:
+      - description: Lobby data
+        in: body
+        name: card
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LobbyToCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved lobby
+          schema:
+            $ref: '#/definitions/dto.Lobby'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Save a lobby
+      tags:
+      - lobby
 swagger: "2.0"

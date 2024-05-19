@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	socketio "github.com/googollee/go-socket.io"
-
 	"dishdash.ru/internal/usecase"
+
+	socketio "github.com/googollee/go-socket.io"
 
 	"github.com/tj/go-spin"
 
@@ -19,16 +19,12 @@ import (
 
 const shutdownDuration = 1500 * time.Millisecond
 
-type UseCases struct {
-	Card *usecase.Card
-}
-
 type Server struct {
 	httpServer http.Server
 	wsServer   *socketio.Server
 }
 
-func NewServer(useCases UseCases, options ...func(*Server)) *Server {
+func NewServer(useCases usecase.Cases, options ...func(*Server)) *Server {
 	r := gin.Default()
 
 	s := &Server{

@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 
+	"dishdash.ru/internal/dto"
+
 	"dishdash.ru/internal/domain"
 	"github.com/jackc/pgx/v4"
 )
@@ -75,23 +77,24 @@ func (cr *CardRepository) GetCards(ctx context.Context) ([]domain.Card, error) {
 
 	var cards []domain.Card
 	for rows.Next() {
-		var card domain.Card
+		var cardDto dto.Card
 		err := rows.Scan(
-			&card.ID,
-			&card.Title,
-			&card.ShortDescription,
-			&card.Description,
-			&card.Image,
-			&card.Location,
-			&card.Address,
-			&card.Type,
-			&card.Price,
+			&cardDto.ID,
+			&cardDto.Title,
+			&cardDto.ShortDescription,
+			&cardDto.Description,
+			&cardDto.Image,
+			&cardDto.Location,
+			&cardDto.Address,
+			&cardDto.Type,
+			&cardDto.Price,
 		)
 		if err != nil {
 			log.Printf("Error scanning card: %v\n", err)
 			return nil, err
 		}
-		cards = append(cards, card)
+		card, _ := domain.CardFromDto(cardDto)
+		cards = append(cards, *card)
 	}
 
 	if err := rows.Err(); err != nil {

@@ -29,7 +29,7 @@ func main() {
 	}
 }
 
-func setupUseCases() httpGateway.UseCases {
+func setupUseCases() usecase.Cases {
 	db, err := pg.NewPostgresDB(context.Background(), pg.Config{
 		User:     config.C.PG.User,
 		Password: config.C.PG.Password,
@@ -42,8 +42,10 @@ func setupUseCases() httpGateway.UseCases {
 	}
 
 	cr := pg.NewCardRepository(db)
+	lr := pg.NewLobbyRepository(db)
 
-	return httpGateway.UseCases{
-		Card: usecase.NewCard(cr),
+	return usecase.Cases{
+		Card:  usecase.NewCard(cr),
+		Lobby: usecase.NewLobby(lr),
 	}
 }

@@ -81,6 +81,46 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/lobby": {
+            "post": {
+                "description": "Save a new lobby to the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobby"
+                ],
+                "summary": "Save a lobby",
+                "parameters": [
+                    {
+                        "description": "Lobby data",
+                        "name": "card",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LobbyToCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saved lobby",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Lobby"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -173,6 +213,25 @@ const docTemplate = `{
                 "CAFE",
                 "RESTAURANT"
             ]
+        },
+        "dto.Lobby": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LobbyToCreate": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
