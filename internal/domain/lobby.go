@@ -14,32 +14,23 @@ type Lobby struct {
 	Location  *geo.Point
 }
 
-func LobbyToDto(lobby Lobby) dto.Lobby {
+func (lb *Lobby) ToDto() dto.Lobby {
 	lobbyDto := dto.Lobby{
-		ID: lobby.ID,
+		ID:        lb.ID,
+		CreatedAt: lb.CreatedAt,
 	}
 
-	lobbyDto.Location = Point2String(lobby.Location)
+	lobbyDto.Location = Point2String(lb.Location)
 	return lobbyDto
 }
 
-func LobbyFromDtoToCreate(lobbyDto dto.LobbyToCreate) (*Lobby, error) {
-	lobby := &Lobby{
-		Location: &geo.Point{},
-	}
-
-	var err error
-	lobby.Location, err = ParsePoint(lobbyDto.Location)
-	return lobby, err
+func (lb *Lobby) ParseDto(lobbyDto dto.Lobby) error {
+	lb.ID = lobbyDto.ID
+	lb.CreatedAt = lobbyDto.CreatedAt
+	return ParsePoint(lobbyDto.Location, lb.Location)
 }
 
-func LobbyFromDto(lobbyDto dto.Lobby) (*Lobby, error) {
-	lobby := &Lobby{
-		ID:       lobbyDto.ID,
-		Location: &geo.Point{},
-	}
-
-	var err error
-	lobby.Location, err = ParsePoint(lobbyDto.Location)
-	return lobby, err
+func (lb *Lobby) ParseDtoToCreate(lobbyDto dto.LobbyToCreate) error {
+	lb.CreatedAt = lobbyDto.CreatedAt
+	return ParsePoint(lobbyDto.Location, lb.Location)
 }

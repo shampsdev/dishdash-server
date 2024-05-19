@@ -1,13 +1,11 @@
 package domain
 
 import (
-	"errors"
-
 	"dishdash.ru/internal/dto"
-
 	geo "github.com/kellydunn/golang-geo"
 )
 
+// Card represents a card with various attributes.
 type Card struct {
 	ID               int64
 	Title            string
@@ -20,8 +18,7 @@ type Card struct {
 	Price            int
 }
 
-func CardToDto(c Card) dto.Card {
-	// TODO move to Card.ToDto
+func (c *Card) ToDto() dto.Card {
 	cardDto := dto.Card{
 		ID:               c.ID,
 		Title:            c.Title,
@@ -29,7 +26,6 @@ func CardToDto(c Card) dto.Card {
 		Description:      c.Description,
 		Image:            c.Image,
 		Address:          c.Address,
-		Location:         "",
 		Type:             c.Type,
 		Price:            c.Price,
 	}
@@ -38,43 +34,27 @@ func CardToDto(c Card) dto.Card {
 	return cardDto
 }
 
-func CardFromDtoToCreate(c dto.CardToCreate) (*Card, error) {
-	card := &Card{
-		Title:            c.Title,
-		ShortDescription: c.ShortDescription,
-		Description:      c.Description,
-		Image:            c.Image,
-		Location:         &geo.Point{},
-		Address:          c.Address,
-		Type:             c.Type,
-		Price:            c.Price,
-	}
+func (c *Card) ParseDto(cardDto dto.Card) error {
+	c.ID = cardDto.ID
+	c.Title = cardDto.Title
+	c.ShortDescription = cardDto.ShortDescription
+	c.Description = cardDto.Description
+	c.Image = cardDto.Image
+	c.Address = cardDto.Address
+	c.Type = cardDto.Type
+	c.Price = cardDto.Price
 
-	var err error
-	card.Location, err = ParsePoint(c.Location)
-	if err != nil {
-		err = errors.New("can't parse location")
-	}
-	return card, err
+	return ParsePoint(cardDto.Location, c.Location)
 }
 
-func CardFromDto(c dto.Card) (*Card, error) {
-	card := &Card{
-		ID:               c.ID,
-		Title:            c.Title,
-		ShortDescription: c.ShortDescription,
-		Description:      c.Description,
-		Image:            c.Image,
-		Location:         &geo.Point{},
-		Address:          c.Address,
-		Type:             c.Type,
-		Price:            c.Price,
-	}
+func (c *Card) ParseDtoToCreate(cardDto dto.CardToCreate) error {
+	c.Title = cardDto.Title
+	c.ShortDescription = cardDto.ShortDescription
+	c.Description = cardDto.Description
+	c.Image = cardDto.Image
+	c.Address = cardDto.Address
+	c.Type = cardDto.Type
+	c.Price = cardDto.Price
 
-	var err error
-	card.Location, err = ParsePoint(c.Location)
-	if err != nil {
-		err = errors.New("can't parse location")
-	}
-	return card, err
+	return ParsePoint(cardDto.Location, c.Location)
 }

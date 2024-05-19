@@ -23,6 +23,7 @@ func main() {
 	r := httpGateway.NewServer(
 		setupUseCases(),
 		httpGateway.WithPort(config.C.Port),
+		httpGateway.WithAllowOrigin(config.C.AllowOrigin),
 	)
 	if err := r.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)

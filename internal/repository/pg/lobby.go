@@ -25,7 +25,8 @@ func (r *LobbyRepository) GetLobbyByID(ctx context.Context, id int64) (*domain.L
 		return nil, err
 	}
 
-	return domain.LobbyFromDto(lobbyDto)
+	var lobby *domain.Lobby
+	return lobby, lobby.ParseDto(lobbyDto)
 }
 
 func (r *LobbyRepository) SaveLobby(ctx context.Context, lobby *domain.Lobby) error {

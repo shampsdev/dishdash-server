@@ -13,7 +13,7 @@ type user struct {
 	conn socketio.Conn
 }
 
-func (u *user) takeCard() domain.Card {
+func (u *user) takeCard() *domain.Card {
 	return u.lobby.takeCard(len(u.swipes))
 }
 

@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"log"
 
-	"dishdash.ru/internal/domain"
-
 	"dishdash.ru/internal/usecase"
 
 	socketio "github.com/googollee/go-socket.io"
@@ -59,7 +57,7 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		conn.SetContext(u)
 
 		firstCard := u.takeCard()
-		conn.Emit(eventCard, cardEvent{Card: domain.CardToDto(firstCard)})
+		conn.Emit(eventCard, cardEvent{Card: firstCard.ToDto()})
 	})
 
 	wsServer.OnEvent("", eventSwipe, func(conn socketio.Conn, msg string) {
@@ -82,13 +80,13 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		}
 		if swipe.T == like {
 			conn.Emit(eventMatch, matchEvent{
-				Card: domain.CardToDto(u.takeCard()),
+				Card: u.takeCard().ToDto(),
 			})
 		}
 		u.swipe(swipe)
 
 		newCard := u.takeCard()
-		conn.Emit(eventCard, cardEvent{Card: domain.CardToDto(newCard)})
+		conn.Emit(eventCard, cardEvent{Card: newCard.ToDto()})
 	})
 
 	wsServer.OnDisconnect("", func(s socketio.Conn, reason string) {

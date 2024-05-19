@@ -10,7 +10,7 @@ import (
 
 type lobby struct {
 	*domain.Lobby
-	cards []domain.Card
+	cards []*domain.Card
 	users map[*user]bool
 
 	lock sync.RWMutex
@@ -53,7 +53,7 @@ func (lb *lobby) unregisterUser(u *user) {
 	delete(lb.users, u)
 }
 
-func (lb *lobby) takeCard(n int) domain.Card {
+func (lb *lobby) takeCard(n int) *domain.Card {
 	lb.lock.RLock()
 	defer lb.lock.RUnlock()
 

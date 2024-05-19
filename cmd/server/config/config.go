@@ -16,8 +16,9 @@ const (
 var C = Config{}
 
 type Config struct {
-	Port uint16
-	PG   pg.Config
+	Port        uint16
+	AllowOrigin string
+	PG          pg.Config
 }
 
 func Load() {
@@ -36,6 +37,7 @@ func Load() {
 	}
 
 	C.Port = port
+	C.AllowOrigin = os.Getenv("ALLOW_ORIGIN")
 
 	pgPort, _ := strconv.ParseInt(os.Getenv("POSTGRES_PORT"), 10, 16)
 

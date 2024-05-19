@@ -41,7 +41,8 @@ func SaveCard(cardUseCase *usecase.Card) gin.HandlerFunc {
 			return
 		}
 
-		card, err := domain.CardFromDtoToCreate(cardDto)
+		var card *domain.Card
+		err = card.ParseDtoToCreate(cardDto)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
@@ -51,6 +52,6 @@ func SaveCard(cardUseCase *usecase.Card) gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		c.JSON(http.StatusCreated, domain.CardToDto(*card))
+		c.JSON(http.StatusCreated, card.ToDto())
 	}
 }

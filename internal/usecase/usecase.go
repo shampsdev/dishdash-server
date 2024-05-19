@@ -13,7 +13,7 @@ type Cases struct {
 
 type CardRepository interface {
 	SaveCard(ctx context.Context, card *domain.Card) error
-	GetCards(ctx context.Context) ([]domain.Card, error)
+	GetCards(ctx context.Context) ([]*domain.Card, error)
 }
 
 type LobbyRepository interface {

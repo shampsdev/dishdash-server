@@ -67,7 +67,7 @@ func (cr *CardRepository) SaveCard(ctx context.Context, card *domain.Card) error
 	return nil
 }
 
-func (cr *CardRepository) GetCards(ctx context.Context) ([]domain.Card, error) {
+func (cr *CardRepository) GetCards(ctx context.Context) ([]*domain.Card, error) {
 	rows, err := cr.db.Query(ctx, getCardsQuery)
 	if err != nil {
 		log.Printf("Error fetching cards: %v\n", err)
@@ -75,7 +75,7 @@ func (cr *CardRepository) GetCards(ctx context.Context) ([]domain.Card, error) {
 	}
 	defer rows.Close()
 
-	var cards []domain.Card
+	var cards []*domain.Card
 	for rows.Next() {
 		var cardDto dto.Card
 		err := rows.Scan(
@@ -93,8 +93,9 @@ func (cr *CardRepository) GetCards(ctx context.Context) ([]domain.Card, error) {
 			log.Printf("Error scanning card: %v\n", err)
 			return nil, err
 		}
-		card, _ := domain.CardFromDto(cardDto)
-		cards = append(cards, *card)
+		var card *domain.Card
+		_ = card.ParseDto(cardDto)
+		cards = append(cards, card)
 	}
 
 	if err := rows.Err(); err != nil {

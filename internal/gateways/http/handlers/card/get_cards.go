@@ -26,6 +26,6 @@ func GetCards(cardUseCase *usecase.Card) gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		c.JSON(http.StatusOK, filter.Map(cards, domain.CardToDto))
+		c.JSON(http.StatusOK, filter.Map(cards, (*domain.Card).ToDto))
 	}
 }

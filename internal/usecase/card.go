@@ -18,6 +18,6 @@ func (c *Card) SaveCard(ctx context.Context, card *domain.Card) error {
 	return c.cardRepo.SaveCard(ctx, card)
 }
 
-func (c *Card) GetCards(ctx context.Context) ([]domain.Card, error) {
+func (c *Card) GetCards(ctx context.Context) ([]*domain.Card, error) {
 	return c.cardRepo.GetCards(ctx)
 }
