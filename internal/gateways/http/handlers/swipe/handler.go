@@ -92,7 +92,7 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		conn.Emit(eventCard, cardEvent{Card: newCard.ToDto()})
 	})
 
-	wsServer.OnError("", func(c socketio.Conn, err error) {
+	wsServer.OnError("", func(_ socketio.Conn, err error) {
 		log.Println("socket.io error: ", err)
 	})
 
