@@ -92,6 +92,10 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		conn.Emit(eventCard, cardEvent{Card: newCard.ToDto()})
 	})
 
+	wsServer.OnError("", func(c socketio.Conn, err error) {
+		log.Println("socket.io error: ", err)
+	})
+
 	wsServer.OnDisconnect("", func(s socketio.Conn, reason string) {
 		u, ok := s.Context().(*swipe.User)
 		if ok {

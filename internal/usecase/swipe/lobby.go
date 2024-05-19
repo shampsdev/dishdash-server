@@ -73,7 +73,7 @@ func (lb *Lobby) Unregister(u *User) {
 }
 
 func (lb *Lobby) takeCard(n int) *domain.Card {
-	return lb.cards[n&len(lb.cards)]
+	return lb.cards[n%len(lb.cards)]
 }
 
 // like returns card if match
