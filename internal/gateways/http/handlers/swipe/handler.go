@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"dishdash.ru/internal/dto"
+	"dishdash.ru/internal/usecase/swipe"
 
 	"dishdash.ru/internal/usecase"
 
@@ -31,7 +31,7 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
-		_, ok := conn.Context().(user)
+		_, ok := conn.Context().(*swipe.User)
 		if ok {
 			return
 		}
@@ -42,23 +42,18 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 			return
 		}
 
-		lobby, err := findLobby(domLobby, useCases.Card)
+		lobby, err := swipe.FindLobby(domLobby, useCases.Card)
 		if err != nil {
 			_ = conn.Close()
 			return
 		}
 
-		u := &user{
-			ID:     conn.ID(),
-			lobby:  lobby,
-			swipes: nil,
-			conn:   conn,
-		}
+		u := swipe.NewUser(conn.ID(), useCases.Swipe)
 
-		lobby.registerUser(u)
+		lobby.Register(u)
 		conn.SetContext(u)
 
-		firstCard := u.takeCard()
+		firstCard := u.Card()
 		conn.Emit(eventCard, cardEvent{Card: firstCard.ToDto()})
 	})
 
@@ -66,35 +61,32 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 		var swipeEvent swipeEvent
 		err := json.Unmarshal([]byte(msg), &swipeEvent)
 		if err != nil {
-			conn.Close()
+			_ = conn.Close()
 			return
 		}
 
-		u, ok := conn.Context().(*user)
+		u, ok := conn.Context().(*swipe.User)
 		if !ok {
-			conn.Close()
+			_ = conn.Close()
 			return
 		}
 
-		swipe := swipe{
-			T:    swipeEvent.SwipeType,
-			Card: u.takeCard(),
-		}
-		if swipe.T == dto.LIKE {
+		card := u.Card()
+		match := u.Swipe(swipeEvent.SwipeType)
+		if match != nil {
 			conn.Emit(eventMatch, matchEvent{
-				Card: u.takeCard().ToDto(),
+				Card: card.ToDto(),
 			})
 		}
-		u.swipe(swipe)
 
-		newCard := u.takeCard()
+		newCard := u.Card()
 		conn.Emit(eventCard, cardEvent{Card: newCard.ToDto()})
 	})
 
 	wsServer.OnDisconnect("", func(s socketio.Conn, reason string) {
-		u, ok := s.Context().(*user)
+		u, ok := s.Context().(*swipe.User)
 		if ok {
-			u.lobby.unregisterUser(u)
+			u.Lobby.Unregister(u)
 		}
 		log.Println("disconnected:", s.ID(), "reason:", reason)
 	})

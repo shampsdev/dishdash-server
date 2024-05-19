@@ -15,5 +15,5 @@ func NewSwipe(swipeRepo SwipeRepository) *Swipe {
 }
 
 func (s *Swipe) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
-	return s.SaveSwipe(ctx, swipe)
+	return s.swipeRepo.SaveSwipe(ctx, swipe)
 }

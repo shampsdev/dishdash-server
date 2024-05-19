@@ -44,9 +44,11 @@ func setupUseCases(ctx context.Context) usecase.Cases {
 
 	cr := pg.NewCardRepository(db)
 	lr := pg.NewLobbyRepository(db)
+	sr := pg.NewSwipeRepository(db)
 
 	return usecase.Cases{
 		Card:  usecase.NewCard(cr),
 		Lobby: usecase.NewLobby(lr),
+		Swipe: usecase.NewSwipe(sr),
 	}
 }

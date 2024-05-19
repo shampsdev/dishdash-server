@@ -16,7 +16,7 @@ const (
 
 type CardToCreate struct {
 	Title            string   `json:"title" validate:"required,min=1,max=255"`
-	ShortDescription string   `json:"short_description" validate:"required,max=255"`
+	ShortDescription string   `json:"shortDescription" validate:"required,max=255"`
 	Description      string   `json:"description" validate:"required"`
 	Image            string   `json:"image" validate:"required,url,max=255"`
 	Location         string   `json:"location" validate:"required,max=255"`
@@ -28,7 +28,7 @@ type CardToCreate struct {
 type Card struct {
 	ID               int64    `json:"id"`
 	Title            string   `json:"title" `
-	ShortDescription string   `json:"short_description"`
+	ShortDescription string   `json:"shortDescription"`
 	Description      string   `json:"description"`
 	Image            string   `json:"image"`
 	Location         string   `json:"location"`
