@@ -86,9 +86,6 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 					Card: card.ToDto(),
 				},
 			)
-			conn.Emit(eventMatch, matchEvent{
-				Card: card.ToDto(),
-			})
 		}
 
 		newCard := u.Card()
