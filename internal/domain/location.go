@@ -5,7 +5,7 @@ import (
 )
 
 func ParsePoint(s string, point *geo.Point) error {
-	return point.UnmarshalBinary([]byte(s))
+	return point.UnmarshalJSON([]byte(s))
 }
 
 func Point2String(p *geo.Point) string {

@@ -41,7 +41,7 @@ func SaveCard(cardUseCase *usecase.Card) gin.HandlerFunc {
 			return
 		}
 
-		var card *domain.Card
+		card := new(domain.Card)
 		err = card.ParseDtoToCreate(cardDto)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})

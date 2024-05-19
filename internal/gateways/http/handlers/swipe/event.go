@@ -1,4 +1,4 @@
-package swipes
+package swipe
 
 import "dishdash.ru/internal/dto"
 
@@ -11,15 +11,8 @@ const (
 	eventMatch     = "match"
 )
 
-type swipeType string
-
-const (
-	like    swipeType = "like"
-	dislike swipeType = "dislike"
-)
-
 type swipeEvent struct {
-	SwipeType swipeType `json:"swipeType"`
+	SwipeType dto.SwipeType `json:"swipeType"`
 }
 
 type matchEvent struct {

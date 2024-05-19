@@ -21,7 +21,7 @@ func main() {
 	defer cancel()
 
 	r := httpGateway.NewServer(
-		setupUseCases(),
+		setupUseCases(ctx),
 		httpGateway.WithPort(config.C.Port),
 		httpGateway.WithAllowOrigin(config.C.AllowOrigin),
 	)
@@ -30,8 +30,8 @@ func main() {
 	}
 }
 
-func setupUseCases() usecase.Cases {
-	db, err := pg.NewPostgresDB(context.Background(), pg.Config{
+func setupUseCases(ctx context.Context) usecase.Cases {
+	db, err := pg.NewPostgresDB(ctx, pg.Config{
 		User:     config.C.PG.User,
 		Password: config.C.PG.Password,
 		Host:     config.C.PG.Host,

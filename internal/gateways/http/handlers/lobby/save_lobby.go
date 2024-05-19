@@ -30,7 +30,7 @@ func SaveCard(lobbyUseCase *usecase.Lobby) gin.HandlerFunc {
 			return
 		}
 
-		var lobby *domain.Lobby
+		lobby := new(domain.Lobby)
 		err = lobby.ParseDtoToCreate(lobbyDto)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})

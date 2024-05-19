@@ -25,7 +25,7 @@ func (r *LobbyRepository) GetLobbyByID(ctx context.Context, id int64) (*domain.L
 		return nil, err
 	}
 
-	var lobby *domain.Lobby
+	lobby := new(domain.Lobby)
 	return lobby, lobby.ParseDto(lobbyDto)
 }
 

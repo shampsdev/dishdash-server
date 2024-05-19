@@ -4,7 +4,7 @@ import (
 	"dishdash.ru/docs"
 	cardHandler "dishdash.ru/internal/gateways/http/handlers/card"
 	lobbyHandler "dishdash.ru/internal/gateways/http/handlers/lobby"
-	"dishdash.ru/internal/gateways/http/handlers/swipes"
+	"dishdash.ru/internal/gateways/http/handlers/swipe"
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -25,5 +25,5 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	s.router.Use(allowOriginMiddleware(s.allowOrigin))
 	s.router.GET("/socket.io/*any", gin.WrapH(s.wsServer))
 	s.router.POST("/socket.io/*any", gin.WrapH(s.wsServer))
-	swipes.SetupLobby(s.wsServer, useCases)
+	swipe.SetupLobby(s.wsServer, useCases)
 }

@@ -1,9 +1,11 @@
-package swipes
+package swipe
 
 import (
 	"context"
 	"encoding/json"
 	"log"
+
+	"dishdash.ru/internal/dto"
 
 	"dishdash.ru/internal/usecase"
 
@@ -78,7 +80,7 @@ func SetupLobby(wsServer *socketio.Server, useCases usecase.Cases) {
 			T:    swipeEvent.SwipeType,
 			Card: u.takeCard(),
 		}
-		if swipe.T == like {
+		if swipe.T == dto.LIKE {
 			conn.Emit(eventMatch, matchEvent{
 				Card: u.takeCard().ToDto(),
 			})

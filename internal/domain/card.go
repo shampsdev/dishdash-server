@@ -43,6 +43,7 @@ func (c *Card) ParseDto(cardDto dto.Card) error {
 	c.Address = cardDto.Address
 	c.Type = cardDto.Type
 	c.Price = cardDto.Price
+	c.Location = new(geo.Point)
 
 	return ParsePoint(cardDto.Location, c.Location)
 }
@@ -55,6 +56,7 @@ func (c *Card) ParseDtoToCreate(cardDto dto.CardToCreate) error {
 	c.Address = cardDto.Address
 	c.Type = cardDto.Type
 	c.Price = cardDto.Price
+	c.Location = new(geo.Point)
 
 	return ParsePoint(cardDto.Location, c.Location)
 }

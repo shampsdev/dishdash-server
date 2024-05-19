@@ -27,10 +27,12 @@ func (lb *Lobby) ToDto() dto.Lobby {
 func (lb *Lobby) ParseDto(lobbyDto dto.Lobby) error {
 	lb.ID = lobbyDto.ID
 	lb.CreatedAt = lobbyDto.CreatedAt
+	lb.Location = new(geo.Point)
 	return ParsePoint(lobbyDto.Location, lb.Location)
 }
 
 func (lb *Lobby) ParseDtoToCreate(lobbyDto dto.LobbyToCreate) error {
 	lb.CreatedAt = lobbyDto.CreatedAt
+	lb.Location = new(geo.Point)
 	return ParsePoint(lobbyDto.Location, lb.Location)
 }

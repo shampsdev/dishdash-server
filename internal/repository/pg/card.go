@@ -52,7 +52,7 @@ func (cr *CardRepository) SaveCard(ctx context.Context, card *domain.Card) error
 		card.ShortDescription,
 		card.Description,
 		card.Image,
-		card.Location,
+		domain.Point2String(card.Location),
 		card.Address,
 		card.Type,
 		card.Price,
@@ -93,7 +93,7 @@ func (cr *CardRepository) GetCards(ctx context.Context) ([]*domain.Card, error) 
 			log.Printf("Error scanning card: %v\n", err)
 			return nil, err
 		}
-		var card *domain.Card
+		card := new(domain.Card)
 		_ = card.ParseDto(cardDto)
 		cards = append(cards, card)
 	}

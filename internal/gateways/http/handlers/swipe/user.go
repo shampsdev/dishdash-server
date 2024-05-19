@@ -1,4 +1,4 @@
-package swipes
+package swipe
 
 import (
 	"dishdash.ru/internal/domain"
