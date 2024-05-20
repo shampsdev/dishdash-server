@@ -25,6 +25,11 @@ func (u *User) Card() *domain.Card {
 
 // Swipe returns matched card if was match
 func (u *User) Swipe(swipeType dto.SwipeType) *domain.Card {
+	// TODO better cards end logic
+	if u.took >= len(u.Lobby.cards) {
+		u.took++
+		return nil
+	}
 	_ = u.swipeUseCase.SaveSwipe(context.Background(), &domain.Swipe{
 		LobbyID:   u.Lobby.Id,
 		CardID:    u.Card().ID,

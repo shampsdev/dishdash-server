@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/googollee/go-socket.io/engineio"
 	"github.com/googollee/go-socket.io/engineio/transport"
-	"github.com/googollee/go-socket.io/engineio/transport/polling"
 	"github.com/googollee/go-socket.io/engineio/transport/websocket"
 
 	"dishdash.ru/internal/usecase"
@@ -53,12 +53,14 @@ func NewServer(useCases usecase.Cases, options ...func(*Server)) *Server {
 
 func WithPort(port uint16) func(*Server) {
 	return func(s *Server) {
+		log.Printf("Setup port: %d", port)
 		s.httpServer.Addr = fmt.Sprintf(":%d", port)
 	}
 }
 
 func WithAllowOrigin(allowOrigin string) func(*Server) {
 	return func(s *Server) {
+		log.Printf("Allow origin: %s", allowOrigin)
 		s.allowOrigin = allowOrigin
 	}
 }
@@ -82,8 +84,6 @@ func (s *Server) Run(ctx context.Context) error {
 }
 
 func newSocketIOServer() *socketio.Server {
-	pt := polling.Default
-
 	wt := websocket.Default
 	// TODO legal CheckOrigin
 	wt.CheckOrigin = func(_ *http.Request) bool {
@@ -92,7 +92,6 @@ func newSocketIOServer() *socketio.Server {
 
 	server := socketio.NewServer(&engineio.Options{
 		Transports: []transport.Transport{
-			pt,
 			wt,
 		},
 	})

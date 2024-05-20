@@ -13,6 +13,8 @@ import (
 
 func setupRouter(s *Server, useCases usecase.Cases) {
 	s.router.HandleMethodNotAllowed = true
+	s.router.Use(allowOriginMiddleware(s.allowOrigin))
+
 	v1 := s.router.Group("/api/v1")
 	{
 		cardHandler.SetupHandlers(v1, useCases.Card)
@@ -21,8 +23,6 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
-	s.router.Use(allowOriginMiddleware(s.allowOrigin))
 	s.router.GET("/socket.io/*any", gin.WrapH(s.wsServer))
 	s.router.POST("/socket.io/*any", gin.WrapH(s.wsServer))
 	swipe.SetupLobby(s.wsServer, useCases)

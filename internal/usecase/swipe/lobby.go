@@ -20,11 +20,15 @@ type Lobby struct {
 }
 
 var lobbies = make(map[int64]*Lobby)
+var lobbiesLock = sync.Mutex{}
 
 func FindLobby(lobbyDomain *domain.Lobby, cardUseCase *usecase.Card) (*Lobby, error) {
+	lobbiesLock.Lock()
+	defer lobbiesLock.Unlock()
+
 	lobby, has := lobbies[lobbyDomain.ID]
-	log.Printf("find lobby: %d", lobbyDomain.ID)
 	if has {
+		log.Printf("find lobby: %d", lobbyDomain.ID)
 		return lobby, nil
 	}
 
@@ -49,6 +53,7 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase *usecase.Card) (*Lobby, er
 		users: make(map[*User]bool),
 		lock:  sync.RWMutex{},
 	}
+	lobbies[lobbyDomain.ID] = lobby
 	log.Printf("create lobby: %d", lobbyDomain.ID)
 	return lobby, nil
 }
