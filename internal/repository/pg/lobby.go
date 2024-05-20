@@ -2,10 +2,11 @@ package pg
 
 import (
 	"context"
+	"math/rand"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/dto"
 	"github.com/jackc/pgx/v4"
-	"math/rand"
 )
 
 type LobbyRepository struct {

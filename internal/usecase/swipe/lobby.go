@@ -19,8 +19,10 @@ type Lobby struct {
 	lock sync.RWMutex
 }
 
-var lobbies = make(map[int64]*Lobby)
-var lobbiesLock = sync.Mutex{}
+var (
+	lobbies     = make(map[int64]*Lobby)
+	lobbiesLock = sync.Mutex{}
+)
 
 func FindLobby(lobbyDomain *domain.Lobby, cardUseCase *usecase.Card) (*Lobby, error) {
 	lobbiesLock.Lock()
