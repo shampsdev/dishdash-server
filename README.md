@@ -1,4 +1,6 @@
 # DishDash
+Стек: Go, Gin, Socket.IO, PostgreSQL, Docker, Traefik (на сервере)
+
 Проект для Creative Space Hackathon \
 Занял первое место
 
