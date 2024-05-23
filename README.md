@@ -25,6 +25,11 @@ Run database and adminer (localhost:1000)
 docker-compose up --build -d
 ```
 
+Dependencies
+```
+go mod download
+```
+
 Run
 ```
 go run cmd/server/main.go
