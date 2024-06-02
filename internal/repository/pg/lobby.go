@@ -2,18 +2,18 @@ package pg
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"math/rand"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/dto"
-	"github.com/jackc/pgx/v4"
 )
 
 type LobbyRepository struct {
-	db *pgx.Conn
+	db *pgxpool.Pool
 }
 
-func NewLobbyRepository(db *pgx.Conn) *LobbyRepository {
+func NewLobbyRepository(db *pgxpool.Pool) *LobbyRepository {
 	return &LobbyRepository{db: db}
 }
 

@@ -145,14 +145,17 @@ const docTemplate = `{
                 "price": {
                     "type": "integer"
                 },
-                "short_description": {
+                "shortDescription": {
                     "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Tag"
+                    }
                 },
                 "title": {
                     "type": "string"
-                },
-                "type": {
-                    "$ref": "#/definitions/dto.CardType"
                 }
             }
         },
@@ -164,9 +167,8 @@ const docTemplate = `{
                 "image",
                 "location",
                 "price",
-                "short_description",
-                "title",
-                "type"
+                "shortDescription",
+                "title"
             ],
             "properties": {
                 "address": {
@@ -187,7 +189,7 @@ const docTemplate = `{
                 "price": {
                     "type": "integer"
                 },
-                "short_description": {
+                "shortDescription": {
                     "type": "string",
                     "maxLength": 255
                 },
@@ -195,28 +197,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 1
-                },
-                "type": {
-                    "$ref": "#/definitions/dto.CardType"
                 }
             }
-        },
-        "dto.CardType": {
-            "type": "string",
-            "enum": [
-                "BAR",
-                "CAFE",
-                "RESTAURANT"
-            ],
-            "x-enum-varnames": [
-                "BAR",
-                "CAFE",
-                "RESTAURANT"
-            ]
         },
         "dto.Lobby": {
             "type": "object",
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -228,7 +217,24 @@ const docTemplate = `{
         "dto.LobbyToCreate": {
             "type": "object",
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "location": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.Tag": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +21,15 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
+	pgConfig := config.C.PGXConfig()
+	pool, err := pgxpool.NewWithConfig(ctx, pgConfig)
+	if err != nil {
+		log.Fatalf("can't create new database pool")
+	}
+	defer pool.Close()
+
 	r := httpGateway.NewServer(
-		setupUseCases(ctx),
+		setupUseCases(pool),
 		httpGateway.WithPort(config.C.Port),
 		httpGateway.WithAllowOrigin(config.C.AllowOrigin),
 	)
@@ -30,25 +38,17 @@ func main() {
 	}
 }
 
-func setupUseCases(ctx context.Context) usecase.Cases {
-	db, err := pg.NewPostgresDB(ctx, pg.Config{
-		User:     config.C.PG.User,
-		Password: config.C.PG.Password,
-		Host:     config.C.PG.Host,
-		Port:     config.C.PG.Port,
-		Database: config.C.PG.Database,
-	})
-	if err != nil {
-		log.Fatalf("can't setup postgres: %s", err)
-	}
+func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 
-	cr := pg.NewCardRepository(db)
-	lr := pg.NewLobbyRepository(db)
-	sr := pg.NewSwipeRepository(db)
+	cr := pg.NewCardRepository(pool)
+	lr := pg.NewLobbyRepository(pool)
+	sr := pg.NewSwipeRepository(pool)
+	tr := pg.NewTagRepository(pool)
 
 	return usecase.Cases{
-		Card:  usecase.NewCard(cr),
+		Card:  usecase.NewCard(cr, tr),
 		Lobby: usecase.NewLobby(lr),
 		Swipe: usecase.NewSwipe(sr),
+		Tag:   usecase.NewTag(tr),
 	}
 }

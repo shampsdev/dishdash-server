@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-
 	"dishdash.ru/internal/domain"
 )
 
@@ -10,6 +9,7 @@ type Cases struct {
 	Card  *Card
 	Lobby *Lobby
 	Swipe *Swipe
+	Tag   *Tag
 }
 
 type CardRepository interface {
@@ -24,4 +24,10 @@ type LobbyRepository interface {
 
 type SwipeRepository interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
+}
+
+type TagRepository interface {
+	SaveTag(ctx context.Context, tag *domain.Tag) error
+	AttachTagToCard(ctx context.Context, tagID int64, cardID int64) error
+	GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
 }

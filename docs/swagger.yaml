@@ -13,12 +13,14 @@ definitions:
         type: string
       price:
         type: integer
-      short_description:
+      shortDescription:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/dto.Tag'
+        type: array
       title:
         type: string
-      type:
-        $ref: '#/definitions/dto.CardType'
     type: object
   dto.CardToCreate:
     properties:
@@ -35,37 +37,26 @@ definitions:
         type: string
       price:
         type: integer
-      short_description:
+      shortDescription:
         maxLength: 255
         type: string
       title:
         maxLength: 255
         minLength: 1
         type: string
-      type:
-        $ref: '#/definitions/dto.CardType'
     required:
     - address
     - description
     - image
     - location
     - price
-    - short_description
+    - shortDescription
     - title
-    - type
     type: object
-  dto.CardType:
-    enum:
-    - BAR
-    - CAFE
-    - RESTAURANT
-    type: string
-    x-enum-varnames:
-    - BAR
-    - CAFE
-    - RESTAURANT
   dto.Lobby:
     properties:
+      createdAt:
+        type: string
       id:
         type: integer
       location:
@@ -73,7 +64,18 @@ definitions:
     type: object
   dto.LobbyToCreate:
     properties:
+      createdAt:
+        type: string
       location:
+        type: string
+    type: object
+  dto.Tag:
+    properties:
+      ID:
+        type: integer
+      icon:
+        type: string
+      title:
         type: string
     type: object
 info:

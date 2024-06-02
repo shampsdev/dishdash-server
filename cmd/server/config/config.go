@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"os"
 	"strconv"
@@ -9,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// TODO конфиг через https://github.com/sethvargo/go-envconfig
 const (
 	defaultPort = uint16(8000)
 )
@@ -46,4 +49,20 @@ func Load() {
 	C.PG.Host = os.Getenv("POSTGRES_HOST")
 	C.PG.Port = uint16(pgPort)
 	C.PG.Database = os.Getenv("POSTGRES_DATABASE")
+}
+
+func (c Config) PGXConfig() *pgxpool.Config {
+	databaseUrl := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		C.PG.User,
+		C.PG.Password,
+		C.PG.Host,
+		C.PG.Port,
+		C.PG.Database,
+	)
+	pgxConfig, err := pgxpool.ParseConfig(databaseUrl)
+	if err != nil {
+		log.Fatalf("can't parse pgxpool config: %s", err)
+	}
+	return pgxConfig
 }

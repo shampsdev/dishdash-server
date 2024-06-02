@@ -2,12 +2,12 @@ package pg
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 
 	"dishdash.ru/internal/dto"
 
 	"dishdash.ru/internal/domain"
-	"github.com/jackc/pgx/v4"
 )
 
 const saveQuery = `
@@ -18,9 +18,8 @@ const saveQuery = `
 		"image", 
 		"location", 
 		"address", 
-		"type", 
 		"price"
-	) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+	) VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING "id"
 `
 
@@ -33,16 +32,15 @@ const getCardsQuery = `
 		"image", 
 		"location", 
 		"address", 
-		"type", 
 		"price"
 	FROM "card"
 `
 
 type CardRepository struct {
-	db *pgx.Conn
+	db *pgxpool.Pool
 }
 
-func NewCardRepository(db *pgx.Conn) *CardRepository {
+func NewCardRepository(db *pgxpool.Pool) *CardRepository {
 	return &CardRepository{db: db}
 }
 
@@ -54,7 +52,6 @@ func (cr *CardRepository) SaveCard(ctx context.Context, card *domain.Card) error
 		card.Image,
 		domain.Point2String(card.Location),
 		card.Address,
-		card.Type,
 		card.Price,
 	)
 
@@ -86,7 +83,6 @@ func (cr *CardRepository) GetCards(ctx context.Context) ([]*domain.Card, error) 
 			&cardDto.Image,
 			&cardDto.Location,
 			&cardDto.Address,
-			&cardDto.Type,
 			&cardDto.Price,
 		)
 		if err != nil {

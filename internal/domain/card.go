@@ -14,11 +14,16 @@ type Card struct {
 	Image            string
 	Location         *geo.Point
 	Address          string
-	Type             dto.CardType
 	Price            int
+	Tags             []*Tag
 }
 
 func (c *Card) ToDto() dto.Card {
+	tagsDto := make([]dto.Tag, len(c.Tags))
+	for i, tag := range c.Tags {
+		tagsDto[i] = tag.ToDto()
+	}
+
 	cardDto := dto.Card{
 		ID:               c.ID,
 		Title:            c.Title,
@@ -26,8 +31,8 @@ func (c *Card) ToDto() dto.Card {
 		Description:      c.Description,
 		Image:            c.Image,
 		Address:          c.Address,
-		Type:             c.Type,
 		Price:            c.Price,
+		Tags:             tagsDto,
 	}
 
 	cardDto.Location = Point2String(c.Location)
@@ -41,9 +46,16 @@ func (c *Card) ParseDto(cardDto dto.Card) error {
 	c.Description = cardDto.Description
 	c.Image = cardDto.Image
 	c.Address = cardDto.Address
-	c.Type = cardDto.Type
 	c.Price = cardDto.Price
 	c.Location = new(geo.Point)
+
+	tags := make([]*Tag, len(cardDto.Tags))
+	for i, tagDto := range cardDto.Tags {
+		tag := new(Tag)
+		tag.ParseDto(tagDto)
+		tags[i] = tag
+	}
+	c.Tags = tags
 
 	return ParsePoint(cardDto.Location, c.Location)
 }
@@ -54,7 +66,6 @@ func (c *Card) ParseDtoToCreate(cardDto dto.CardToCreate) error {
 	c.Description = cardDto.Description
 	c.Image = cardDto.Image
 	c.Address = cardDto.Address
-	c.Type = cardDto.Type
 	c.Price = cardDto.Price
 	c.Location = new(geo.Point)
 

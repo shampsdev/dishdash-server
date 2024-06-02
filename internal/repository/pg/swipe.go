@@ -2,10 +2,10 @@ package pg
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 
 	"dishdash.ru/internal/domain"
-	"github.com/jackc/pgx/v4"
 )
 
 const saveSwipeQuery = `
@@ -18,11 +18,11 @@ const saveSwipeQuery = `
 `
 
 type SwipeRepository struct {
-	db *pgx.Conn
+	db *pgxpool.Pool
 }
 
-func NewSwipeRepository(db *pgx.Conn) *SwipeRepository {
-	return &SwipeRepository{db: db}
+func NewSwipeRepository(pool *pgxpool.Pool) *SwipeRepository {
+	return &SwipeRepository{db: pool}
 }
 
 func (sr *SwipeRepository) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
