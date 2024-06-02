@@ -4,7 +4,6 @@ services:
     image: postgres:15
     container_name: database
     volumes:
-      - ./migrations:/docker-entrypoint-initdb.d
       - ~/.pg/dishdash-db:/var/lib/postgresql/data
     env_file:
       - .env

@@ -17,8 +17,6 @@ import (
 )
 
 func main() {
-	config.Load()
-
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
@@ -31,8 +29,8 @@ func main() {
 
 	r := httpGateway.NewServer(
 		setupUseCases(pool),
-		httpGateway.WithPort(config.C.Port),
-		httpGateway.WithAllowOrigin(config.C.AllowOrigin),
+		httpGateway.WithPort(config.C.Server.Port),
+		httpGateway.WithAllowOrigin(config.C.Server.AllowOrigin),
 	)
 	if err := r.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)

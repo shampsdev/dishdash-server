@@ -1,65 +1,59 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"dishdash.ru/internal/repository/pg"
 	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
 )
-
-// TODO конфиг через https://github.com/sethvargo/go-envconfig
-const (
-	defaultPort = uint16(8000)
-)
-
-var C = Config{}
 
 type Config struct {
-	Port        uint16
-	AllowOrigin string
-	PG          pg.Config
+	Server struct {
+		Port        uint16 `envconfig:"HTTP_PORT" default:"8000"`
+		AllowOrigin string `envconfig:"ALLOW_ORIGIN" default:"*"`
+	}
+	DB struct {
+		User     string `envconfig:"POSTGRES_USER"`
+		Password string `envconfig:"POSTGRES_PASSWORD"`
+		Host     string `envconfig:"POSTGRES_HOST"`
+		Port     uint16 `envconfig:"POSTGRES_PORT"`
+		Database string `envconfig:"POSTGRES_DB"`
+	}
 }
 
-func Load() {
-	err := godotenv.Load()
+var C Config
+
+func init() {
+	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+		log.Println("[INFO] no .env file, parsed exported variables")
 	}
-	port := defaultPort
-
-	if portEnv, ok := os.LookupEnv("HTTP_PORT"); ok {
-		port64, err := strconv.ParseInt(portEnv, 10, 16)
-		if err != nil {
-			log.Fatalf("Can't parse Port: %s", portEnv)
-		}
-		port = uint16(port64)
+	err = envconfig.Process("", &C)
+	if err != nil {
+		log.Fatalf("can't parse config: %s", err)
 	}
 
-	C.Port = port
-	C.AllowOrigin = os.Getenv("ALLOW_ORIGIN")
+	printConfig(C)
+}
 
-	pgPort, _ := strconv.ParseInt(os.Getenv("POSTGRES_PORT"), 10, 16)
-
-	C.PG.User = os.Getenv("POSTGRES_USER")
-	C.PG.Password = os.Getenv("POSTGRES_PASSWORD")
-	C.PG.Host = os.Getenv("POSTGRES_HOST")
-	C.PG.Port = uint16(pgPort)
-	C.PG.Database = os.Getenv("POSTGRES_DATABASE")
+func printConfig(c Config) {
+	data, _ := json.MarshalIndent(c, "", "\t")
+	fmt.Println("=== CONFIG ===")
+	fmt.Println(string(data))
+	fmt.Println("==============")
 }
 
 func (c Config) PGXConfig() *pgxpool.Config {
 	databaseUrl := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
-		C.PG.User,
-		C.PG.Password,
-		C.PG.Host,
-		C.PG.Port,
-		C.PG.Database,
+		C.DB.User,
+		C.DB.Password,
+		C.DB.Host,
+		C.DB.Port,
+		C.DB.Database,
 	)
 	pgxConfig, err := pgxpool.ParseConfig(databaseUrl)
 	if err != nil {

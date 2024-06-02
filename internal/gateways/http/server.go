@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -53,14 +52,12 @@ func NewServer(useCases usecase.Cases, options ...func(*Server)) *Server {
 
 func WithPort(port uint16) func(*Server) {
 	return func(s *Server) {
-		log.Printf("Setup port: %d", port)
 		s.httpServer.Addr = fmt.Sprintf(":%d", port)
 	}
 }
 
 func WithAllowOrigin(allowOrigin string) func(*Server) {
 	return func(s *Server) {
-		log.Printf("Allow origin: %s", allowOrigin)
 		s.allowOrigin = allowOrigin
 	}
 }
