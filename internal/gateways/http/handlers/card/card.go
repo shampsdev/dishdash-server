@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupHandlers(r *gin.RouterGroup, cardUseCase *usecase.Card, tagUseCase *usecase.Tag) {
+func SetupHandlers(r *gin.RouterGroup, cardUseCase *usecase.Card) {
 	cardGroup := r.Group("cards")
-	cardGroup.GET("", GetCards(cardUseCase, tagUseCase))
+	cardGroup.GET("", GetCards(cardUseCase))
 	cardGroup.POST("", SaveCard(cardUseCase))
 }

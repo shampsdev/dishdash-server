@@ -1,9 +1,7 @@
 package pg
 
 import (
-	"context"
 	"fmt"
-	"github.com/jackc/pgx/v5"
 )
 
 type Config struct {
@@ -23,13 +21,4 @@ func (cfg *Config) ConnString() string {
 		cfg.Port,
 		cfg.Database,
 	)
-}
-
-func NewPostgresDB(ctx context.Context, cfg Config) (*pgx.Conn, error) {
-	conn, err := pgx.Connect(ctx, cfg.ConnString())
-	if err != nil {
-		return nil, err
-	}
-	err = conn.Ping(ctx)
-	return conn, err
 }

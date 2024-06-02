@@ -17,7 +17,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 
 	v1 := s.router.Group("/api/v1")
 	{
-		cardHandler.SetupHandlers(v1, useCases.Card, useCases.Tag)
+		cardHandler.SetupHandlers(v1, useCases.Card)
 		lobbyHandler.SetupHandlers(v1, useCases.Lobby)
 	}
 

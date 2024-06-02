@@ -19,7 +19,7 @@ import (
 // @Success 200 {array} dto.Card "List of cards"
 // @Failure 500
 // @Router /cards [get]
-func GetCards(cardUseCase *usecase.Card, tagUseCase *usecase.Tag) gin.HandlerFunc {
+func GetCards(cardUseCase *usecase.Card) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cards, err := cardUseCase.GetCards(c)
 		if err != nil {
