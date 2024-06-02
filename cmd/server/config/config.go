@@ -2,10 +2,11 @@ package config
 
 import (
 	"fmt"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/internal/repository/pg"
 	"github.com/joho/godotenv"

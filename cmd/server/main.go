@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/cmd/server/config"
 	httpGateway "dishdash.ru/internal/gateways/http"
@@ -39,7 +40,6 @@ func main() {
 }
 
 func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
-
 	cr := pg.NewCardRepository(pool)
 	lr := pg.NewLobbyRepository(pool)
 	sr := pg.NewSwipeRepository(pool)

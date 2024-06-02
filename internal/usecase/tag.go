@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"dishdash.ru/internal/domain"
 )
 
@@ -17,7 +18,7 @@ func (t *Tag) SaveTag(ctx context.Context, tag *domain.Tag) error {
 	return t.tagRepo.SaveTag(ctx, tag)
 }
 
-func (t *Tag) AttachTagToCard(ctx context.Context, tagID int64, cardID int64) error {
+func (t *Tag) AttachTagToCard(ctx context.Context, tagID, cardID int64) error {
 	return t.tagRepo.AttachTagToCard(ctx, tagID, cardID)
 }
 

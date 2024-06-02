@@ -2,8 +2,9 @@ package pg
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/internal/domain"
 )

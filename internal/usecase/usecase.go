@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"dishdash.ru/internal/domain"
 )
 
@@ -28,6 +29,6 @@ type SwipeRepository interface {
 
 type TagRepository interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) error
-	AttachTagToCard(ctx context.Context, tagID int64, cardID int64) error
+	AttachTagToCard(ctx context.Context, tagID, cardID int64) error
 	GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
 }

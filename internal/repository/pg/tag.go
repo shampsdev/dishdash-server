@@ -2,8 +2,10 @@ package pg
 
 import (
 	"context"
-	"dishdash.ru/internal/domain"
 	"fmt"
+
+	"dishdash.ru/internal/domain"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -24,7 +26,7 @@ func (t *TagRepository) SaveTag(ctx context.Context, tag *domain.Tag) error {
 	return nil
 }
 
-func (t *TagRepository) AttachTagToCard(ctx context.Context, tagID int64, cardID int64) error {
+func (t *TagRepository) AttachTagToCard(ctx context.Context, tagID, cardID int64) error {
 	query := `INSERT INTO tag_card (tag_id, card_id) VALUES ($1, $2)`
 	_, err := t.db.Exec(ctx, query, tagID, cardID)
 	if err != nil {
