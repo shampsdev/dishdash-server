@@ -12,7 +12,7 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	httpGateway "dishdash.ru/internal/gateways/http"
-	"dishdash.ru/internal/repository/pg"
+	"dishdash.ru/internal/repo/pg"
 	"dishdash.ru/internal/usecase"
 )
 
@@ -27,26 +27,18 @@ func main() {
 	}
 	defer pool.Close()
 
-	r := httpGateway.NewServer(
-		setupUseCases(pool),
-		httpGateway.WithPort(config.C.Server.Port),
-		httpGateway.WithAllowOrigin(config.C.Server.AllowOrigin),
-	)
-	if err := r.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	s := httpGateway.NewServer(setupUseCases(pool))
+	if err := s.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)
 	}
 }
 
 func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 	cr := pg.NewCardRepository(pool)
-	lr := pg.NewLobbyRepository(pool)
-	sr := pg.NewSwipeRepository(pool)
 	tr := pg.NewTagRepository(pool)
 
 	return usecase.Cases{
-		Card:  usecase.NewCard(cr, tr),
-		Lobby: usecase.NewLobby(lr),
-		Swipe: usecase.NewSwipe(sr),
-		Tag:   usecase.NewTag(tr),
+		Card: usecase.NewCard(cr, tr),
+		Tag:  usecase.NewTag(tr),
 	}
 }

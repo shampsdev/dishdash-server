@@ -1,5 +1,5 @@
 definitions:
-  dto.Card:
+  card.cardInput:
     properties:
       address:
         type: string
@@ -10,73 +10,63 @@ definitions:
       image:
         type: string
       location:
-        type: string
+        $ref: '#/definitions/domain.Coordinate'
       price:
         type: integer
       shortDescription:
         type: string
       tags:
         items:
-          $ref: '#/definitions/dto.Tag'
+          type: integer
         type: array
       title:
         type: string
     type: object
-  dto.CardToCreate:
+  card.cardOutput:
     properties:
       address:
-        maxLength: 255
         type: string
       description:
         type: string
+      id:
+        type: integer
       image:
-        maxLength: 255
         type: string
       location:
-        maxLength: 255
-        type: string
+        $ref: '#/definitions/domain.Coordinate'
       price:
         type: integer
       shortDescription:
-        maxLength: 255
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/card.tagOutput'
+        type: array
       title:
-        maxLength: 255
-        minLength: 1
         type: string
-    required:
-    - address
-    - description
-    - image
-    - location
-    - price
-    - shortDescription
-    - title
     type: object
-  dto.Lobby:
+  card.tagInput:
     properties:
-      createdAt:
+      icon:
+        type: string
+      name:
+        type: string
+    type: object
+  card.tagOutput:
+    properties:
+      icon:
         type: string
       id:
         type: integer
-      location:
+      name:
         type: string
     type: object
-  dto.LobbyToCreate:
+  domain.Coordinate:
     properties:
-      createdAt:
-        type: string
-      location:
-        type: string
-    type: object
-  dto.Tag:
-    properties:
-      ID:
-        type: integer
-      icon:
-        type: string
-      title:
-        type: string
+      lat:
+        type: number
+      lon:
+        type: number
     type: object
 info:
   contact: {}
@@ -93,7 +83,7 @@ paths:
           description: List of cards
           schema:
             items:
-              $ref: '#/definitions/dto.Card'
+              $ref: '#/definitions/card.cardOutput'
             type: array
         "500":
           description: Internal Server Error
@@ -103,52 +93,52 @@ paths:
     post:
       consumes:
       - application/json
-      description: Save a new card to the database
+      description: Create a new card in the database
       parameters:
       - description: Card data
         in: body
         name: card
         required: true
         schema:
-          $ref: '#/definitions/dto.CardToCreate'
+          $ref: '#/definitions/card.cardInput'
       produces:
       - application/json
       responses:
         "200":
           description: Saved card
           schema:
-            $ref: '#/definitions/dto.Card'
+            $ref: '#/definitions/card.cardOutput'
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Save a card
+      summary: Create a card
       tags:
       - cards
-  /lobby:
+  /cards/tags:
     post:
       consumes:
       - application/json
-      description: Save a new lobby to the database
+      description: Create a new tag in the database
       parameters:
-      - description: Lobby data
+      - description: Tag data
         in: body
-        name: card
+        name: tag
         required: true
         schema:
-          $ref: '#/definitions/dto.LobbyToCreate'
+          $ref: '#/definitions/card.tagInput'
       produces:
       - application/json
       responses:
         "200":
-          description: Saved lobby
+          description: Saved tag
           schema:
-            $ref: '#/definitions/dto.Lobby'
+            $ref: '#/definitions/card.tagOutput'
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Save a lobby
+      summary: Create a tag
       tags:
-      - lobby
+      - cards
 swagger: "2.0"

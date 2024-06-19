@@ -34,7 +34,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.Card"
+                                "$ref": "#/definitions/card.cardOutput"
                             }
                         }
                     },
@@ -44,7 +44,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Save a new card to the database",
+                "description": "Create a new card in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -54,7 +54,7 @@ const docTemplate = `{
                 "tags": [
                     "cards"
                 ],
-                "summary": "Save a card",
+                "summary": "Create a card",
                 "parameters": [
                     {
                         "description": "Card data",
@@ -62,7 +62,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CardToCreate"
+                            "$ref": "#/definitions/card.cardInput"
                         }
                     }
                 ],
@@ -70,7 +70,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved card",
                         "schema": {
-                            "$ref": "#/definitions/dto.Card"
+                            "$ref": "#/definitions/card.cardOutput"
                         }
                     },
                     "400": {
@@ -82,9 +82,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/lobby": {
+        "/cards/tags": {
             "post": {
-                "description": "Save a new lobby to the database",
+                "description": "Create a new tag in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -92,25 +92,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "lobby"
+                    "cards"
                 ],
-                "summary": "Save a lobby",
+                "summary": "Create a tag",
                 "parameters": [
                     {
-                        "description": "Lobby data",
-                        "name": "card",
+                        "description": "Tag data",
+                        "name": "tag",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LobbyToCreate"
+                            "$ref": "#/definitions/card.tagInput"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Saved lobby",
+                        "description": "Saved tag",
                         "schema": {
-                            "$ref": "#/definitions/dto.Lobby"
+                            "$ref": "#/definitions/card.tagOutput"
                         }
                     },
                     "400": {
@@ -124,7 +124,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.Card": {
+        "card.cardInput": {
             "type": "object",
             "properties": {
                 "address": {
@@ -140,7 +140,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "location": {
-                    "type": "string"
+                    "$ref": "#/definitions/domain.Coordinate"
                 },
                 "price": {
                     "type": "integer"
@@ -151,7 +151,7 @@ const docTemplate = `{
                 "tags": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Tag"
+                        "type": "integer"
                     }
                 },
                 "title": {
@@ -159,83 +159,74 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CardToCreate": {
+        "card.cardOutput": {
             "type": "object",
-            "required": [
-                "address",
-                "description",
-                "image",
-                "location",
-                "price",
-                "shortDescription",
-                "title"
-            ],
             "properties": {
                 "address": {
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "description": {
                     "type": "string"
                 },
-                "image": {
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "location": {
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "shortDescription": {
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "title": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1
-                }
-            }
-        },
-        "dto.Lobby": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
+                "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "location": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.LobbyToCreate": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
+                "image": {
                     "type": "string"
                 },
                 "location": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.Tag": {
-            "type": "object",
-            "properties": {
-                "ID": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "price": {
                     "type": "integer"
                 },
-                "icon": {
+                "shortDescription": {
                     "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/card.tagOutput"
+                    }
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "card.tagInput": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "card.tagOutput": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Coordinate": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
                 }
             }
         }

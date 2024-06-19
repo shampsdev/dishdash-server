@@ -4,8 +4,7 @@ import (
 	"time"
 )
 
-type Lobby struct {
-	ID        int64
+type TempUser struct {
+	Id        string
 	CreatedAt time.Time
-	Location  Coordinate
 }

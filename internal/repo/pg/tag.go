@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jackc/pgx/v5"
+
 	"dishdash.ru/internal/domain"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -17,30 +19,40 @@ func NewTagRepository(db *pgxpool.Pool) *TagRepository {
 	return &TagRepository{db: db}
 }
 
-func (t *TagRepository) SaveTag(ctx context.Context, tag *domain.Tag) error {
+func (t *TagRepository) CreateTag(ctx context.Context, tag *domain.Tag) (int64, error) {
 	query := `INSERT INTO tag (name, icon) VALUES ($1, $2) RETURNING id`
-	err := t.db.QueryRow(ctx, query, tag.Name, tag.Icon).Scan(&tag.ID)
+	var id int64
+	err := t.db.QueryRow(ctx, query, tag.Name, tag.Icon).Scan(&id)
 	if err != nil {
-		return fmt.Errorf("could not insert tag: %w", err)
+		return 0, fmt.Errorf("could not insert tag: %w", err)
 	}
-	return nil
+	return id, err
 }
 
-func (t *TagRepository) AttachTagToCard(ctx context.Context, tagID, cardID int64) error {
-	query := `INSERT INTO tag_card (tag_id, card_id) VALUES ($1, $2)`
-	_, err := t.db.Exec(ctx, query, tagID, cardID)
+func (t *TagRepository) AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error {
+	batch := &pgx.Batch{}
+
+	query := `INSERT INTO card_tag (tag_id, card_id) VALUES ($1, $2)`
+	for _, tagID := range tagIDs {
+		batch.Queue(query, tagID, cardID)
+	}
+
+	br := t.db.SendBatch(ctx, batch)
+	defer br.Close()
+
+	_, err := br.Exec()
 	if err != nil {
-		return fmt.Errorf("could not attach tag to card: %w", err)
+		return fmt.Errorf("could not attach tags to card: %w", err)
 	}
 	return nil
 }
 
 func (t *TagRepository) GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error) {
 	query := `
-	SELECT t.id, t.name, t.icon
-	FROM tag t
-	JOIN tag_card tc ON t.id = tc.tag_id
-	WHERE tc.card_id = $1
+	SELECT tag.id, tag.name, tag.icon
+	FROM tag
+	JOIN card_tag ON tag.id = card_tag.tag_id
+	WHERE card_tag.card_id = $1
 	`
 
 	rows, err := t.db.Query(ctx, query, cardID)

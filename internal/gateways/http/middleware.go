@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func allowOriginMiddleware(_ string) gin.HandlerFunc {
+func allowOriginMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		allowHeaders := "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
 

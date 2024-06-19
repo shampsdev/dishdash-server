@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"dishdash.ru/cmd/server/config"
+
 	"github.com/googollee/go-socket.io/engineio"
 	"github.com/googollee/go-socket.io/engineio/transport"
 	"github.com/googollee/go-socket.io/engineio/transport/websocket"
@@ -24,43 +26,31 @@ import (
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	httpServer  http.Server
-	router      *gin.Engine
-	wsServer    *socketio.Server
-	allowOrigin string
+	httpServer http.Server
+	router     *gin.Engine
+	wsServer   *socketio.Server
 }
 
-func NewServer(useCases usecase.Cases, options ...func(*Server)) *Server {
+func NewServer(useCases usecase.Cases) *Server {
 	r := gin.Default()
 
 	s := &Server{
 		router: r,
 		httpServer: http.Server{
-			Addr:    fmt.Sprintf(":%d", 8080),
+			Addr:    fmt.Sprintf(":%d", config.C.Server.Port),
 			Handler: r,
 		},
 		wsServer: newSocketIOServer(),
 	}
 
-	for _, o := range options {
-		o(s)
-	}
 	setupRouter(s, useCases)
 
 	return s
 }
 
-func WithPort(port uint16) func(*Server) {
-	return func(s *Server) {
-		s.httpServer.Addr = fmt.Sprintf(":%d", port)
-	}
-}
-
-func WithAllowOrigin(allowOrigin string) func(*Server) {
-	return func(s *Server) {
-		s.allowOrigin = allowOrigin
-	}
-}
+// @title           DishDash server
+// @version         2.0
+// @description     Manage cards, lobbies, swipes
 
 func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}

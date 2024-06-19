@@ -1,7 +1,7 @@
 services:
   database:
     restart: unless-stopped
-    image: postgres:15
+    image: postgis/postgis:16-3.4
     container_name: database
     volumes:
       - ~/.pg/dishdash-db:/var/lib/postgresql/data
@@ -19,4 +19,3 @@ services:
       - "1000:8080"
     depends_on:
       - database
-

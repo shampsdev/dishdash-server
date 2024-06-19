@@ -3,25 +3,24 @@ package usecase
 import (
 	"context"
 
+	"dishdash.ru/internal/repo"
+
 	"dishdash.ru/internal/domain"
 )
 
 type Tag struct {
-	tagRepo TagRepository
+	tagRepo repo.Tag
 }
 
-func NewTag(tagRepo TagRepository) *Tag {
+func NewTag(tagRepo repo.Tag) *Tag {
 	return &Tag{tagRepo: tagRepo}
 }
 
-func (t *Tag) SaveTag(ctx context.Context, tag *domain.Tag) error {
-	return t.tagRepo.SaveTag(ctx, tag)
-}
-
-func (t *Tag) AttachTagToCard(ctx context.Context, tagID, cardID int64) error {
-	return t.tagRepo.AttachTagToCard(ctx, tagID, cardID)
-}
-
-func (t *Tag) GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error) {
-	return t.tagRepo.GetTagsByCardID(ctx, cardID)
+func (t *Tag) CreateTag(ctx context.Context, tag *domain.Tag) error {
+	id, err := t.tagRepo.CreateTag(ctx, tag)
+	if err != nil {
+		return err
+	}
+	tag.ID = id
+	return nil
 }

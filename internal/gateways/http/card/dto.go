@@ -1,0 +1,84 @@
+package card
+
+import (
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/pkg/filter"
+)
+
+type cardInput struct {
+	ID               int64             `json:"id"`
+	Title            string            `json:"title"`
+	ShortDescription string            `json:"shortDescription"`
+	Description      string            `json:"description"`
+	Image            string            `json:"image"`
+	Location         domain.Coordinate `json:"location"`
+	Address          string            `json:"address"`
+	Price            int               `json:"price"`
+	Tags             []int64           `json:"tags"`
+}
+
+type tagInput struct {
+	Icon string `json:"icon"`
+	Name string `json:"name"`
+}
+
+type tagOutput struct {
+	Id   int64  `json:"id"`
+	Icon string `json:"icon"`
+	Name string `json:"name"`
+}
+
+type cardOutput struct {
+	ID               int64             `json:"id"`
+	Title            string            `json:"title"`
+	ShortDescription string            `json:"shortDescription"`
+	Description      string            `json:"description"`
+	Image            string            `json:"image"`
+	Location         domain.Coordinate `json:"location"`
+	Address          string            `json:"address"`
+	Price            int               `json:"price"`
+	Tags             []tagOutput       `json:"tags"`
+}
+
+func inputToTag(t tagInput) *domain.Tag {
+	return &domain.Tag{
+		Name: t.Name,
+		Icon: t.Icon,
+	}
+}
+
+func inputToCard(c cardInput) *domain.Card {
+	return &domain.Card{
+		ID:               c.ID,
+		Title:            c.Title,
+		ShortDescription: c.ShortDescription,
+		Description:      c.Description,
+		Image:            c.Image,
+		Location:         c.Location,
+		Address:          c.Address,
+		Price:            c.Price,
+		Tags:             nil,
+	}
+}
+
+func tagToOutput(t *domain.Tag) tagOutput {
+	return tagOutput{
+		Id:   t.ID,
+		Icon: t.Icon,
+		Name: t.Name,
+	}
+}
+
+func cardToOutput(c *domain.Card) cardOutput {
+	return cardOutput{
+		ID:               c.ID,
+		Title:            c.Title,
+		ShortDescription: c.ShortDescription,
+		Description:      c.Description,
+		Image:            c.Image,
+		Location:         c.Location,
+		Address:          c.Address,
+		Price:            c.Price,
+		Tags:             filter.Map(c.Tags, tagToOutput),
+	}
+}
