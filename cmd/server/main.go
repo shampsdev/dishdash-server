@@ -38,7 +38,7 @@ func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 	tr := pg.NewTagRepository(pool)
 
 	return usecase.Cases{
-		Card: usecase.NewCard(cr, tr),
-		Tag:  usecase.NewTag(tr),
+		Card: usecase.NewCardUseCase(cr, tr),
+		Tag:  usecase.NewTagUseCase(tr),
 	}
 }

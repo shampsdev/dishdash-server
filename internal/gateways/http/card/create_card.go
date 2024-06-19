@@ -19,30 +19,21 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /cards [post]
-func CreateCard(cardUseCase *usecase.Card) gin.HandlerFunc {
+func CreateCard(cardUseCase usecase.Card) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var cardInput cardInput
+		var cardInput usecase.CardInput
 		err := c.BindJSON(&cardInput)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
 
-		card := inputToCard(cardInput)
-		err = cardUseCase.CreateCard(c, card)
+		card, err := cardUseCase.CreateCard(c, cardInput)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
-		err = cardUseCase.AttachTagsToCard(c, cardInput.Tags, card.ID)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
-			return
-		}
-		card, err = cardUseCase.GetCardByID(c, card.ID)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
-		}
+
 		c.JSON(http.StatusOK, cardToOutput(card))
 	}
 }

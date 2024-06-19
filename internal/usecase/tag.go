@@ -8,19 +8,23 @@ import (
 	"dishdash.ru/internal/domain"
 )
 
-type Tag struct {
+type TagUseCase struct {
 	tagRepo repo.Tag
 }
 
-func NewTag(tagRepo repo.Tag) *Tag {
-	return &Tag{tagRepo: tagRepo}
+func NewTagUseCase(tagRepo repo.Tag) *TagUseCase {
+	return &TagUseCase{tagRepo: tagRepo}
 }
 
-func (t *Tag) CreateTag(ctx context.Context, tag *domain.Tag) error {
+func (t *TagUseCase) CreateTag(ctx context.Context, tagInput TagInput) (*domain.Tag, error) {
+	tag := &domain.Tag{
+		Name: tagInput.Name,
+		Icon: tagInput.Icon,
+	}
 	id, err := t.tagRepo.CreateTag(ctx, tag)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	tag.ID = id
-	return nil
+	return tag, nil
 }

@@ -19,17 +19,16 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /cards/tags [post]
-func CreateTag(tagUseCase *usecase.Tag) gin.HandlerFunc {
+func CreateTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var tagInput tagInput
+		var tagInput usecase.TagInput
 		err := c.BindJSON(&tagInput)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
 
-		tag := inputToTag(tagInput)
-		err = tagUseCase.CreateTag(c, tag)
+		tag, err := tagUseCase.CreateTag(c, tagInput)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 			return

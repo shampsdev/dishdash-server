@@ -19,7 +19,7 @@ import (
 // @Success 200 {array} cardOutput "List of cards"
 // @Failure 500
 // @Router /cards [get]
-func GetAllCards(cardUseCase *usecase.Card) gin.HandlerFunc {
+func GetAllCards(cardUseCase usecase.Card) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cards, err := cardUseCase.GetAllCards(c)
 		if err != nil {

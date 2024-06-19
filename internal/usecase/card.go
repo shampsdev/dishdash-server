@@ -7,26 +7,40 @@ import (
 	"dishdash.ru/internal/repo"
 )
 
-type Card struct {
+type CardUseCase struct {
 	cardRepo repo.Card
 	tagRepo  repo.Tag
 }
 
-func NewCard(cardRepo repo.Card, tagRepo repo.Tag) *Card {
-	return &Card{cardRepo: cardRepo, tagRepo: tagRepo}
+func NewCardUseCase(cardRepo repo.Card, tagRepo repo.Tag) *CardUseCase {
+	return &CardUseCase{cardRepo: cardRepo, tagRepo: tagRepo}
 }
 
-func (c *Card) CreateCard(ctx context.Context, card *domain.Card) error {
+func (c *CardUseCase) CreateCard(ctx context.Context, cardInput CardInput) (*domain.Card, error) {
+	card := &domain.Card{
+		Title:            cardInput.Title,
+		ShortDescription: cardInput.ShortDescription,
+		Description:      cardInput.Description,
+		Image:            cardInput.Image,
+		Location:         cardInput.Location,
+		Address:          cardInput.Address,
+		Price:            cardInput.Price,
+		Tags:             nil,
+	}
 	id, err := c.cardRepo.CreateCard(ctx, card)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	card.ID = id
+	err = c.tagRepo.AttachTagsToCard(ctx, cardInput.Tags, id)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil
+	return c.cardRepo.GetCardByID(ctx, id)
 }
 
-func (c *Card) GetCardByID(ctx context.Context, id int64) (*domain.Card, error) {
+func (c *CardUseCase) GetCardByID(ctx context.Context, id int64) (*domain.Card, error) {
 	card, err := c.cardRepo.GetCardByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -35,11 +49,11 @@ func (c *Card) GetCardByID(ctx context.Context, id int64) (*domain.Card, error) 
 	return card, err
 }
 
-func (c *Card) AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error {
+func (c *CardUseCase) AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error {
 	return c.tagRepo.AttachTagsToCard(ctx, tagIDs, cardID)
 }
 
-func (c *Card) GetAllCards(ctx context.Context) ([]*domain.Card, error) {
+func (c *CardUseCase) GetAllCards(ctx context.Context) ([]*domain.Card, error) {
 	cards, err := c.cardRepo.GetAllCards(ctx)
 	if err != nil {
 		return nil, err
