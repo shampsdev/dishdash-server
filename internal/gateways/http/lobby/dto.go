@@ -1,8 +1,9 @@
 package lobby
 
 import (
-	"dishdash.ru/internal/domain"
 	"time"
+
+	"dishdash.ru/internal/domain"
 )
 
 type lobbyOutput struct {

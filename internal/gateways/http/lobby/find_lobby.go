@@ -1,9 +1,10 @@
 package lobby
 
 import (
+	"net/http"
+
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // FindLobby godoc

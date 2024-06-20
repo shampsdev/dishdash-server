@@ -3,9 +3,10 @@ package pg
 import (
 	"context"
 	"errors"
-	"github.com/Vaniog/go-postgis"
 	"math/rand/v2"
 	"time"
+
+	"github.com/Vaniog/go-postgis"
 
 	"dishdash.ru/internal/domain"
 	"github.com/jackc/pgx/v5/pgxpool"

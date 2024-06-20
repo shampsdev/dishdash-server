@@ -1,10 +1,11 @@
 package lobby
 
 import (
+	"net/http"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // NearestLobby godoc
