@@ -16,7 +16,7 @@ run:
 	go run cmd/server/main.go
 
 lint:
-	golangci-lin run
+	golangci-lint run
 
 lint-fix:
-	golangci-lin run --fix
+	golangci-lint run --fix

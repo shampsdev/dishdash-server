@@ -1,13 +1,13 @@
 package pg
 
 import (
-	"dishdash.ru/cmd/server/config"
 	"errors"
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"log"
 	"time"
+
+	"dishdash.ru/cmd/server/config"
+
+	"github.com/golang-migrate/migrate/v4"
 )
 
 const (
