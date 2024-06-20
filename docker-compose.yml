@@ -19,3 +19,16 @@ services:
       - "1000:8080"
     depends_on:
       - database
+  backend:
+    container_name: backend
+    build: .
+    env_file:
+      - .env
+    environment:
+      HTTP_PORT: 8000
+      POSTGRES_HOST: database
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

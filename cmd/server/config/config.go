@@ -46,8 +46,8 @@ func printConfig(c Config) {
 	fmt.Println("==============")
 }
 
-func (c Config) PGXConfig() *pgxpool.Config {
-	databaseUrl := fmt.Sprintf(
+func (c Config) DBUrl() string {
+	return fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		C.DB.User,
 		C.DB.Password,
@@ -55,7 +55,10 @@ func (c Config) PGXConfig() *pgxpool.Config {
 		C.DB.Port,
 		C.DB.Database,
 	)
-	pgxConfig, err := pgxpool.ParseConfig(databaseUrl)
+}
+
+func (c Config) PGXConfig() *pgxpool.Config {
+	pgxConfig, err := pgxpool.ParseConfig(c.DBUrl())
 	if err != nil {
 		log.Fatalf("can't parse pgxpool config: %s", err)
 	}

@@ -19,7 +19,8 @@ type cardOutput struct {
 	Image            string            `json:"image"`
 	Location         domain.Coordinate `json:"location"`
 	Address          string            `json:"address"`
-	Price            int               `json:"price"`
+	PriceMin         int               `json:"priceMin"`
+	PriceMax         int               `json:"priceMax"`
 	Tags             []tagOutput       `json:"tags"`
 }
 
@@ -40,7 +41,8 @@ func cardToOutput(c *domain.Card) cardOutput {
 		Image:            c.Image,
 		Location:         c.Location,
 		Address:          c.Address,
-		Price:            c.Price,
+		PriceMin:         c.PriceMin,
+		PriceMax:         c.PriceMax,
 		Tags:             filter.Map(c.Tags, tagToOutput),
 	}
 }

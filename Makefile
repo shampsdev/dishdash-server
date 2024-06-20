@@ -14,3 +14,9 @@ swag:
 
 run:
 	go run cmd/server/main.go
+
+lint:
+	golangci-lin run
+
+lint-fix:
+	golangci-lin run --fix

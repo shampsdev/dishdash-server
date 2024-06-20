@@ -28,3 +28,7 @@ func (t *TagUseCase) CreateTag(ctx context.Context, tagInput TagInput) (*domain.
 	tag.ID = id
 	return tag, nil
 }
+
+func (t *TagUseCase) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
+	return t.tagRepo.GetAllTags(ctx)
+}

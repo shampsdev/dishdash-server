@@ -26,8 +26,9 @@ func (cr *CardRepository) CreateCard(ctx context.Context, card *domain.Card) (in
 		"image", 
 		"location", 
 		"address", 
-		"price"
-	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7)
+		"price_min",
+	    "price_max"
+	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8)
 	RETURNING "id"
 `
 
@@ -38,7 +39,8 @@ func (cr *CardRepository) CreateCard(ctx context.Context, card *domain.Card) (in
 		card.Image,
 		postgis.PointS{SRID: 4326, X: card.Location.Lon, Y: card.Location.Lat},
 		card.Address,
-		card.Price,
+		card.PriceMin,
+		card.PriceMax,
 	)
 
 	var id int64
@@ -61,7 +63,8 @@ func (cr *CardRepository) GetCardByID(ctx context.Context, id int64) (*domain.Ca
 		"image", 
 		"location", 
 		"address", 
-		"price"
+		"price_min",
+		"price_max"
 	FROM "card"
 	WHERE id=$1
 `
@@ -84,7 +87,8 @@ func (cr *CardRepository) GetAllCards(ctx context.Context) ([]*domain.Card, erro
 		"image", 
 		"location", 
 		"address", 
-		"price"
+		"price_min",
+		"price_max"
 	FROM "card"
 `
 	rows, err := cr.db.Query(ctx, getCardsQuery)
@@ -127,7 +131,8 @@ func scanCard(s Scanner) (*domain.Card, error) {
 		&card.Image,
 		&cardLocation,
 		&card.Address,
-		&card.Price,
+		&card.PriceMin,
+		&card.PriceMax,
 	)
 	card.Location = domain.Coordinate{
 		Lon: cardLocation.X,

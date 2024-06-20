@@ -19,7 +19,8 @@ type CardInput struct {
 	Image            string            `json:"image"`
 	Location         domain.Coordinate `json:"location"`
 	Address          string            `json:"address"`
-	Price            int               `json:"price"`
+	PriceMin         int               `json:"priceMin"`
+	PriceMax         int               `json:"priceMax"`
 	Tags             []int64           `json:"tags"`
 }
 
@@ -36,6 +37,7 @@ type TagInput struct {
 
 type Tag interface {
 	CreateTag(ctx context.Context, tagInput TagInput) (*domain.Tag, error)
+	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
 }
 
 type LobbyInput struct {

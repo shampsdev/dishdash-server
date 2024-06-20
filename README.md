@@ -1,4 +1,5 @@
 # DishDash
+
 Стек: Go, Gin, Socket.IO, PostgreSQL, Docker, Traefik (на сервере)
 
 Проект для Creative Space Hackathon \
@@ -9,28 +10,84 @@
 Выбирай с друзьями где поесть с помощью свайпов. \
 Люди в одном лобби свайпают заведения, пока не произойдет match.
 
-
 https://github.com/shampiniony/dishdash-server/assets/79862574/6987d0d0-3d09-4c2e-83fb-64256e7fff13
 
-
-
 ### Deployment
-Create .env file
+
+Скопировать .env
+
 ```
 cp .env.example .env
 ```
 
-Run database and adminer (localhost:1000)
+Есть два варианта запуска:
+
+#### 1. Full compose
+
 ```
-docker-compose up --build -d
+make compose-up
 ```
 
-Dependencies
+#### 2. Compose db + go run
+
 ```
-go mod download
+make db-compose-up
+make run
 ```
 
-Run
+#### Детали
+
+---
+
+- Бек поднимет миграции при подключении, если это не удастся, он упадёт с ошибкой
+- Документация rest по адресу http://localhost:8000/api/v1/swagger/index.html
+- Документация socket.io далее
+
+### Socket.io
+
+---
+
+Подключение к socket.io: http://localhost:8000/socket.io
+
+### Events !!В РАЗРАБОТКЕ!!
+
+---
+
+__joinLobby__ : client->server
+
+Первый запрос при подключении.
+
+__request__:
+
 ```
-go run cmd/server/main.go
+{
+    "id": "AV1S2",
+}
+```
+
+__response__:
+
+```
+{
+    "status": "connected",
+    "lobby": TODO
+}
+```
+
+---
+
+__changeSettings__: client->server
+
+```
+{
+    "settings"
+}
+```
+
+__response__:
+
+```
+{
+    "status": "connected",
+}
 ```

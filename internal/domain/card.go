@@ -8,6 +8,7 @@ type Card struct {
 	Image            string
 	Location         Coordinate
 	Address          string
-	Price            int
+	PriceMin         int
+	PriceMax         int
 	Tags             []*Tag
 }

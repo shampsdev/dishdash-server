@@ -83,6 +83,33 @@ const docTemplate = `{
             }
         },
         "/cards/tags": {
+            "get": {
+                "description": "Get a list of tags from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Get tags",
+                "responses": {
+                    "200": {
+                        "description": "List of tags",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/card.tagOutput"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new tag in the database",
                 "consumes": [
@@ -193,6 +220,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/lobby.lobbyOutput"
                         }
                     },
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/lobby.lobbyOutput"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request"
                     },
@@ -297,7 +330,10 @@ const docTemplate = `{
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "price": {
+                "priceMax": {
+                    "type": "integer"
+                },
+                "priceMin": {
                     "type": "integer"
                 },
                 "shortDescription": {
@@ -390,7 +426,10 @@ const docTemplate = `{
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "price": {
+                "priceMax": {
+                    "type": "integer"
+                },
+                "priceMin": {
                     "type": "integer"
                 },
                 "shortDescription": {

@@ -77,3 +77,32 @@ func (t *TagRepository) GetTagsByCardID(ctx context.Context, cardID int64) ([]*d
 
 	return tags, nil
 }
+
+func (t *TagRepository) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
+	query := `
+	SELECT tag.id, tag.name, tag.icon
+	FROM tag
+	`
+
+	rows, err := t.db.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("could not get tags by card ID: %w", err)
+	}
+	defer rows.Close()
+
+	var tags []*domain.Tag
+	for rows.Next() {
+		var tag domain.Tag
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		if err != nil {
+			return nil, fmt.Errorf("could not scan tag: %w", err)
+		}
+		tags = append(tags, &tag)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating rows: %w", err)
+	}
+
+	return tags, nil
+}

@@ -11,7 +11,9 @@ definitions:
         type: string
       location:
         $ref: '#/definitions/domain.Coordinate'
-      price:
+      priceMax:
+        type: integer
+      priceMin:
         type: integer
       shortDescription:
         type: string
@@ -71,7 +73,9 @@ definitions:
         type: string
       location:
         $ref: '#/definitions/domain.Coordinate'
-      price:
+      priceMax:
+        type: integer
+      priceMin:
         type: integer
       shortDescription:
         type: string
@@ -145,6 +149,24 @@ paths:
       tags:
       - cards
   /cards/tags:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of tags from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tags
+          schema:
+            items:
+              $ref: '#/definitions/card.tagOutput'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get tags
+      tags:
+      - cards
     post:
       consumes:
       - application/json
@@ -236,6 +258,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/lobby.lobbyOutput'
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/lobby.lobbyOutput'
         "400":

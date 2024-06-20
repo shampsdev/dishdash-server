@@ -16,6 +16,7 @@ type Tag interface {
 	CreateTag(ctx context.Context, tag *domain.Tag) (int64, error)
 	AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error
 	GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
+	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
 }
 
 type Lobby interface {

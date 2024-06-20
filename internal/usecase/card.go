@@ -24,7 +24,8 @@ func (c *CardUseCase) CreateCard(ctx context.Context, cardInput CardInput) (*dom
 		Image:            cardInput.Image,
 		Location:         cardInput.Location,
 		Address:          cardInput.Address,
-		Price:            cardInput.Price,
+		PriceMin:         cardInput.PriceMin,
+		PriceMax:         cardInput.PriceMax,
 		Tags:             nil,
 	}
 	id, err := c.cardRepo.CreateCard(ctx, card)
