@@ -8,6 +8,9 @@ import (
 	"dishdash.ru/cmd/server/config"
 
 	"github.com/golang-migrate/migrate/v4"
+	// driver for migration
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 const (
