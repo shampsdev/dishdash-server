@@ -1,7 +1,10 @@
 include .env
 
-dev-compose-up:
+db-compose-up:
 	docker compose up database adminer --build -d && docker compose logs -f
+
+compose-up:
+	docker compose up --build -d && docker compose logs -f
 
 compose-down:
 	docker compose down
