@@ -3,6 +3,7 @@ package http
 import (
 	"dishdash.ru/docs"
 	"dishdash.ru/internal/gateways/http/card"
+	"dishdash.ru/internal/gateways/http/lobby"
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -16,6 +17,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	v1 := s.router.Group("/api/v1")
 	{
 		card.SetupHandlers(v1, useCases)
+		lobby.SetupHandlers(v1, useCases)
 	}
 
 	docs.SwaggerInfo.BasePath = "/api/v1"

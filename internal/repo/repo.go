@@ -17,3 +17,9 @@ type Tag interface {
 	AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error
 	GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
 }
+
+type Lobby interface {
+	CreateLobby(ctx context.Context, lobby *domain.Lobby) (*domain.Lobby, error)
+	DeleteLobbyByID(ctx context.Context, lobbyID string) error
+	NearestLobby(ctx context.Context, loc domain.Coordinate) (lobby *domain.Lobby, dist float64, err error)
+}

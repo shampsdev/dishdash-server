@@ -5,7 +5,7 @@ import (
 )
 
 type Lobby struct {
-	ID        int64
+	ID        string
 	CreatedAt time.Time
 	Location  Coordinate
 }

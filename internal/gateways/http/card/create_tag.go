@@ -14,7 +14,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param tag body tagInput true "Tag data"
+// @Param tag body usecase.TagInput true "Tag data"
 // @Success 200 {object} tagOutput "Saved tag"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
@@ -24,13 +24,13 @@ func CreateTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 		var tagInput usecase.TagInput
 		err := c.BindJSON(&tagInput)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		tag, err := tagUseCase.CreateTag(c, tagInput)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusOK, tagToOutput(tag))

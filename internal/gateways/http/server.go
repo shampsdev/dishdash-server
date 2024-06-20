@@ -48,10 +48,6 @@ func NewServer(useCases usecase.Cases) *Server {
 	return s
 }
 
-// @title           DishDash server
-// @version         2.0
-// @description     Manage cards, lobbies, swipes
-
 func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}
 

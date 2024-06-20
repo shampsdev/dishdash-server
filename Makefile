@@ -8,3 +8,6 @@ compose-down:
 
 swag:
 	swag init -g cmd/server/main.go -o docs
+
+run:
+	go run cmd/server/main.go

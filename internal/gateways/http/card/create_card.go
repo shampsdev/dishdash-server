@@ -14,7 +14,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param card body cardInput true "Card data"
+// @Param card body usecase.CardInput true "Card data"
 // @Success 200 {object} cardOutput "Saved card"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
@@ -24,13 +24,13 @@ func CreateCard(cardUseCase usecase.Card) gin.HandlerFunc {
 		var cardInput usecase.CardInput
 		err := c.BindJSON(&cardInput)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		card, err := cardUseCase.CreateCard(c, cardInput)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 

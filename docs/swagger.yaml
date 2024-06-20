@@ -1,27 +1,4 @@
 definitions:
-  card.cardInput:
-    properties:
-      address:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      image:
-        type: string
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-      price:
-        type: integer
-      shortDescription:
-        type: string
-      tags:
-        items:
-          type: integer
-        type: array
-      title:
-        type: string
-    type: object
   card.cardOutput:
     properties:
       address:
@@ -45,13 +22,6 @@ definitions:
       title:
         type: string
     type: object
-  card.tagInput:
-    properties:
-      icon:
-        type: string
-      name:
-        type: string
-    type: object
   card.tagOutput:
     properties:
       icon:
@@ -68,8 +38,67 @@ definitions:
       lon:
         type: number
     type: object
+  lobby.findLobbyInput:
+    properties:
+      dist:
+        type: number
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+    type: object
+  lobby.lobbyOutput:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+    type: object
+  lobby.nearestLobbyOutput:
+    properties:
+      distance:
+        type: number
+      lobby:
+        $ref: '#/definitions/lobby.lobbyOutput'
+    type: object
+  usecase.CardInput:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      image:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      price:
+        type: integer
+      shortDescription:
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+    type: object
+  usecase.LobbyInput:
+    properties:
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+    type: object
+  usecase.TagInput:
+    properties:
+      icon:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
+  description: Manage cards, lobbies, swipes
+  title: DishDash server
+  version: "2.0"
 paths:
   /cards:
     get:
@@ -100,7 +129,7 @@ paths:
         name: card
         required: true
         schema:
-          $ref: '#/definitions/card.cardInput'
+          $ref: '#/definitions/usecase.CardInput'
       produces:
       - application/json
       responses:
@@ -126,7 +155,7 @@ paths:
         name: tag
         required: true
         schema:
-          $ref: '#/definitions/card.tagInput'
+          $ref: '#/definitions/usecase.TagInput'
       produces:
       - application/json
       responses:
@@ -141,4 +170,105 @@ paths:
       summary: Create a tag
       tags:
       - cards
+  /lobbies:
+    post:
+      consumes:
+      - application/json
+      description: Create a new lobby in the database
+      parameters:
+      - description: Lobby data
+        in: body
+        name: lobby
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.LobbyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved lobby
+          schema:
+            $ref: '#/definitions/lobby.lobbyOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create a lobby
+      tags:
+      - lobbies
+  /lobbies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a lobby in the database
+      parameters:
+      - description: Lobby id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: delete a lobby
+      tags:
+      - lobbies
+  /lobbies/find:
+    post:
+      consumes:
+      - application/json
+      description: shortcut for find nearest + create if not close enough
+      parameters:
+      - description: Location + Distance (in metres)
+        in: body
+        name: location
+        required: true
+        schema:
+          $ref: '#/definitions/lobby.findLobbyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/lobby.lobbyOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: find lobby
+      tags:
+      - lobbies
+  /lobbies/nearest:
+    post:
+      consumes:
+      - application/json
+      description: find nearest lobby in the database
+      parameters:
+      - description: Location
+        in: body
+        name: location
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Coordinate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Nearest Lobby + Distance (in metres)
+          schema:
+            $ref: '#/definitions/lobby.nearestLobbyOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: find nearest lobby
+      tags:
+      - lobbies
 swagger: "2.0"

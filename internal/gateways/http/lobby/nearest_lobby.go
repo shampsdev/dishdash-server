@@ -1,0 +1,42 @@
+package lobby
+
+import (
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/usecase"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+// NearestLobby godoc
+// @Summary find nearest lobby
+// @Description find nearest lobby in the database
+// @Tags lobbies
+// @Accept  json
+// @Produce  json
+// @Schemes http https
+// @Param location body domain.Coordinate true "Location"
+// @Success 200 {object} nearestLobbyOutput "Nearest Lobby + Distance (in metres)"
+// @Failure 400 "Bad Request"
+// @Failure 500 "Internal Server Error"
+// @Router /lobbies/nearest [post]
+func NearestLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var location domain.Coordinate
+		err := c.BindJSON(&location)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		lobby, dist, err := lobbyUseCase.NearestLobby(c, location)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, nearestLobbyOutput{
+			Dist:  dist,
+			Lobby: lobbyToOutput(lobby),
+		})
+	}
+}

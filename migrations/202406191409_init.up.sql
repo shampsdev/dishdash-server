@@ -5,7 +5,7 @@ CREATE TABLE "card"
     "short_description" varchar(255) NOT NULL,
     "description"       text         NOT NULL,
     "image"             varchar(255) NOT NULL,
-    "location"          geometry     NOT NULL,
+    "location"          geography    NOT NULL,
     "address"           varchar(255) NOT NULL,
     "price"             decimal      NOT NULL,
     PRIMARY KEY ("id")
@@ -28,7 +28,7 @@ CREATE TABLE "card_tag"
 CREATE TABLE "lobby"
 (
     "id"         varchar(255) NOT NULL,
-    "location"   geometry     NOT NULL,
+    "location"   geography     NOT NULL,
     "created_at" timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );

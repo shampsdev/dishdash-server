@@ -16,6 +16,10 @@ import (
 	"dishdash.ru/internal/usecase"
 )
 
+// @title           DishDash server
+// @version         2.0
+// @description     Manage cards, lobbies, swipes
+
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
@@ -36,9 +40,11 @@ func main() {
 func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 	cr := pg.NewCardRepository(pool)
 	tr := pg.NewTagRepository(pool)
+	lr := pg.NewLobbyRepository(pool)
 
 	return usecase.Cases{
-		Card: usecase.NewCardUseCase(cr, tr),
-		Tag:  usecase.NewTagUseCase(tr),
+		Card:  usecase.NewCardUseCase(cr, tr),
+		Tag:   usecase.NewTagUseCase(tr),
+		Lobby: usecase.NewLobbyUseCase(lr),
 	}
 }

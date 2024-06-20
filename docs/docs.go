@@ -62,7 +62,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/card.cardInput"
+                            "$ref": "#/definitions/usecase.CardInput"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/card.tagInput"
+                            "$ref": "#/definitions/usecase.TagInput"
                         }
                     }
                 ],
@@ -121,44 +121,164 @@ const docTemplate = `{
                     }
                 }
             }
-        }
-    },
-    "definitions": {
-        "card.cardInput": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "shortDescription": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
+        },
+        "/lobbies": {
+            "post": {
+                "description": "Create a new lobby in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobbies"
+                ],
+                "summary": "Create a lobby",
+                "parameters": [
+                    {
+                        "description": "Lobby data",
+                        "name": "lobby",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecase.LobbyInput"
+                        }
                     }
-                },
-                "title": {
-                    "type": "string"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saved lobby",
+                        "schema": {
+                            "$ref": "#/definitions/lobby.lobbyOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
                 }
             }
         },
+        "/lobbies/find": {
+            "post": {
+                "description": "shortcut for find nearest + create if not close enough",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobbies"
+                ],
+                "summary": "find lobby",
+                "parameters": [
+                    {
+                        "description": "Location + Distance (in metres)",
+                        "name": "location",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/lobby.findLobbyInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/lobby.lobbyOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/lobbies/nearest": {
+            "post": {
+                "description": "find nearest lobby in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobbies"
+                ],
+                "summary": "find nearest lobby",
+                "parameters": [
+                    {
+                        "description": "Location",
+                        "name": "location",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Coordinate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Nearest Lobby + Distance (in metres)",
+                        "schema": {
+                            "$ref": "#/definitions/lobby.nearestLobbyOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/lobbies/{id}": {
+            "delete": {
+                "description": "delete a lobby in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobbies"
+                ],
+                "summary": "delete a lobby",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
         "card.cardOutput": {
             "type": "object",
             "properties": {
@@ -194,17 +314,6 @@ const docTemplate = `{
                 }
             }
         },
-        "card.tagInput": {
-            "type": "object",
-            "properties": {
-                "icon": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "card.tagOutput": {
             "type": "object",
             "properties": {
@@ -229,18 +338,105 @@ const docTemplate = `{
                     "type": "number"
                 }
             }
+        },
+        "lobby.findLobbyInput": {
+            "type": "object",
+            "properties": {
+                "dist": {
+                    "type": "number"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "lobby.lobbyOutput": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "lobby.nearestLobbyOutput": {
+            "type": "object",
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "lobby": {
+                    "$ref": "#/definitions/lobby.lobbyOutput"
+                }
+            }
+        },
+        "usecase.CardInput": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "shortDescription": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecase.LobbyInput": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "usecase.TagInput": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "2.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "DishDash server",
+	Description:      "Manage cards, lobbies, swipes",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
