@@ -12,4 +12,5 @@ type Lobby struct {
 	Cards         []*Card
 	Matches       []*Match
 	FinalVotes    []*FinalVote
+	Swipes        []*Swipe
 }

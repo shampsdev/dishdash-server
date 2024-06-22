@@ -40,6 +40,38 @@ definitions:
       lon:
         type: number
     type: object
+  lobby.cardOutput:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceMax:
+        type: integer
+      priceMin:
+        type: integer
+      shortDescription:
+        type: string
+      title:
+        type: string
+    type: object
+  lobby.finalVoteOutput:
+    properties:
+      cardId:
+        type: integer
+      id:
+        type: integer
+      lobbyId:
+        type: string
+      userId:
+        type: string
+    type: object
   lobby.findLobbyInput:
     properties:
       dist:
@@ -49,12 +81,46 @@ definitions:
     type: object
   lobby.lobbyOutput:
     properties:
+      cards:
+        items:
+          $ref: '#/definitions/lobby.cardOutput'
+        type: array
       createdAt:
         type: string
+      finalVotes:
+        items:
+          $ref: '#/definitions/lobby.finalVoteOutput'
+        type: array
       id:
         type: string
+      lobbySettings:
+        $ref: '#/definitions/lobby.lobbySettingsOutput'
       location:
         $ref: '#/definitions/domain.Coordinate'
+      matches:
+        items:
+          $ref: '#/definitions/lobby.matchOutput'
+        type: array
+    type: object
+  lobby.lobbySettingsOutput:
+    properties:
+      id:
+        type: integer
+      maxDistance:
+        type: number
+      priceMax:
+        type: integer
+      priceMin:
+        type: integer
+    type: object
+  lobby.matchOutput:
+    properties:
+      cardId:
+        type: integer
+      id:
+        type: integer
+      lobbyId:
+        type: string
     type: object
   lobby.nearestLobbyOutput:
     properties:
@@ -257,6 +323,30 @@ paths:
         "500":
           description: Internal Server Error
       summary: delete a lobby
+      tags:
+      - lobbies
+    get:
+      consumes:
+      - application/json
+      description: Get a lobby from the database by ID
+      parameters:
+      - description: Lobby ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lobby data
+          schema:
+            $ref: '#/definitions/lobby.lobbyOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get lobby by ID
       tags:
       - lobbies
   /lobbies/find:

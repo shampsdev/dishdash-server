@@ -1,6 +1,7 @@
 package domain
 
 type Match struct {
-	LobbyID int64
+	ID      int64
+	LobbyID string
 	CardID  int64
 }
