@@ -6,6 +6,10 @@ import (
 	"math/rand/v2"
 	"time"
 
+	"dishdash.ru/internal/usecase"
+
+	"github.com/jackc/pgx/v5"
+
 	"github.com/Vaniog/go-postgis"
 
 	"dishdash.ru/internal/domain"
@@ -24,7 +28,7 @@ func NewLobbyRepository(db *pgxpool.Pool) *LobbyRepository {
 	}
 }
 
-func (lr LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby) (*domain.Lobby, error) {
+func (lr *LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby) (*domain.Lobby, error) {
 	const saveQuery = `
 	INSERT INTO "lobby" (
 		"id",
@@ -47,7 +51,7 @@ func (lr LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby) 
 	return lobby, err
 }
 
-func (lr LobbyRepository) NearestLobby(ctx context.Context, location domain.Coordinate) (*domain.Lobby, float64, error) {
+func (lr *LobbyRepository) NearestLobby(ctx context.Context, location domain.Coordinate) (*domain.Lobby, float64, error) {
 	const getQuery = `
 	SELECT lobby.id, lobby.created_at, lobby.location, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
     FROM lobby
@@ -69,6 +73,9 @@ func (lr LobbyRepository) NearestLobby(ctx context.Context, location domain.Coor
 		&loc,
 		&dist,
 	)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, 0, usecase.ErrLobbyNotFound
+	}
 	lobby.Location = domain.Coordinate{Lat: loc.X, Lon: loc.Y}
 	if err != nil {
 		return nil, 0, err
@@ -76,7 +83,7 @@ func (lr LobbyRepository) NearestLobby(ctx context.Context, location domain.Coor
 	return lobby, dist, nil
 }
 
-func (lr LobbyRepository) DeleteLobbyByID(ctx context.Context, lobbyID string) error {
+func (lr *LobbyRepository) DeleteLobbyByID(ctx context.Context, lobbyID string) error {
 	const deleteQuery = `
 	WITH deleted as (
 		DELETE FROM lobby
@@ -99,7 +106,7 @@ func (lr LobbyRepository) DeleteLobbyByID(ctx context.Context, lobbyID string) e
 
 var letterRunes = []rune("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-func (lr LobbyRepository) generateID() string {
+func (lr *LobbyRepository) generateID() string {
 	b := make([]rune, 5)
 	for i := range b {
 		b[i] = letterRunes[lr.rand.IntN(len(letterRunes))]
