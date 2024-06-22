@@ -1,6 +1,7 @@
 package domain
 
 type LobbySettings struct {
+	ID          int64
 	LobbyID     string
 	PriceMin    int
 	PriceMax    int

@@ -1,7 +1,8 @@
 package domain
 
 type FinalVote struct {
-	LobbyID int64
+	ID      int64
+	LobbyID string
 	CardID  int64
 	UserID  string
 }
