@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"errors"
 	"net/http"
 
 	"dishdash.ru/internal/usecase"
@@ -30,11 +31,11 @@ func FindLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 		}
 
 		lobby, dist, err := lobbyUseCase.NearestLobby(c, locDist.Location)
-		if err != nil {
+		if err != nil && !errors.Is(err, usecase.ErrLobbyNotFound) {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		if dist <= locDist.Dist {
+		if dist <= locDist.Dist && !errors.Is(err, usecase.ErrLobbyNotFound) {
 			c.JSON(http.StatusOK, lobbyToOutput(lobby))
 			return
 		}

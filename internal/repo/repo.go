@@ -24,3 +24,9 @@ type Lobby interface {
 	DeleteLobbyByID(ctx context.Context, lobbyID string) error
 	NearestLobby(ctx context.Context, loc domain.Coordinate) (lobby *domain.Lobby, dist float64, err error)
 }
+
+type User interface {
+	CreateUser(ctx context.Context, user *domain.User) (string, error)
+	GetUserByID(ctx context.Context, id string) (*domain.User, error)
+	GetAllUsers(ctx context.Context) ([]*domain.User, error)
+}

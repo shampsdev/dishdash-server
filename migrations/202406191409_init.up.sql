@@ -34,9 +34,11 @@ CREATE TABLE "lobby"
     PRIMARY KEY ("id")
 );
 
-CREATE TABLE "temp_user"
+CREATE TABLE "user"
 (
     "id"         varchar(255) NOT NULL,
+    "avatar"     varchar(255) NOT NULL,
+    "name"       varchar(255) NOT NULL,
     "created_at" timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );
@@ -63,5 +65,5 @@ ALTER TABLE "swipe"
     ADD FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id")
         ON UPDATE NO ACTION ON DELETE CASCADE;
 ALTER TABLE "swipe"
-    ADD FOREIGN KEY ("user_id") REFERENCES "temp_user" ("id")
+    ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id")
         ON UPDATE NO ACTION ON DELETE CASCADE;
