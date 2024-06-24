@@ -1,4 +1,4 @@
-package http
+package server
 
 import (
 	"context"
@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	ws "dishdash.ru/internal/gateways/ws"
+	http "dishdash.ru/internal/gateways/http"
 	"dishdash.ru/cmd/server/config"
 
 	"github.com/googollee/go-socket.io/engineio"
@@ -18,7 +20,6 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 
 	"github.com/tj/go-spin"
-
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -26,24 +27,24 @@ import (
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	httpServer http.Server
-	router     *gin.Engine
-	wsServer   *socketio.Server
+	HttpServer http.Server
+	Router     *gin.Engine
+	WsServer   *socketio.Server
 }
 
 func NewServer(useCases usecase.Cases) *Server {
 	r := gin.Default()
 
 	s := &Server{
-		router: r,
-		httpServer: http.Server{
+		Router: r,
+		HttpServer: http.Server{
 			Addr:    fmt.Sprintf(":%d", config.C.Server.Port),
 			Handler: r,
 		},
-		wsServer: newSocketIOServer(),
+		WsServer: newSocketIOServer(),
 	}
 
-	setupRouter(s, useCases)
+	ws.SetupRouter(s, useCases)
 
 	return s
 }
