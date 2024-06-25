@@ -34,6 +34,8 @@ func NewServer(useCases usecase.Cases) *Server {
 		},
 	}
 
+	setupRouter(s, useCases)
+
 	return s
 }
 

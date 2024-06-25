@@ -6,16 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	ws "dishdash.ru/internal/gateways/ws"
 	http "dishdash.ru/internal/gateways/http"
-
-	"github.com/googollee/go-socket.io/engineio"
-	"github.com/googollee/go-socket.io/engineio/transport"
-	"github.com/googollee/go-socket.io/engineio/transport/websocket"
-
+	ws "dishdash.ru/internal/gateways/ws"
 	"dishdash.ru/internal/usecase"
-
-	socketio "github.com/googollee/go-socket.io"
 
 	"github.com/tj/go-spin"
 	"golang.org/x/sync/errgroup"
@@ -42,34 +35,18 @@ func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}
 
 	eg.Go(func() error {
-		return s.HttpServer.ListenAndServe()
+		return s.HttpServer.HttpServer.ListenAndServe()
 	})
 	eg.Go(func() error {
-		return s.wsServer.Serve()
+		return s.WsServer.WsServer.Serve()
 	})
 
 	<-ctx.Done()
-	err := s.HttpServer.Shutdown(ctx)
-	err = errors.Join(err, s.WsServer.Close())
+	err := s.HttpServer.HttpServer.Shutdown(ctx)
+	err = errors.Join(err, s.WsServer.WsServer.Close())
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()
 	return err
-}
-
-func newSocketIOServer() *socketio.Server {
-	wt := websocket.Default
-	// TODO legal CheckOrigin
-	wt.CheckOrigin = func(_ *http.Request) bool {
-		return true
-	}
-
-	server := socketio.NewServer(&engineio.Options{
-		Transports: []transport.Transport{
-			wt,
-		},
-	})
-
-	return server
 }
 
 func shutdownWait() {
