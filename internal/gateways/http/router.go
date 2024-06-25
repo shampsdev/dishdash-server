@@ -2,7 +2,6 @@ package http
 
 import (
 	"dishdash.ru/docs"
-	server "dishdash.ru/internal/gateways"
 	"dishdash.ru/internal/gateways/http/card"
 	"dishdash.ru/internal/gateways/http/lobby"
 	"dishdash.ru/internal/usecase"
@@ -11,7 +10,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func setupRouter(s *server.Server, useCases usecase.Cases) {
+func setupRouter(s *Server, useCases usecase.Cases) {
 	s.Router.HandleMethodNotAllowed = true
 	s.Router.Use(allowOriginMiddleware())
 

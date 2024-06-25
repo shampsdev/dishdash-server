@@ -3,14 +3,13 @@ package ws
 import (
 	"fmt"
 
-	server "dishdash.ru/internal/gateways"
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
 
 	socketio "github.com/googollee/go-socket.io"
 )
 
-func SetupRouter(s *server.Server, useCases usecase.Cases) {
+func SetupRouter(s *Server, useCases usecase.Cases) {
 	s.WsServer.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
 		return nil

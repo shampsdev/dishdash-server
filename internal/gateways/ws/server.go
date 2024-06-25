@@ -1,13 +1,11 @@
-package server
+package ws
 
 import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"time"
-
-	ws "dishdash.ru/internal/gateways/ws"
-	http "dishdash.ru/internal/gateways/http"
 
 	"github.com/googollee/go-socket.io/engineio"
 	"github.com/googollee/go-socket.io/engineio/transport"
@@ -18,22 +16,26 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 
 	"github.com/tj/go-spin"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
 
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	HttpServer *http.Server
-	WsServer   *ws.Server
+	Router     *gin.Engine
+	WsServer   *socketio.Server
 }
 
 func NewServer(useCases usecase.Cases) *Server {
+	r := gin.Default()
 
 	s := &Server{
-		HttpServer: http.NewServer(useCases),
-		WsServer: ws.NewServer(useCases),
+		Router: r,
+		WsServer: newSocketIOServer(),
 	}
+
+	SetupRouter(s, useCases)
 
 	return s
 }
@@ -42,15 +44,11 @@ func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}
 
 	eg.Go(func() error {
-		return s.HttpServer.ListenAndServe()
-	})
-	eg.Go(func() error {
-		return s.wsServer.Serve()
+		return s.WsServer.Serve()
 	})
 
 	<-ctx.Done()
-	err := s.HttpServer.Shutdown(ctx)
-	err = errors.Join(err, s.WsServer.Close())
+	err := errors.Join(s.WsServer.Close())
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()
 	return err
