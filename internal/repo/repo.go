@@ -31,3 +31,7 @@ type User interface {
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 }
+
+type Swipe interface {
+	CreateSwipe(ctx context.Context, swipe *domain.Swipe) error
+}
