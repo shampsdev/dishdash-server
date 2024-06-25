@@ -9,7 +9,7 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 )
 
-func SetupRouter(s *Server, useCases usecase.Cases) {
+func setupRouter(s *Server, useCases usecase.Cases) {
 	s.WsServer.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
 		return nil

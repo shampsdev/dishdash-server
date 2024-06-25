@@ -35,7 +35,7 @@ func NewServer(useCases usecase.Cases) *Server {
 		WsServer: newSocketIOServer(),
 	}
 
-	SetupRouter(s, useCases)
+	setupRouter(s, useCases)
 
 	return s
 }
