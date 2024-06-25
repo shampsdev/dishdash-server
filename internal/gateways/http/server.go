@@ -23,14 +23,13 @@ type Server struct {
 	Router     *gin.Engine
 }
 
-func NewServer(useCases usecase.Cases) *Server {
-	r := gin.Default()
+func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
 
 	s := &Server{
-		Router: r,
+		Router: router,
 		HttpServer: http.Server{
 			Addr:    fmt.Sprintf(":%d", config.C.Server.Port),
-			Handler: r,
+			Handler: router,
 		},
 	}
 

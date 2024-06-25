@@ -10,7 +10,9 @@ import (
 	ws "dishdash.ru/internal/gateways/ws"
 	"dishdash.ru/internal/usecase"
 
+	"github.com/gin-gonic/gin"
 	"github.com/tj/go-spin"
+
 	"golang.org/x/sync/errgroup"
 )
 
@@ -22,10 +24,11 @@ type Server struct {
 }
 
 func NewServer(useCases usecase.Cases) *Server {
+	r := gin.Default()
 
 	s := &Server{
-		HttpServer: http.NewServer(useCases),
-		WsServer: ws.NewServer(useCases),
+		HttpServer: http.NewServer(useCases, r),
+		WsServer: ws.NewServer(useCases, r),
 	}
 
 	return s

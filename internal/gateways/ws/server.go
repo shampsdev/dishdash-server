@@ -27,11 +27,10 @@ type Server struct {
 	WsServer   *socketio.Server
 }
 
-func NewServer(useCases usecase.Cases) *Server {
-	r := gin.Default()
+func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
 
 	s := &Server{
-		Router: r,
+		Router: router,
 		WsServer: newSocketIOServer(),
 	}
 
