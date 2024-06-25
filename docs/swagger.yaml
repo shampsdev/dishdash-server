@@ -40,6 +40,38 @@ definitions:
       lon:
         type: number
     type: object
+  lobby.cardOutput:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceMax:
+        type: integer
+      priceMin:
+        type: integer
+      shortDescription:
+        type: string
+      title:
+        type: string
+    type: object
+  lobby.finalVoteOutput:
+    properties:
+      cardId:
+        type: integer
+      id:
+        type: integer
+      lobbyId:
+        type: string
+      userId:
+        type: string
+    type: object
   lobby.findLobbyInput:
     properties:
       dist:
@@ -49,12 +81,46 @@ definitions:
     type: object
   lobby.lobbyOutput:
     properties:
+      cards:
+        items:
+          $ref: '#/definitions/lobby.cardOutput'
+        type: array
       createdAt:
         type: string
+      finalVotes:
+        items:
+          $ref: '#/definitions/lobby.finalVoteOutput'
+        type: array
       id:
         type: string
+      lobbySettings:
+        $ref: '#/definitions/lobby.lobbySettingsOutput'
       location:
         $ref: '#/definitions/domain.Coordinate'
+      matches:
+        items:
+          $ref: '#/definitions/lobby.matchOutput'
+        type: array
+    type: object
+  lobby.lobbySettingsOutput:
+    properties:
+      id:
+        type: integer
+      maxDistance:
+        type: number
+      priceMax:
+        type: integer
+      priceMin:
+        type: integer
+    type: object
+  lobby.matchOutput:
+    properties:
+      cardId:
+        type: integer
+      id:
+        type: integer
+      lobbyId:
+        type: string
     type: object
   lobby.nearestLobbyOutput:
     properties:
@@ -94,6 +160,24 @@ definitions:
   usecase.TagInput:
     properties:
       icon:
+        type: string
+      name:
+        type: string
+    type: object
+  usecase.UserInput:
+    properties:
+      avatar:
+        type: string
+      name:
+        type: string
+    type: object
+  user.userOutput:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      id:
         type: string
       name:
         type: string
@@ -241,6 +325,30 @@ paths:
       summary: delete a lobby
       tags:
       - lobbies
+    get:
+      consumes:
+      - application/json
+      description: Get a lobby from the database by ID
+      parameters:
+      - description: Lobby ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lobby data
+          schema:
+            $ref: '#/definitions/lobby.lobbyOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get lobby by ID
+      tags:
+      - lobbies
   /lobbies/find:
     post:
       consumes:
@@ -297,4 +405,73 @@ paths:
       summary: find nearest lobby
       tags:
       - lobbies
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            items:
+              $ref: '#/definitions/user.userOutput'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user in the database
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved user
+          schema:
+            $ref: '#/definitions/user.userOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create a user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user from the database by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            $ref: '#/definitions/user.userOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get user by ID
+      tags:
+      - users
 swagger: "2.0"

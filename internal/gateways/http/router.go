@@ -4,6 +4,7 @@ import (
 	"dishdash.ru/docs"
 	"dishdash.ru/internal/gateways/http/card"
 	"dishdash.ru/internal/gateways/http/lobby"
+	"dishdash.ru/internal/gateways/http/user"
 	"dishdash.ru/internal/usecase"
 
 	swaggerfiles "github.com/swaggo/files"
@@ -18,6 +19,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	{
 		card.SetupHandlers(v1, useCases)
 		lobby.SetupHandlers(v1, useCases)
+		user.SetupHandlers(v1, useCases)
 	}
 
 	docs.SwaggerInfo.BasePath = "/api/v1"

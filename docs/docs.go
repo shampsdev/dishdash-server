@@ -276,6 +276,42 @@ const docTemplate = `{
             }
         },
         "/lobbies/{id}": {
+            "get": {
+                "description": "Get a lobby from the database by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lobbies"
+                ],
+                "summary": "Get lobby by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lobby data",
+                        "schema": {
+                            "$ref": "#/definitions/lobby.lobbyOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "delete": {
                 "description": "delete a lobby in the database",
                 "consumes": [
@@ -300,6 +336,111 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "Get a list of users from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get users",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user.userOutput"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new user in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create a user",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecase.UserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saved user",
+                        "schema": {
+                            "$ref": "#/definitions/user.userOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "Get a user from the database by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User data",
+                        "schema": {
+                            "$ref": "#/definitions/user.userOutput"
+                        }
                     },
                     "400": {
                         "description": "Bad Request"
@@ -375,6 +516,55 @@ const docTemplate = `{
                 }
             }
         },
+        "lobby.cardOutput": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceMax": {
+                    "type": "integer"
+                },
+                "priceMin": {
+                    "type": "integer"
+                },
+                "shortDescription": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "lobby.finalVoteOutput": {
+            "type": "object",
+            "properties": {
+                "cardId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lobbyId": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
         "lobby.findLobbyInput": {
             "type": "object",
             "properties": {
@@ -389,14 +579,66 @@ const docTemplate = `{
         "lobby.lobbyOutput": {
             "type": "object",
             "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lobby.cardOutput"
+                    }
+                },
                 "createdAt": {
                     "type": "string"
+                },
+                "finalVotes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lobby.finalVoteOutput"
+                    }
                 },
                 "id": {
                     "type": "string"
                 },
+                "lobbySettings": {
+                    "$ref": "#/definitions/lobby.lobbySettingsOutput"
+                },
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
+                },
+                "matches": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lobby.matchOutput"
+                    }
+                }
+            }
+        },
+        "lobby.lobbySettingsOutput": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "maxDistance": {
+                    "type": "number"
+                },
+                "priceMax": {
+                    "type": "integer"
+                },
+                "priceMin": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lobby.matchOutput": {
+            "type": "object",
+            "properties": {
+                "cardId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lobbyId": {
+                    "type": "string"
                 }
             }
         },
@@ -458,6 +700,34 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "icon": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecase.UserInput": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.userOutput": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "name": {

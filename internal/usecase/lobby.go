@@ -15,7 +15,7 @@ func NewLobbyUseCase(lobbyRepo repo.Lobby) *LobbyUseCase {
 	return &LobbyUseCase{lobbyRepo: lobbyRepo}
 }
 
-func (l LobbyUseCase) CreateLobby(ctx context.Context, lobbyInput LobbyInput) (*domain.Lobby, error) {
+func (l *LobbyUseCase) CreateLobby(ctx context.Context, lobbyInput LobbyInput) (*domain.Lobby, error) {
 	lobby := &domain.Lobby{
 		Location: lobbyInput.Location,
 	}
@@ -26,10 +26,14 @@ func (l LobbyUseCase) CreateLobby(ctx context.Context, lobbyInput LobbyInput) (*
 	return lobby, err
 }
 
-func (l LobbyUseCase) NearestLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error) {
+func (l *LobbyUseCase) NearestLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error) {
 	return l.lobbyRepo.NearestLobby(ctx, loc)
 }
 
-func (l LobbyUseCase) DeleteLobbyByID(ctx context.Context, id string) error {
+func (l *LobbyUseCase) DeleteLobbyByID(ctx context.Context, id string) error {
 	return l.lobbyRepo.DeleteLobbyByID(ctx, id)
+}
+
+func (l *LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error) {
+	return l.lobbyRepo.GetLobbyByID(ctx, id)
 }

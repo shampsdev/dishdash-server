@@ -1,8 +1,7 @@
 package domain
 
 type Swipe struct {
-	ID      int64
-	LobbyID int64
+	LobbyID string
 	CardID  int64
 	UserID  string
 	Type    SwipeType
