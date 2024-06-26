@@ -24,9 +24,7 @@ func (u *User) Card() *domain.Card {
 	return u.Lobby.takeCard(u.took)
 }
 
-// Swipe returns matched card if was match
 func (u *User) Swipe(swipeType domain.SwipeType) *domain.Card {
-	// TODO better cards end logic
 	if u.took >= len(u.Lobby.cards) {
 		u.took++
 		return nil
