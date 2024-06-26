@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/cmd/server/config"
-	httpGateway "dishdash.ru/internal/gateways/http"
+	server "dishdash.ru/internal/gateways"
 	"dishdash.ru/internal/repo/pg"
 	"dishdash.ru/internal/usecase"
 )
@@ -31,7 +31,7 @@ func main() {
 	}
 	defer pool.Close()
 
-	s := httpGateway.NewServer(setupUseCases(pool))
+	s := server.NewServer(setupUseCases(pool))
 	if err := s.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)
 	}
@@ -42,11 +42,13 @@ func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 	tr := pg.NewTagRepository(pool)
 	lr := pg.NewLobbyRepository(pool)
 	ur := pg.NewUserRepository(pool)
+	sr := pg.NewSwipeRepository(pool)
 
 	return usecase.Cases{
 		Card:  usecase.NewCardUseCase(cr, tr),
 		Tag:   usecase.NewTagUseCase(tr),
 		Lobby: usecase.NewLobbyUseCase(lr),
 		User:  usecase.NewUserUseCase(ur),
+		Swipe: usecase.NewSwipeUseCase(sr),
 	}
 }

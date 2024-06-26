@@ -1,4 +1,4 @@
-package http
+package ws
 
 import (
 	"context"
@@ -7,30 +7,31 @@ import (
 	"net/http"
 	"time"
 
-	"dishdash.ru/cmd/server/config"
+	"github.com/googollee/go-socket.io/engineio"
+	"github.com/googollee/go-socket.io/engineio/transport"
+	"github.com/googollee/go-socket.io/engineio/transport/websocket"
+
 	"dishdash.ru/internal/usecase"
+
+	socketio "github.com/googollee/go-socket.io"
 
 	"github.com/tj/go-spin"
 	"github.com/gin-gonic/gin"
-
 	"golang.org/x/sync/errgroup"
 )
 
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	HttpServer http.Server
 	Router     *gin.Engine
+	WsServer   *socketio.Server
 }
 
 func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
 
 	s := &Server{
 		Router: router,
-		HttpServer: http.Server{
-			Addr:    fmt.Sprintf(":%d", config.C.Server.Port),
-			Handler: router,
-		},
+		WsServer: newSocketIOServer(),
 	}
 
 	setupRouter(s, useCases)
@@ -42,14 +43,30 @@ func (s *Server) Run(ctx context.Context) error {
 	eg := errgroup.Group{}
 
 	eg.Go(func() error {
-		return s.HttpServer.ListenAndServe()
+		return s.WsServer.Serve()
 	})
 
 	<-ctx.Done()
-	err := s.HttpServer.Shutdown(ctx)
+	err := errors.Join(s.WsServer.Close())
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()
 	return err
+}
+
+func newSocketIOServer() *socketio.Server {
+	wt := websocket.Default
+	// TODO legal CheckOrigin
+	wt.CheckOrigin = func(_ *http.Request) bool {
+		return true
+	}
+
+	server := socketio.NewServer(&engineio.Options{
+		Transports: []transport.Transport{
+			wt,
+		},
+	})
+
+	return server
 }
 
 func shutdownWait() {

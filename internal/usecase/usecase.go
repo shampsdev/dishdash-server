@@ -11,6 +11,7 @@ type Cases struct {
 	Tag   Tag
 	Lobby Lobby
 	User  User
+	Swipe Swipe
 }
 
 type CardInput struct {
@@ -74,4 +75,8 @@ type User interface {
 	CreateUser(ctx context.Context, userInput UserInput) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
+}
+
+type Swipe interface {
+	CreateSwipe(ctx context.Context, swipe *domain.Swipe) error
 }

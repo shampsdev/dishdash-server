@@ -25,10 +25,10 @@ func NewUserRepository(db *pgxpool.Pool) *UserRepository {
 
 func (ur *UserRepository) CreateUser(ctx context.Context, user *domain.User) (string, error) {
 	const query = `
-	INSERT INTO "user" (id, name, avatar, created_at)
-	VALUES ($1, $2, $3, $4)
-	RETURNING id
-`
+		INSERT INTO "user" (id, name, avatar, created_at)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id
+	`
 	var id string
 	user.CreatedAt = time.Now().UTC()
 	err := ur.db.QueryRow(ctx, query, ur.generateID(), user.Name, user.Avatar, user.CreatedAt).Scan(&id)
