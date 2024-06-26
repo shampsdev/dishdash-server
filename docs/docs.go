@@ -374,6 +374,44 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update a existing user in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update a user",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecase.UserInputExtended"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated user",
+                        "schema": {
+                            "$ref": "#/definitions/user.userOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new user in the database",
                 "consumes": [
@@ -608,6 +646,12 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/lobby.matchOutput"
                     }
+                },
+                "swipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lobby.swipeOutput"
+                    }
                 }
             }
         },
@@ -650,6 +694,23 @@ const docTemplate = `{
                 },
                 "lobby": {
                     "$ref": "#/definitions/lobby.lobbyOutput"
+                }
+            }
+        },
+        "lobby.swipeOutput": {
+            "type": "object",
+            "properties": {
+                "cardId": {
+                    "type": "integer"
+                },
+                "lobbyId": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
                 }
             }
         },
@@ -711,6 +772,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "avatar": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecase.UserInputExtended": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "name": {

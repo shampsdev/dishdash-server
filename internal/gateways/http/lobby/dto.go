@@ -72,7 +72,6 @@ func lobbySettingsToOutput(settings *domain.LobbySettings) *lobbySettingsOutput 
 		return nil
 	}
 	return &lobbySettingsOutput{
-		ID:          settings.ID,
 		PriceMin:    settings.PriceMin,
 		PriceMax:    settings.PriceMax,
 		MaxDistance: settings.MaxDistance,

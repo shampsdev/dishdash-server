@@ -1,6 +1,8 @@
 package swipes
 
-import "dishdash.ru/internal/domain"
+import (
+	"dishdash.ru/internal/domain"
+)
 
 const (
 	eventJoinLobby      = "joinLobby"
@@ -8,6 +10,10 @@ const (
 	eventCard           = "card"
 	eventSwipe          = "swipe"
 	eventMatch          = "match"
+	eventRelaseMatch    = "releaseMatch"
+	eventUserJoined     = "userJoined"
+	eventStartSwipes    = "startSwipes"
+	eventVote           = "vote"
 )
 
 type swipeEvent struct {
@@ -15,6 +21,7 @@ type swipeEvent struct {
 }
 
 type matchEvent struct {
+	Id   int64       `json:"id"`
 	Card domain.Card `json:"card"`
 }
 
@@ -35,6 +42,11 @@ type joinLobbyEvent struct {
 }
 
 type userJoinEvent struct {
-	Name      string `json:"name"`
-	Avatar    string `json:"avatar"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+}
+
+type voteEvent struct {
+	VoteId     int64 `json:"id"`
+	VoteOption int64 `json:"option"`
 }

@@ -38,6 +38,25 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *domain.User) (st
 	return id, nil
 }
 
+func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (string, error) {
+	const query = `
+        UPDATE "user"
+        SET name = $2, avatar = $3
+        WHERE id = $1
+    `
+
+	commandTag, err := ur.db.Exec(ctx, query, user.ID, user.Name, user.Avatar)
+	if err != nil {
+		return "", fmt.Errorf("could not update user: %w", err)
+	}
+
+	if commandTag.RowsAffected() == 0 {
+		return "", fmt.Errorf("no rows affected, user not found")
+	}
+
+	return user.ID, nil
+}
+
 func (ur *UserRepository) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
 	const query = `
 	SELECT id, name, avatar, created_at

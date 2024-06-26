@@ -10,10 +10,12 @@ import (
 )
 
 type Lobby struct {
-	Id    string
-	cards []*domain.Card
-	likes map[*domain.Card]int
-	users map[string]*User
+	Id       string
+	cards    []*domain.Card
+	likes    map[*domain.Card]int
+	users    map[string]*User
+	settings domain.LobbySettings
+	votes    map[int64]*Vote
 
 	lock sync.RWMutex
 }
@@ -53,26 +55,44 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase usecase.Card) (*Lobby, err
 		likes: make(map[*domain.Card]int),
 		users: make(map[string]*User),
 		lock:  sync.RWMutex{},
+		votes: make(map[int64]*Vote),
+		settings: domain.LobbySettings{
+			PriceMin:    0,
+			PriceMax:    0,
+			MaxDistance: 0,
+			Tags:        []domain.Tag{},
+		},
 	}
 	lobbies[lobbyDomain.ID] = lobby
 	log.Printf("create lobby: %s", lobbyDomain.ID)
 	return lobby, nil
 }
 
-func (lb *Lobby) UpdateSettings(settings domain.LobbySettings) {
+func (lb *Lobby) GetUsers() []*User {
+	lb.lock.RLock() // Use RLock for concurrent read access
+	defer lb.lock.RUnlock()
 
+	var usersSlice []*User
+	for _, user := range lb.users {
+		usersSlice = append(usersSlice, user)
+	}
+	return usersSlice
+}
+
+func (lb *Lobby) UpdateSettings(settings domain.LobbySettings) {
+	lb.settings = settings
 }
 
 func (lb *Lobby) Register(connectionId string, user *User) *User {
 	lb.lock.Lock()
 	defer lb.lock.Unlock()
 
-	user.Lobby = lb;
+	user.Lobby = lb
 
 	lb.users[connectionId] = user
 	log.Printf("register user in lobby: %s", lb.Id)
 
-	return user;
+	return user
 }
 
 func (lb *Lobby) Unregister(connectionId string) {
@@ -85,6 +105,16 @@ func (lb *Lobby) Unregister(connectionId string) {
 		delete(lobbies, lb.Id)
 		log.Printf("delete lobby: %s", lb.Id)
 	}
+}
+
+func (lb *Lobby) RegisterVote(vote *Vote, matchId int64) {
+	log.Println("registered a vote", matchId)
+	lb.votes[matchId] = vote
+}
+
+func (lb *Lobby) GetVoteById(id int64) *Vote {
+	log.Println("getting the vote", id)
+	return lb.votes[id]
 }
 
 func (lb *Lobby) takeCard(n int) *domain.Card {
