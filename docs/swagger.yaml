@@ -101,6 +101,10 @@ definitions:
         items:
           $ref: '#/definitions/lobby.matchOutput'
         type: array
+      swipes:
+        items:
+          $ref: '#/definitions/lobby.swipeOutput'
+        type: array
     type: object
   lobby.lobbySettingsOutput:
     properties:
@@ -128,6 +132,17 @@ definitions:
         type: number
       lobby:
         $ref: '#/definitions/lobby.lobbyOutput'
+    type: object
+  lobby.swipeOutput:
+    properties:
+      cardId:
+        type: integer
+      lobbyId:
+        type: string
+      type:
+        type: string
+      userID:
+        type: string
     type: object
   usecase.CardInput:
     properties:
@@ -167,6 +182,15 @@ definitions:
   usecase.UserInput:
     properties:
       avatar:
+        type: string
+      name:
+        type: string
+    type: object
+  usecase.UserInputExtended:
+    properties:
+      avatar:
+        type: string
+      id:
         type: string
       name:
         type: string
@@ -447,6 +471,31 @@ paths:
         "500":
           description: Internal Server Error
       summary: Create a user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update a existing user in the database
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.UserInputExtended'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated user
+          schema:
+            $ref: '#/definitions/user.userOutput'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update a user
       tags:
       - users
   /users/{id}:
