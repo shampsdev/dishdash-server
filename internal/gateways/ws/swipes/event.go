@@ -8,6 +8,8 @@ const (
 	eventCard           = "card"
 	eventSwipe          = "swipe"
 	eventMatch          = "match"
+	eventUserJoined     = "userJoined"
+	eventStartSwipes    = "startSwipes"
 )
 
 type swipeEvent struct {
@@ -35,6 +37,6 @@ type joinLobbyEvent struct {
 }
 
 type userJoinEvent struct {
-	Name      string `json:"name"`
-	Avatar    string `json:"avatar"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
 }

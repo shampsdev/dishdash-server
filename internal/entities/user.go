@@ -48,7 +48,5 @@ func (u *User) Swipe(swipeType domain.SwipeType) *domain.Card {
 	}
 	u.took++
 
-	log.Println("Problem is here lol 4")
-
 	return nil
 }
