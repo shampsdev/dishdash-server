@@ -71,8 +71,15 @@ type UserInput struct {
 	Avatar string `json:"avatar"`
 }
 
+type UserInputExtended struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+}
+
 type User interface {
 	CreateUser(ctx context.Context, userInput UserInput) (*domain.User, error)
+	UpdateUser(ctx context.Context, userInput UserInputExtended) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 }

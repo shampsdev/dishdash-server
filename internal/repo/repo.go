@@ -28,6 +28,7 @@ type Lobby interface {
 
 type User interface {
 	CreateUser(ctx context.Context, user *domain.User) (string, error)
+	UpdateUser(ctx context.Context, user *domain.User) (string, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 }
