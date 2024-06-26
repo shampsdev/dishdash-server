@@ -25,7 +25,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
-		_, ok := conn.Context().(*domain.User)
+		_, ok := conn.Context().(*entities.User)
 		if ok {
 			return
 		}
@@ -57,15 +57,32 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		s.BroadcastToRoom(
 			"",
 			user.Lobby.Id,
-			"userJoined",
+			eventUserJoined,
 			userJoinEvent{
 				Name:   u.Name,
 				Avatar: u.Avatar,
 			},
 		)
+	})
 
-		firstCard := user.Card()
-		conn.Emit(eventCard, cardEvent{Card: *firstCard})
+	s.OnEvent("/", eventStartSwipes, func(conn socketio.Conn, msg string) {
+		user, ok := conn.Context().(*entities.User)
+		if !ok {
+			log.Println("user not registered, disconnected")
+			_ = conn.Close()
+			return
+		}
+
+		s.ForEach("/", user.Lobby.Id, func(c socketio.Conn) {
+			roomUser, ok := c.Context().(*entities.User)
+			if !ok {
+				log.Println("Failed to retrieve user from connection context.")
+			}
+
+			firstCard := roomUser.Card()
+			c.Emit(eventCard, cardEvent{Card: *firstCard})
+		})
+
 	})
 
 	s.OnEvent("/", eventSettingsUpdate, func(conn socketio.Conn, msg string) {
@@ -84,10 +101,17 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			return
 		}
 
+		user.Lobby.UpdateSettings(domain.LobbySettings{
+			PriceMin:    updateEvent.PriceMin,
+			PriceMax:    updateEvent.PriceMax,
+			MaxDistance: updateEvent.MaxDistance,
+			Tags:        updateEvent.Tags,
+		})
+
 		s.BroadcastToRoom(
 			"",
 			user.Lobby.Id,
-			"settingsUpdate",
+			eventSettingsUpdate,
 			updateEvent,
 		)
 	})
@@ -109,7 +133,6 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		}
 
 		card := u.Card()
-		log.Println(card)
 
 		match := u.Swipe(swipeEvent.SwipeType)
 		if match != nil {

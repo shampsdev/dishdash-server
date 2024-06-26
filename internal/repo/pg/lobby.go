@@ -91,7 +91,7 @@ func (lr *LobbyRepository) NearestLobby(ctx context.Context, location domain.Coo
 	SELECT lobby.id, lobby.created_at, lobby.location, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
     FROM lobby
     WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
-    	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1))) 
+    	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1)))
     	FROM lobby
   	);
 `
@@ -124,7 +124,7 @@ func (lr *LobbyRepository) DeleteLobbyByID(ctx context.Context, lobbyID string) 
 		DELETE FROM lobby
 		WHERE id = $1
 		RETURNING *
-	) 
+	)
 	SELECT count(*) FROM deleted
 `
 	row := lr.db.QueryRow(ctx, deleteQuery, lobbyID)
@@ -204,14 +204,14 @@ func (lr *LobbyRepository) GetLobbyByID(ctx context.Context, id string) (*domain
 
 func (lr *LobbyRepository) getLobbySettings(ctx context.Context, lobbyID string) (*domain.LobbySettings, error) {
 	const query = `
-		SELECT id, lobby_id, price_min, price_max, max_distance
+		SELECT price_min, price_max, max_distance
 		FROM lobbysettings
 		WHERE lobby_id = $1
 	`
 	row := lr.db.QueryRow(ctx, query, lobbyID)
 
 	var lobbySettings domain.LobbySettings
-	if err := row.Scan(&lobbySettings.ID, &lobbySettings.LobbyID, &lobbySettings.PriceMin, &lobbySettings.PriceMax, &lobbySettings.MaxDistance); err != nil {
+	if err := row.Scan(&lobbySettings.PriceMin, &lobbySettings.PriceMax, &lobbySettings.MaxDistance); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
 		}
