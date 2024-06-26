@@ -141,13 +141,54 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 				u.Lobby.Id,
 				eventMatch,
 				matchEvent{
+					Id:   match.ID,
 					Card: *card,
 				},
 			)
+
+			vote := entities.NewVote(2, func(vote *entities.Vote, results []int) {
+				sum := 0
+				for _, number := range results {
+					sum += number
+				}
+				if sum == len(u.Lobby.GetUsers()) {
+					vote.FinalizeVote()
+				}
+			}, func(results []int) {
+				s.BroadcastToRoom(
+					"",
+					u.Lobby.Id,
+					eventRelaseMatch,
+				)
+			})
+
+			u.Lobby.RegisterVote(vote, match.ID)
 		}
 
 		newCard := u.Card()
 		conn.Emit(eventCard, cardEvent{Card: *newCard})
+	})
+
+	s.OnEvent("/", eventVote, func(conn socketio.Conn, msg string) {
+		var voteEvent voteEvent
+		err := json.Unmarshal([]byte(msg), &voteEvent)
+		if err != nil {
+			log.Println("wrong swipe event")
+			_ = conn.Close()
+			return
+		}
+
+		u, ok := conn.Context().(*entities.User)
+		if !ok {
+			log.Println("user not registered, disconnected")
+			_ = conn.Close()
+			return
+		}
+
+		v := u.Lobby.GetVoteById(voteEvent.VoteId)
+
+		v.Vote(int(voteEvent.VoteOption))
+		log.Println("user", v)
 	})
 
 	s.OnDisconnect("/", func(s socketio.Conn, reason string) {

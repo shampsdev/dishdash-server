@@ -18,6 +18,5 @@ func NewSwipeUseCase(swipeRepo repo.Swipe) *SwipeUseCase {
 }
 
 func (s *SwipeUseCase) CreateSwipe(ctx context.Context, swipe *domain.Swipe) error {
-	log.Println("Im here baby")
 	return s.swipeRepo.CreateSwipe(ctx, swipe)
 }

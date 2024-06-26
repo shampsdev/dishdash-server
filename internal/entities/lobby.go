@@ -15,6 +15,7 @@ type Lobby struct {
 	likes    map[*domain.Card]int
 	users    map[string]*User
 	settings domain.LobbySettings
+	votes    map[int64]*Vote
 
 	lock sync.RWMutex
 }
@@ -54,6 +55,7 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase usecase.Card) (*Lobby, err
 		likes: make(map[*domain.Card]int),
 		users: make(map[string]*User),
 		lock:  sync.RWMutex{},
+		votes: make(map[int64]*Vote),
 		settings: domain.LobbySettings{
 			PriceMin:    0,
 			PriceMax:    0,
@@ -103,6 +105,16 @@ func (lb *Lobby) Unregister(connectionId string) {
 		delete(lobbies, lb.Id)
 		log.Printf("delete lobby: %s", lb.Id)
 	}
+}
+
+func (lb *Lobby) RegisterVote(vote *Vote, matchId int64) {
+	log.Println("registered a vote", matchId)
+	lb.votes[matchId] = vote
+}
+
+func (lb *Lobby) GetVoteById(id int64) *Vote {
+	log.Println("getting the vote", id)
+	return lb.votes[id]
 }
 
 func (lb *Lobby) takeCard(n int) *domain.Card {

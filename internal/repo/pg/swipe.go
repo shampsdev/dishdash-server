@@ -18,8 +18,6 @@ func NewSwipeRepository(pool *pgxpool.Pool) *SwipeRepository {
 }
 
 func (sr *SwipeRepository) CreateSwipe(ctx context.Context, swipe *domain.Swipe) error {
-	log.Println("Yeeee")
-
 	const saveSwipeQuery = `
 	    INSERT INTO "swipe" (
 	        "lobby_id",
