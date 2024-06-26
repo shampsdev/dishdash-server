@@ -19,6 +19,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 	})
 
 	s.OnEvent("/", eventJoinLobby, func(conn socketio.Conn, msg string) {
+		log.Println("received connection bro")
 		var joinEvent joinLobbyEvent
 		err := json.Unmarshal([]byte(msg), &joinEvent)
 		if err != nil {
@@ -115,6 +116,19 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			updateEvent,
 		)
 	})
+
+	// s.OnEvent("", "getLobbyUpdate", func(conn socketio.Conn, msg string) {
+	// 	u, ok := conn.Context().(*entities.User)
+	// 	if !ok {
+	// 		log.Println("user not registered, disconnected")
+	// 		conn.Close()
+	// 		return
+	// 	}
+
+	// 	// conn.Emit("lobbyUpdate", &lobbyUpdateEvent{
+
+	// 	// })
+	// })
 
 	s.OnEvent("/", eventSwipe, func(conn socketio.Conn, msg string) {
 		var swipeEvent swipeEvent

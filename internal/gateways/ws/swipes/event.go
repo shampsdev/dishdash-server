@@ -1,6 +1,8 @@
 package swipes
 
-import "dishdash.ru/internal/domain"
+import (
+	"dishdash.ru/internal/domain"
+)
 
 const (
 	eventJoinLobby      = "joinLobby"
