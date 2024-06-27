@@ -15,22 +15,21 @@ import (
 
 	socketio "github.com/googollee/go-socket.io"
 
-	"github.com/tj/go-spin"
 	"github.com/gin-gonic/gin"
+	"github.com/tj/go-spin"
 	"golang.org/x/sync/errgroup"
 )
 
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	Router     *gin.Engine
-	WsServer   *socketio.Server
+	Router   *gin.Engine
+	WsServer *socketio.Server
 }
 
 func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
-
 	s := &Server{
-		Router: router,
+		Router:   router,
 		WsServer: newSocketIOServer(),
 	}
 

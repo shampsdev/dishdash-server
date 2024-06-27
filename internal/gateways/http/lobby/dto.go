@@ -1,8 +1,9 @@
 package lobby
 
 import (
-	"dishdash.ru/pkg/filter"
 	"time"
+
+	"dishdash.ru/pkg/filter"
 
 	"dishdash.ru/internal/domain"
 )
@@ -105,6 +106,7 @@ func matchToOutput(match *domain.Match) *matchOutput {
 		LobbyID: match.LobbyID,
 	}
 }
+
 func swipeToOutput(swipe *domain.Swipe) *swipeOutput {
 	if swipe == nil {
 		return nil
