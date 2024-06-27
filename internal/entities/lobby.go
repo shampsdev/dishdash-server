@@ -16,7 +16,7 @@ type Lobby struct {
 	cards    []*domain.Card
 	likes    map[*domain.Card]int
 	users    map[string]*User
-	settings domain.LobbySettings
+	Settings domain.LobbySettings
 	votes    map[int64]*Vote
 
 	lock sync.RWMutex
@@ -62,7 +62,7 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase usecase.Card) (*Lobby, err
 		users: make(map[string]*User),
 		lock:  sync.RWMutex{},
 		votes: make(map[int64]*Vote),
-		settings: domain.LobbySettings{
+		Settings: domain.LobbySettings{
 			PriceMin:    0,
 			PriceMax:    0,
 			MaxDistance: 0,
@@ -86,7 +86,7 @@ func (lb *Lobby) GetUsers() []*User {
 }
 
 func (lb *Lobby) UpdateSettings(settings domain.LobbySettings) {
-	lb.settings = settings
+	lb.Settings = settings
 }
 
 func (lb *Lobby) Register(connectionID string, user *User) *User {

@@ -60,10 +60,35 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			user.Lobby.ID,
 			eventUserJoined,
 			userJoinEvent{
+				UserID: user.ID,
 				Name:   u.Name,
 				Avatar: u.Avatar,
 			},
 		)
+
+		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
+			roomUser, ok := c.Context().(*entities.User)
+			if !ok {
+				log.Println("Failed to retrieve user from connection context.")
+			}
+			if roomUser.ID != user.ID {
+				u, _ := useCases.User.GetUserByID(context.Background(), roomUser.ID)
+				conn.Emit(eventUserJoined, &userJoinEvent{
+					UserID: u.ID,
+					Name:   u.Name,
+					Avatar: u.Avatar,
+				})
+			}
+		})
+
+		settings := user.Lobby.Settings
+
+		conn.Emit(eventSettingsUpdate, &settingsUpdateEvent{
+			PriceMin:    settings.PriceMin,
+			PriceMax:    settings.PriceMax,
+			MaxDistance: settings.MaxDistance,
+			Tags:        settings.Tags,
+		})
 	})
 
 	s.OnEvent("/", eventStartSwipes, func(conn socketio.Conn, msg string) {
@@ -73,6 +98,8 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
+
+		s.BroadcastToRoom("", user.Lobby.ID, eventStartSwipes)
 
 		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
 			roomUser, ok := c.Context().(*entities.User)
@@ -109,12 +136,16 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			Tags:        updateEvent.Tags,
 		})
 
-		s.BroadcastToRoom(
-			"",
-			user.Lobby.ID,
-			eventSettingsUpdate,
-			updateEvent,
-		)
+		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
+			roomUser, ok := c.Context().(*entities.User)
+			if !ok {
+				log.Println("Failed to retrieve user from connection context.")
+			}
+
+			if roomUser.ID != user.ID {
+				c.Emit(eventSettingsUpdate, updateEvent)
+			}
+		})
 	})
 
 	s.OnEvent("/", eventSwipe, func(conn socketio.Conn, msg string) {
@@ -246,6 +277,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			eventVoted,
 			&votedEvent{
 				User: User{
+					UserID: u.ID,
 					Name:   u.Name,
 					Avatar: u.Avatar,
 				},
@@ -268,6 +300,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		u, _ := useCases.User.GetUserByID(context.Background(), user.ID)
 
 		s.BroadcastToRoom("", user.Lobby.ID, eventUserLeft, &userJoinEvent{
+			UserID: u.ID,
 			Name:   u.Name,
 			Avatar: u.Avatar,
 		})
