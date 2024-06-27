@@ -41,8 +41,8 @@ type settingsUpdateEvent struct {
 }
 
 type joinLobbyEvent struct {
-	LobbyID string `json:"lobbyID"`
-	UserID  string `json:"userID"`
+	LobbyID string `json:"lobbyId"`
+	UserID  string `json:"userId"`
 }
 
 type userJoinEvent struct {
