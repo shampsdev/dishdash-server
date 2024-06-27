@@ -31,12 +31,15 @@ func (u *User) Swipe(swipeType domain.SwipeType) *domain.Card {
 
 	log.Println(u.swipeUseCase)
 
-	u.swipeUseCase.CreateSwipe(context.Background(), &domain.Swipe{
+	err := u.swipeUseCase.CreateSwipe(context.Background(), &domain.Swipe{
 		LobbyID: u.Lobby.ID,
 		CardID:  u.Card().ID,
 		UserID:  u.ID,
 		Type:    swipeType,
 	})
+	if err != nil {
+		log.Println("Swipe wasn't able to be created")
+	}
 
 	if swipeType == domain.LIKE {
 		card := u.Lobby.like(u.Card())

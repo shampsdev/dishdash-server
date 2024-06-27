@@ -10,8 +10,8 @@ import (
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/internal/usecase"
 
-	"github.com/tj/go-spin"
 	"github.com/gin-gonic/gin"
+	"github.com/tj/go-spin"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -24,7 +24,6 @@ type Server struct {
 }
 
 func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
-
 	s := &Server{
 		Router: router,
 		HttpServer: http.Server{

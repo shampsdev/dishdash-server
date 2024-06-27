@@ -111,7 +111,6 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			firstCard := roomUser.Card()
 			c.Emit(eventCard, cardEvent{Card: *firstCard})
 		})
-
 	})
 
 	s.OnEvent("/", eventSettingsUpdate, func(conn socketio.Conn, msg string) {

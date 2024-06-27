@@ -33,7 +33,6 @@ func (sr *SwipeRepository) CreateSwipe(ctx context.Context, swipe *domain.Swipe)
 		swipe.UserID,
 		swipe.Type,
 	)
-
 	if err != nil {
 		log.Printf("Error saving swipe: %v\n", err)
 		return err

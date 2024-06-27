@@ -28,7 +28,7 @@ func NewServer(useCases usecase.Cases) *Server {
 
 	s := &Server{
 		HttpServer: http.NewServer(useCases, r),
-		WsServer: ws.NewServer(useCases, r),
+		WsServer:   ws.NewServer(useCases, r),
 	}
 
 	return s
