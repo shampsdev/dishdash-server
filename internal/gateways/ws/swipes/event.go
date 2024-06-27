@@ -12,8 +12,12 @@ const (
 	eventMatch          = "match"
 	eventRelaseMatch    = "releaseMatch"
 	eventUserJoined     = "userJoined"
+	eventUserLeft       = "userLeft"
 	eventStartSwipes    = "startSwipes"
 	eventVote           = "vote"
+	eventVoted          = "voted"
+	eventFinish         = "finish"
+	eventFinalVote      = "finalVote"
 )
 
 type swipeEvent struct {
@@ -21,7 +25,7 @@ type swipeEvent struct {
 }
 
 type matchEvent struct {
-	Id   int64       `json:"id"`
+	ID   int64       `json:"id"`
 	Card domain.Card `json:"card"`
 }
 
@@ -37,16 +41,43 @@ type settingsUpdateEvent struct {
 }
 
 type joinLobbyEvent struct {
-	LobbyID string `json:"lobbyId"`
-	UserID  string `json:"userId"`
+	LobbyID string `json:"lobbyID"`
+	UserID  string `json:"userID"`
 }
 
 type userJoinEvent struct {
+	UserID string `json:"id"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+}
+
+type userLeftEvent struct {
+	UserID string `json:"id"`
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
 }
 
 type voteEvent struct {
-	VoteId     int64 `json:"id"`
+	VoteID     int64 `json:"id"`
 	VoteOption int64 `json:"option"`
+}
+
+type User struct {
+	UserID string `json:"id"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+}
+
+type votedEvent struct {
+	User       User  `json:"user"`
+	VoteID     int64 `json:"id"`
+	VoteOption int64 `json:"option"`
+}
+
+type finalVoteEvent struct {
+	Options []domain.Card `json:"options"`
+}
+
+type finishEvent struct {
+	Result domain.Card `json:"result"`
 }

@@ -581,16 +581,16 @@
         "lobby.finalVoteOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 },
-                "userId": {
+                "userID": {
                     "type": "string"
                 }
             }
@@ -667,13 +667,13 @@
         "lobby.matchOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 }
             }
@@ -692,10 +692,10 @@
         "lobby.swipeOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 },
                 "type": {
@@ -789,9 +789,6 @@
             "type": "object",
             "properties": {
                 "avatar": {
-                    "type": "string"
-                },
-                "createdAt": {
                     "type": "string"
                 },
                 "id": {

@@ -10,14 +10,13 @@ import (
 
 type User struct {
 	swipeUseCase usecase.Swipe
-	id           string
+	ID           string
 	Lobby        *Lobby
 	took         int
 }
 
 func NewUser(user domain.User, swipeUseCase usecase.Swipe) *User {
-	log.Println("In the user its this", swipeUseCase)
-	return &User{id: user.ID, swipeUseCase: swipeUseCase}
+	return &User{ID: user.ID, swipeUseCase: swipeUseCase}
 }
 
 func (u *User) Card() *domain.Card {
@@ -33,9 +32,9 @@ func (u *User) Swipe(swipeType domain.SwipeType) *domain.Card {
 	log.Println(u.swipeUseCase)
 
 	u.swipeUseCase.CreateSwipe(context.Background(), &domain.Swipe{
-		LobbyID: u.Lobby.Id,
+		LobbyID: u.Lobby.ID,
 		CardID:  u.Card().ID,
-		UserID:  u.id,
+		UserID:  u.ID,
 		Type:    swipeType,
 	})
 

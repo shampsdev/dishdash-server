@@ -28,22 +28,22 @@ type cardOutput struct {
 
 type matchOutput struct {
 	ID      int64  `json:"id"`
-	CardID  int64  `json:"cardId"`
-	LobbyID string `json:"lobbyId"`
+	CardID  int64  `json:"cardID"`
+	LobbyID string `json:"lobbyID"`
 }
 
 type swipeOutput struct {
 	UserID  string `json:"userID"`
-	CardID  int64  `json:"cardId"`
-	LobbyID string `json:"lobbyId"`
+	CardID  int64  `json:"cardID"`
+	LobbyID string `json:"lobbyID"`
 	Type    string `json:"type"`
 }
 
 type finalVoteOutput struct {
 	ID      int64  `json:"id"`
-	CardID  int64  `json:"cardId"`
-	UserID  string `json:"userId"`
-	LobbyID string `json:"lobbyId"`
+	CardID  int64  `json:"cardID"`
+	UserID  string `json:"userID"`
+	LobbyID string `json:"lobbyID"`
 }
 
 type lobbyOutput struct {

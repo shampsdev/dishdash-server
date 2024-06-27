@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"time"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/entities"
@@ -19,7 +20,6 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 	})
 
 	s.OnEvent("/", eventJoinLobby, func(conn socketio.Conn, msg string) {
-		log.Println("received connection bro")
 		var joinEvent joinLobbyEvent
 		err := json.Unmarshal([]byte(msg), &joinEvent)
 		if err != nil {
@@ -57,7 +57,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 
 		s.BroadcastToRoom(
 			"",
-			user.Lobby.Id,
+			user.Lobby.ID,
 			eventUserJoined,
 			userJoinEvent{
 				Name:   u.Name,
@@ -74,7 +74,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			return
 		}
 
-		s.ForEach("/", user.Lobby.Id, func(c socketio.Conn) {
+		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
 			roomUser, ok := c.Context().(*entities.User)
 			if !ok {
 				log.Println("Failed to retrieve user from connection context.")
@@ -111,24 +111,11 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 
 		s.BroadcastToRoom(
 			"",
-			user.Lobby.Id,
+			user.Lobby.ID,
 			eventSettingsUpdate,
 			updateEvent,
 		)
 	})
-
-	// s.OnEvent("", "getLobbyUpdate", func(conn socketio.Conn, msg string) {
-	// 	u, ok := conn.Context().(*entities.User)
-	// 	if !ok {
-	// 		log.Println("user not registered, disconnected")
-	// 		conn.Close()
-	// 		return
-	// 	}
-
-	// 	// conn.Emit("lobbyUpdate", &lobbyUpdateEvent{
-
-	// 	// })
-	// })
 
 	s.OnEvent("/", eventSwipe, func(conn socketio.Conn, msg string) {
 		var swipeEvent swipeEvent
@@ -152,10 +139,10 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		if match != nil {
 			s.BroadcastToRoom(
 				"",
-				u.Lobby.Id,
+				u.Lobby.ID,
 				eventMatch,
 				matchEvent{
-					Id:   match.ID,
+					ID:   match.ID,
 					Card: *card,
 				},
 			)
@@ -168,18 +155,68 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 				if sum == len(u.Lobby.GetUsers()) {
 					vote.FinalizeVote()
 				}
-			}, func(results []int) {
+			}, func(matchResults []int) {
 				s.BroadcastToRoom(
 					"",
-					u.Lobby.Id,
+					u.Lobby.ID,
 					eventRelaseMatch,
 				)
+
+				// 0 - continue
+				// 1 - finish
+				if matchResults[1] == len(u.Lobby.GetUsers()) {
+					lobbyResults := u.Lobby.GetResults()
+					if len(lobbyResults) > 1 {
+						s.BroadcastToRoom(
+							"",
+							u.Lobby.ID,
+							eventFinalVote,
+							&finalVoteEvent{
+								Options: lobbyResults,
+							},
+						)
+
+						vote := entities.NewVote(len(lobbyResults), func(vote *entities.Vote, finalVoteResults []int) {
+							sum := 0
+							for _, number := range finalVoteResults {
+								sum += number
+							}
+							if sum == len(u.Lobby.GetUsers()) {
+								vote.FinalizeVote()
+							}
+						}, func(results []int) {
+							s.BroadcastToRoom(
+								"",
+								u.Lobby.ID,
+								eventFinish,
+								&finishEvent{
+									Result: lobbyResults[0],
+								},
+							)
+						})
+
+						time.AfterFunc(20*time.Second, func() {
+							vote.FinalizeVote()
+						})
+
+					} else {
+						s.BroadcastToRoom(
+							"",
+							u.Lobby.ID,
+							eventFinish,
+							&finishEvent{
+								Result: lobbyResults[0],
+							},
+						)
+					}
+				}
 			})
 
 			u.Lobby.RegisterVote(vote, match.ID)
 		}
 
 		newCard := u.Card()
+
 		conn.Emit(eventCard, cardEvent{Card: *newCard})
 	})
 
@@ -192,20 +229,47 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			return
 		}
 
-		u, ok := conn.Context().(*entities.User)
+		user, ok := conn.Context().(*entities.User)
 		if !ok {
 			log.Println("user not registered, disconnected")
 			_ = conn.Close()
 			return
 		}
 
-		v := u.Lobby.GetVoteById(voteEvent.VoteId)
-
+		v := user.Lobby.GetVoteByID(voteEvent.VoteID)
 		v.Vote(int(voteEvent.VoteOption))
-		log.Println("user", v)
+
+		u, _ := useCases.User.GetUserByID(context.Background(), user.ID)
+		s.BroadcastToRoom(
+			"",
+			user.Lobby.ID,
+			eventVoted,
+			&votedEvent{
+				User: User{
+					Name:   u.Name,
+					Avatar: u.Avatar,
+				},
+				VoteID:     voteEvent.VoteID,
+				VoteOption: voteEvent.VoteOption,
+			},
+		)
 	})
 
-	s.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		log.Println("closed", reason)
+	s.OnDisconnect("/", func(conn socketio.Conn, reason string) {
+		user, ok := conn.Context().(*entities.User)
+		if !ok {
+			log.Println("user not registered, disconnected")
+			_ = conn.Close()
+			return
+		}
+
+		user.Lobby.Unregister(conn.ID())
+
+		u, _ := useCases.User.GetUserByID(context.Background(), user.ID)
+
+		s.BroadcastToRoom("", user.Lobby.ID, eventUserLeft, &userJoinEvent{
+			Name:   u.Name,
+			Avatar: u.Avatar,
+		})
 	})
 }
