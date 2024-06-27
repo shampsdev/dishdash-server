@@ -59,11 +59,6 @@ type Lobby interface {
 	DeleteLobbyByID(ctx context.Context, id string) error
 	NearestLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
-
-	//ChangeLobbySettings(ctx context.Context, lobbyID string, settings LobbySettingsInput) (*domain.LobbySettings, error)
-	//FillLobbyWithCards(ctx context.Context, lobbyID string) ([]*domain.Card, error)
-	//SwipeCard(ctx context.Context, lobbyID string, userID string, cardID int) (*domain.Match, error)
-	//VoteForCard(ctx context.Context, lobbyID string, userID string, cardID int) error
 }
 
 type UserInput struct {

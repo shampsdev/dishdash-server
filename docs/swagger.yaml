@@ -63,13 +63,13 @@ definitions:
     type: object
   lobby.finalVoteOutput:
     properties:
-      cardId:
+      cardID:
         type: integer
       id:
         type: integer
-      lobbyId:
+      lobbyID:
         type: string
-      userId:
+      userID:
         type: string
     type: object
   lobby.findLobbyInput:
@@ -119,11 +119,11 @@ definitions:
     type: object
   lobby.matchOutput:
     properties:
-      cardId:
+      cardID:
         type: integer
       id:
         type: integer
-      lobbyId:
+      lobbyID:
         type: string
     type: object
   lobby.nearestLobbyOutput:
@@ -135,9 +135,9 @@ definitions:
     type: object
   lobby.swipeOutput:
     properties:
-      cardId:
+      cardID:
         type: integer
-      lobbyId:
+      lobbyID:
         type: string
       type:
         type: string
@@ -198,8 +198,6 @@ definitions:
   user.userOutput:
     properties:
       avatar:
-        type: string
-      createdAt:
         type: string
       id:
         type: string

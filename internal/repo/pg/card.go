@@ -20,12 +20,12 @@ func NewCardRepository(db *pgxpool.Pool) *CardRepository {
 func (cr *CardRepository) CreateCard(ctx context.Context, card *domain.Card) (int64, error) {
 	const saveQuery = `
 	INSERT INTO "card" (
-		"title", 
-		"short_description", 
-		"description", 
-		"image", 
-		"location", 
-		"address", 
+		"title",
+		"short_description",
+		"description",
+		"image",
+		"location",
+		"address",
 		"price_min",
 	    "price_max"
 	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8)
@@ -55,14 +55,14 @@ func (cr *CardRepository) CreateCard(ctx context.Context, card *domain.Card) (in
 
 func (cr *CardRepository) GetCardByID(ctx context.Context, id int64) (*domain.Card, error) {
 	const getCardQuery = `
-	SELECT 
-		"id", 
-		"title", 
-		"short_description", 
-		"description", 
-		"image", 
-		"location", 
-		"address", 
+	SELECT
+		"id",
+		"title",
+		"short_description",
+		"description",
+		"image",
+		"location",
+		"address",
 		"price_min",
 		"price_max"
 	FROM "card"
@@ -79,14 +79,14 @@ func (cr *CardRepository) GetCardByID(ctx context.Context, id int64) (*domain.Ca
 
 func (cr *CardRepository) GetAllCards(ctx context.Context) ([]*domain.Card, error) {
 	const getCardsQuery = `
-	SELECT 
-		"id", 
-		"title", 
-		"short_description", 
-		"description", 
-		"image", 
-		"location", 
-		"address", 
+	SELECT
+		"id",
+		"title",
+		"short_description",
+		"description",
+		"image",
+		"location",
+		"address",
 		"price_min",
 		"price_max"
 	FROM "card"

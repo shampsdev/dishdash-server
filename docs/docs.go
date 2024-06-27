@@ -589,16 +589,16 @@ const docTemplate = `{
         "lobby.finalVoteOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 },
-                "userId": {
+                "userID": {
                     "type": "string"
                 }
             }
@@ -675,13 +675,13 @@ const docTemplate = `{
         "lobby.matchOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 }
             }
@@ -700,10 +700,10 @@ const docTemplate = `{
         "lobby.swipeOutput": {
             "type": "object",
             "properties": {
-                "cardId": {
+                "cardID": {
                     "type": "integer"
                 },
-                "lobbyId": {
+                "lobbyID": {
                     "type": "string"
                 },
                 "type": {
@@ -797,9 +797,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "avatar": {
-                    "type": "string"
-                },
-                "createdAt": {
                     "type": "string"
                 },
                 "id": {

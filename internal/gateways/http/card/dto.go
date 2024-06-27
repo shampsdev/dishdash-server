@@ -6,7 +6,7 @@ import (
 )
 
 type tagOutput struct {
-	Id   int64  `json:"id"`
+	ID   int64  `json:"id"`
 	Icon string `json:"icon"`
 	Name string `json:"name"`
 }
@@ -26,7 +26,7 @@ type cardOutput struct {
 
 func tagToOutput(t *domain.Tag) tagOutput {
 	return tagOutput{
-		Id:   t.ID,
+		ID:   t.ID,
 		Icon: t.Icon,
 		Name: t.Name,
 	}
