@@ -99,12 +99,13 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			return
 		}
 
-		s.BroadcastToRoom("", user.Lobby.ID, eventStartSwipes)
-
 		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
 			roomUser, ok := c.Context().(*entities.User)
 			if !ok {
 				log.Println("Failed to retrieve user from connection context.")
+			}
+			if roomUser.ID != user.ID {
+				c.Emit(eventStartSwipes)
 			}
 
 			firstCard := roomUser.Card()
