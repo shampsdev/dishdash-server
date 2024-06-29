@@ -203,6 +203,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 							u.Lobby.ID,
 							eventFinalVote,
 							&finalVoteEvent{
+								VoteID:  -1,
 								Options: lobbyResults,
 							},
 						)
@@ -229,6 +230,8 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 						time.AfterFunc(20*time.Second, func() {
 							vote.FinalizeVote()
 						})
+
+						u.Lobby.RegisterVote(vote, -1)
 
 					} else {
 						s.BroadcastToRoom(
@@ -290,7 +293,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 	s.OnDisconnect("/", func(conn socketio.Conn, reason string) {
 		user, ok := conn.Context().(*entities.User)
 		if !ok {
-			log.Println("user not registered, disconnected")
+			log.Println("user not registered, disconnected on disconnect")
 			_ = conn.Close()
 			return
 		}
