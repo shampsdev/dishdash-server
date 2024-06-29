@@ -74,11 +74,6 @@ type votedEvent struct {
 	VoteOption int64 `json:"option"`
 }
 
-type finalVoteEvent struct {
-	VoteID  int64         `json:"id"`
-	Options []domain.Card `json:"options"`
-}
-
 type finishEvent struct {
 	Result domain.Card `json:"result"`
 }

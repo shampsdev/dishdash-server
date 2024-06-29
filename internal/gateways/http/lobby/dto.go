@@ -8,11 +8,18 @@ import (
 	"dishdash.ru/internal/domain"
 )
 
+type tagOutput struct {
+	ID   int64  `json:"id"`
+	Icon string `json:"icon"`
+	Name string `json:"name"`
+}
+
 type lobbySettingsOutput struct {
-	ID          int64   `json:"id"`
-	PriceMin    int     `json:"priceMin"`
-	PriceMax    int     `json:"priceMax"`
-	MaxDistance float64 `json:"maxDistance"`
+	ID          int64       `json:"id"`
+	PriceMin    int         `json:"priceMin"`
+	PriceMax    int         `json:"priceMax"`
+	MaxDistance float64     `json:"maxDistance"`
+	Tags        []tagOutput `json:"tags"`
 }
 
 type cardOutput struct {
@@ -25,6 +32,7 @@ type cardOutput struct {
 	Address          string            `json:"address"`
 	PriceMin         int               `json:"priceMin"`
 	PriceMax         int               `json:"priceMax"`
+	Tags             []tagOutput       `json:"tags"`
 }
 
 type matchOutput struct {
@@ -52,7 +60,7 @@ type lobbyOutput struct {
 	CreatedAt     time.Time            `json:"createdAt"`
 	Location      domain.Coordinate    `json:"location"`
 	LobbySettings *lobbySettingsOutput `json:"lobbySettings"`
-	Cards         []*cardOutput        `json:"cards"`
+	Cards         []cardOutput         `json:"cards"`
 	Matches       []*matchOutput       `json:"matches"`
 	FinalVotes    []*finalVoteOutput   `json:"finalVotes"`
 	Swipes        []*swipeOutput       `json:"swipes"`
@@ -76,23 +84,32 @@ func lobbySettingsToOutput(settings *domain.LobbySettings) *lobbySettingsOutput 
 		PriceMin:    settings.PriceMin,
 		PriceMax:    settings.PriceMax,
 		MaxDistance: settings.MaxDistance,
+		Tags:        filter.Map(settings.Tags, tagToOutput),
 	}
 }
 
-func cardToOutput(card *domain.Card) *cardOutput {
-	if card == nil {
-		return nil
+func tagToOutput(t domain.Tag) tagOutput {
+	return tagOutput{
+		ID:   t.ID,
+		Icon: t.Icon,
+		Name: t.Name,
 	}
-	return &cardOutput{
-		ID:               card.ID,
-		Title:            card.Title,
-		ShortDescription: card.ShortDescription,
-		Description:      card.Description,
-		Image:            card.Image,
-		Location:         card.Location,
-		Address:          card.Address,
-		PriceMin:         card.PriceMin,
-		PriceMax:         card.PriceMax,
+}
+
+func cardToOutput(c *domain.Card) cardOutput {
+	return cardOutput{
+		ID:               c.ID,
+		Title:            c.Title,
+		ShortDescription: c.ShortDescription,
+		Description:      c.Description,
+		Image:            c.Image,
+		Location:         c.Location,
+		Address:          c.Address,
+		PriceMin:         c.PriceMin,
+		PriceMax:         c.PriceMax,
+		Tags: filter.Map(c.Tags, func(t *domain.Tag) tagOutput {
+			return tagToOutput(*t)
+		}),
 	}
 }
 

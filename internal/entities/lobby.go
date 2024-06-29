@@ -13,6 +13,7 @@ import (
 
 type Lobby struct {
 	ID       string
+	Location domain.Coordinate
 	cards    []*domain.Card
 	likes    map[*domain.Card]int
 	users    map[string]*User
@@ -56,12 +57,13 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase usecase.Card) (*Lobby, err
 		return nil, err
 	}
 	lobby = &Lobby{
-		ID:    lobbyDomain.ID,
-		cards: cards,
-		likes: make(map[*domain.Card]int),
-		users: make(map[string]*User),
-		lock:  sync.RWMutex{},
-		votes: make(map[int64]*Vote),
+		ID:       lobbyDomain.ID,
+		Location: lobbyDomain.Location,
+		cards:    cards,
+		likes:    make(map[*domain.Card]int),
+		users:    make(map[string]*User),
+		lock:     sync.RWMutex{},
+		votes:    make(map[int64]*Vote),
 		Settings: domain.LobbySettings{
 			PriceMin:    0,
 			PriceMax:    0,
@@ -72,6 +74,10 @@ func FindLobby(lobbyDomain *domain.Lobby, cardUseCase usecase.Card) (*Lobby, err
 	lobbies[lobbyDomain.ID] = lobby
 	log.Printf("create lobby: %s", lobbyDomain.ID)
 	return lobby, nil
+}
+
+func (lb *Lobby) SetCards(cards []*domain.Card) {
+	lb.cards = cards
 }
 
 func (lb *Lobby) GetUsers() []*User {
