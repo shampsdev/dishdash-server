@@ -72,7 +72,7 @@ func (lr *LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby)
 		lobby.ID,
 		0.0,
 		1000000.0,
-		1000000.0,
+		1000000000.0,
 	)
 
 	var settingsID int
@@ -206,16 +206,46 @@ func (lr *LobbyRepository) GetLobbyByID(ctx context.Context, id string) (*domain
 
 func (lr *LobbyRepository) getLobbySettings(ctx context.Context, lobbyID string) (*domain.LobbySettings, error) {
 	const query = `
-		SELECT price_min, price_max, max_distance
+		SELECT id, price_min, price_max, max_distance
 		FROM lobbysettings
 		WHERE lobby_id = $1
 	`
 	row := lr.db.QueryRow(ctx, query, lobbyID)
 
 	var lobbySettings domain.LobbySettings
-	if err := row.Scan(&lobbySettings.PriceMin, &lobbySettings.PriceMax, &lobbySettings.MaxDistance); err != nil {
+	if err := row.Scan(
+		&lobbySettings.ID,
+		&lobbySettings.PriceMin,
+		&lobbySettings.PriceMax,
+		&lobbySettings.MaxDistance,
+	); err != nil {
 		return nil, err
 	}
+
+	const queryTags = `
+		SELECT t.id, t.name, t.icon
+		FROM lobbysettings_tag lt
+		JOIN tag t ON lt.tag_id = t.id
+		WHERE lt.lobbysettings_id = $1 
+`
+
+	rows, err := lr.db.Query(ctx, queryTags, lobbySettings.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tags []domain.Tag
+	for rows.Next() {
+		var tag domain.Tag
+		if err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon); err != nil {
+			return nil, err
+		}
+		tags = append(tags, tag)
+	}
+
+	lobbySettings.Tags = tags
+
 	return &lobbySettings, nil
 }
 
@@ -321,4 +351,65 @@ func (lr *LobbyRepository) getSwipes(ctx context.Context, lobbyID string) ([]*do
 	}
 
 	return swipes, nil
+}
+
+func (lr *LobbyRepository) GetCardsForSettings(ctx context.Context, loc domain.Coordinate, settings *domain.LobbySettings) ([]*domain.Card, error) {
+	const query = `
+		SELECT 
+		    c.id,
+		    c.title, 
+		    c.short_description,
+		    c.description, 
+		    c.image, 
+		    c.location,
+		    c.address,
+		    c.price_min,
+		    c.price_max
+		FROM card c
+		JOIN card_tag ct ON c.id = ct.card_id
+		WHERE ct.tag_id = ANY($1)
+		AND ST_Distance(c.location, ST_GeogFromWkb($2)) <= $3
+		GROUP BY c.id, c.location
+		ORDER BY ST_Distance(c.location, ST_GeogFromWkb($2))
+	`
+
+	tagIDs := make([]int64, len(settings.Tags))
+	for i, tag := range settings.Tags {
+		tagIDs[i] = tag.ID
+	}
+
+	rows, err := lr.db.Query(
+		ctx,
+		query,
+		tagIDs,
+		postgis.PointS{SRID: 4326, X: loc.Lat, Y: loc.Lon},
+		settings.MaxDistance,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var cards []*domain.Card
+	for rows.Next() {
+		var card domain.Card
+		var location postgis.PointS
+		if err := rows.Scan(
+			&card.ID,
+			&card.Title,
+			&card.ShortDescription,
+			&card.Description,
+			&card.Image,
+			&location,
+			&card.Address,
+			&card.PriceMin,
+			&card.PriceMax,
+		); err != nil {
+			return nil, err
+		}
+		card.Location = domain.Coordinate{Lat: location.X, Lon: location.Y}
+		cards = append(cards, &card)
+	}
+
+	return cards, nil
 }

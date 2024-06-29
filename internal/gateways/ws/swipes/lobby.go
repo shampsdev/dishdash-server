@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"time"
+	"slices"
+
+	"dishdash.ru/pkg/location"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/entities"
@@ -98,6 +100,18 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
+		cards, err := useCases.Lobby.GetCardsForSettings(context.Background(), user.Lobby.Location, &user.Lobby.Settings)
+		if err == nil {
+			user.Lobby.SetCards(cards)
+		} else {
+			log.Printf("can't get cards for settings: %s", err.Error())
+		}
+		// TODO sort on database side
+		slices.SortFunc(cards, func(a, b *domain.Card) int {
+			d1 := location.GetDistance(user.Lobby.Location, a.Location)
+			d2 := location.GetDistance(user.Lobby.Location, b.Location)
+			return int(d1 - d2)
+		})
 
 		s.ForEach("/", user.Lobby.ID, func(c socketio.Conn) {
 			roomUser, ok := c.Context().(*entities.User)
@@ -197,52 +211,15 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 				// 1 - finish
 				if matchResults[1] == len(u.Lobby.GetUsers()) {
 					lobbyResults := u.Lobby.GetResults()
-					if len(lobbyResults) > 1 {
-						s.BroadcastToRoom(
-							"",
-							u.Lobby.ID,
-							eventFinalVote,
-							&finalVoteEvent{
-								VoteID:  -1,
-								Options: lobbyResults,
-							},
-						)
 
-						vote := entities.NewVote(len(lobbyResults), func(vote *entities.Vote, finalVoteResults []int) {
-							sum := 0
-							for _, number := range finalVoteResults {
-								sum += number
-							}
-							if sum == len(u.Lobby.GetUsers()) {
-								vote.FinalizeVote()
-							}
-						}, func(_ []int) {
-							s.BroadcastToRoom(
-								"",
-								u.Lobby.ID,
-								eventFinish,
-								&finishEvent{
-									Result: lobbyResults[0],
-								},
-							)
-						})
-
-						time.AfterFunc(20*time.Second, func() {
-							vote.FinalizeVote()
-						})
-
-						u.Lobby.RegisterVote(vote, -1)
-
-					} else {
-						s.BroadcastToRoom(
-							"",
-							u.Lobby.ID,
-							eventFinish,
-							&finishEvent{
-								Result: lobbyResults[0],
-							},
-						)
-					}
+					s.BroadcastToRoom(
+						"",
+						u.Lobby.ID,
+						eventFinish,
+						&finishEvent{
+							Result: lobbyResults[len(lobbyResults)-1],
+						},
+					)
 				}
 			})
 

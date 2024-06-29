@@ -37,3 +37,7 @@ func (l *LobbyUseCase) DeleteLobbyByID(ctx context.Context, id string) error {
 func (l *LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error) {
 	return l.lobbyRepo.GetLobbyByID(ctx, id)
 }
+
+func (l *LobbyUseCase) GetCardsForSettings(ctx context.Context, loc domain.Coordinate, settings *domain.LobbySettings) ([]*domain.Card, error) {
+	return l.lobbyRepo.GetCardsForSettings(ctx, loc, settings)
+}

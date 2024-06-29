@@ -12,4 +12,5 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	lobbiesGroup.DELETE("/:id", DeleteLobby(cases.Lobby))
 	lobbiesGroup.POST("/nearest", NearestLobby(cases.Lobby))
 	lobbiesGroup.POST("/find", FindLobby(cases.Lobby))
+	lobbiesGroup.GET("/:id/cards", CardsForLobby(cases.Lobby))
 }
