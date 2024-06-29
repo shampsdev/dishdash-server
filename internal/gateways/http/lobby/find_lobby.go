@@ -30,7 +30,7 @@ func FindLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 			return
 		}
 
-		lobby, dist, err := lobbyUseCase.NearestLobby(c, locDist.Location)
+		lobby, dist, err := lobbyUseCase.NearestActiveLobby(c, locDist.Location)
 		if err != nil && !errors.Is(err, usecase.ErrLobbyNotFound) {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

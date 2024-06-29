@@ -57,9 +57,10 @@ type LobbySettingsInput struct {
 type Lobby interface {
 	CreateLobby(ctx context.Context, lobbyInput LobbyInput) (*domain.Lobby, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
-	NearestLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
+	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
 	GetCardsForSettings(ctx context.Context, loc domain.Coordinate, settings *domain.LobbySettings) ([]*domain.Card, error)
+	SetLobbyActive(ctx context.Context, id string, active bool) error
 }
 
 type UserInput struct {

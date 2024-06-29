@@ -88,14 +88,16 @@ func (lr *LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby)
 	return lobby, nil
 }
 
-func (lr *LobbyRepository) NearestLobby(ctx context.Context, location domain.Coordinate) (*domain.Lobby, float64, error) {
+func (lr *LobbyRepository) NearestActiveLobby(ctx context.Context, location domain.Coordinate) (*domain.Lobby, float64, error) {
 	const getQuery = `
 	SELECT lobby.id, lobby.created_at, lobby.location, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
     FROM lobby
     WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
     	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1)))
     	FROM lobby
-  	);
+  	)
+	AND lobby.active
+	AND extract(epoch from now() - lobby.created_at) / 60 <= 5
 `
 	row := lr.db.QueryRow(ctx, getQuery,
 		postgis.PointS{SRID: 4326, X: location.Lat, Y: location.Lon},
@@ -412,4 +414,15 @@ func (lr *LobbyRepository) GetCardsForSettings(ctx context.Context, loc domain.C
 	}
 
 	return cards, nil
+}
+
+func (lr *LobbyRepository) SetLobbyActive(ctx context.Context, id string, active bool) error {
+	const query = `
+		UPDATE lobby
+		SET active = $1
+		WHERE id = $2
+	`
+
+	_, err := lr.db.Exec(ctx, query, active, id)
+	return err
 }
