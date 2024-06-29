@@ -100,7 +100,10 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
-		cards, err := useCases.Lobby.GetCardsForSettings(context.Background(), user.Lobby.Location, &user.Lobby.Settings)
+		// cards, err := useCases.Lobby.GetCardsForSettings(context.Background(), user.Lobby.Location, &user.Lobby.Settings)
+
+		cards, err := useCases.Card.GetAllCards(context.Background());
+
 		if err == nil {
 			user.Lobby.SetCards(cards)
 		} else {
