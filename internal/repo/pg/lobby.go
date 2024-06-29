@@ -33,7 +33,9 @@ func (lr *LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby)
 	if err != nil {
 		return nil, err
 	}
-	defer tx.Rollback(ctx)
+	defer func(tx pgx.Tx, ctx context.Context) {
+		_ = tx.Rollback(ctx)
+	}(tx, ctx)
 
 	const saveLobbyQuery = `
 		INSERT INTO "lobby" (
@@ -212,9 +214,6 @@ func (lr *LobbyRepository) getLobbySettings(ctx context.Context, lobbyID string)
 
 	var lobbySettings domain.LobbySettings
 	if err := row.Scan(&lobbySettings.PriceMin, &lobbySettings.PriceMax, &lobbySettings.MaxDistance); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return &lobbySettings, nil

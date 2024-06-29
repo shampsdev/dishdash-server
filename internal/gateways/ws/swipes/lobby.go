@@ -91,7 +91,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		})
 	})
 
-	s.OnEvent("/", eventStartSwipes, func(conn socketio.Conn, msg string) {
+	s.OnEvent("/", eventStartSwipes, func(conn socketio.Conn, _ string) {
 		user, ok := conn.Context().(*entities.User)
 		if !ok {
 			log.Println("user not registered, disconnected")
@@ -216,7 +216,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 							if sum == len(u.Lobby.GetUsers()) {
 								vote.FinalizeVote()
 							}
-						}, func(results []int) {
+						}, func(_ []int) {
 							s.BroadcastToRoom(
 								"",
 								u.Lobby.ID,
@@ -290,7 +290,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		)
 	})
 
-	s.OnDisconnect("/", func(conn socketio.Conn, reason string) {
+	s.OnDisconnect("/", func(conn socketio.Conn, _ string) {
 		user, ok := conn.Context().(*entities.User)
 		if !ok {
 			log.Println("user not registered, disconnected on disconnect")
@@ -302,7 +302,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 
 		u, _ := useCases.User.GetUserByID(context.Background(), user.ID)
 
-		s.BroadcastToRoom("", user.Lobby.ID, eventUserLeft, &userJoinEvent{
+		s.BroadcastToRoom("", user.Lobby.ID, eventUserLeft, &userLeftEvent{
 			UserID: u.ID,
 			Name:   u.Name,
 			Avatar: u.Avatar,

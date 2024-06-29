@@ -21,7 +21,7 @@ const (
 )
 
 type swipeEvent struct {
-	SwipeType domain.SwipeType `json:"s	wipeType"`
+	SwipeType domain.SwipeType `json:"swipeType"`
 }
 
 type matchEvent struct {
