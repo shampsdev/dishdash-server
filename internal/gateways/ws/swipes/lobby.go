@@ -211,7 +211,10 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 				// 1 - finish
 				if matchResults[1] == len(u.Lobby.GetUsers()) {
 					lobbyResults := u.Lobby.GetResults()
-
+					err := useCases.Lobby.SetLobbyActive(context.Background(), u.Lobby.ID, true)
+					if err != nil {
+						log.Printf("error while set lobby active: %s", err.Error())
+					}
 					s.BroadcastToRoom(
 						"",
 						u.Lobby.ID,
