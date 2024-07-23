@@ -40,7 +40,7 @@ func FindLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 			return
 		}
 
-		lobby, err = lobbyUseCase.CreateLobby(c, usecase.LobbyInput{Location: locDist.Location})
+		lobby, err = lobbyUseCase.CreateLobby(c, usecase.SaveLobbyInput{Location: locDist.Location})
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

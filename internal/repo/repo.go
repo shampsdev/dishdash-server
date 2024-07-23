@@ -10,10 +10,10 @@ type Tag interface {
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
 
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
-	GetTagsByPlaceID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
+	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
 
 	AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error
-	DetachTagsFromLobby(ctx context.Context, tagIDs []int64, lobbyID string) error
+	DetachTagsFromLobby(ctx context.Context, lobbyID string) error
 	GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Tag, error)
 }
 
@@ -39,9 +39,9 @@ type Lobby interface {
 	SaveLobby(ctx context.Context, lobby *domain.Lobby) (string, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
+	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
 
 	NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error)
-	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
 }
 
 type Swipe interface {

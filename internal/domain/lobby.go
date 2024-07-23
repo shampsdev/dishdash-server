@@ -6,7 +6,7 @@ import (
 
 type Lobby struct {
 	ID        string     `json:"id"`
-	State     string     `json:"state"`
+	State     LobbyState `json:"state"`
 	PriceAvg  int        `json:"priceAvg"`
 	Location  Coordinate `json:"location"`
 	CreatedAt time.Time  `json:"createdAt"`

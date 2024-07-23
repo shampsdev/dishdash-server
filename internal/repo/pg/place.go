@@ -2,7 +2,6 @@ package pg
 
 import (
 	"context"
-	"dishdash.ru/internal/repo"
 	"fmt"
 	"github.com/jackc/pgx/v5"
 	"log"
@@ -16,11 +15,10 @@ import (
 
 type PlaceRepo struct {
 	db *pgxpool.Pool
-	tr *repo.Tag
 }
 
-func NewPlaceRepo(db *pgxpool.Pool, tr *repo.Tag) *PlaceRepo {
-	return &PlaceRepo{db: db, tr: tr}
+func NewPlaceRepo(db *pgxpool.Pool) *PlaceRepo {
+	return &PlaceRepo{db: db}
 }
 
 func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64, error) {

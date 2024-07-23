@@ -14,14 +14,14 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param lobby body usecase.LobbyInput true "Lobby data"
+// @Param lobby body usecase.SaveLobbyInput true "Lobby data"
 // @Success 200 {object} lobbyOutput "Saved lobby"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies [post]
 func CreateLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var lobbyInput usecase.LobbyInput
+		var lobbyInput usecase.SaveLobbyInput
 		err := c.BindJSON(&lobbyInput)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
