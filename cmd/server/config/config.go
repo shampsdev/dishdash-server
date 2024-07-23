@@ -12,8 +12,7 @@ import (
 
 type Config struct {
 	Server struct {
-		Port        uint16 `envconfig:"HTTP_PORT" default:"8000"`
-		AllowOrigin string `envconfig:"ALLOW_ORIGIN" default:"*"`
+		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
 	}
 	DB struct {
 		User     string `envconfig:"POSTGRES_USER"`

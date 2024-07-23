@@ -9,27 +9,23 @@ import (
 	"dishdash.ru/internal/domain"
 )
 
-type SwipeRepository struct {
+type SwipeRepo struct {
 	db *pgxpool.Pool
 }
 
-func NewSwipeRepository(pool *pgxpool.Pool) *SwipeRepository {
-	return &SwipeRepository{db: pool}
+func NewSwipeRepo(pool *pgxpool.Pool) *SwipeRepo {
+	return &SwipeRepo{db: pool}
 }
 
-func (sr *SwipeRepository) CreateSwipe(ctx context.Context, swipe *domain.Swipe) error {
+func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 	const saveSwipeQuery = `
-	    INSERT INTO "swipe" (
-	        "lobby_id",
-	        "card_id",
-	        "user_id",
-	        "type"
-	    ) VALUES ($1, $2, $3, $4)
+	    INSERT INTO "swipe" (lobby_id, place_id, user_id, type) 
+	    VALUES ($1, $2, $3, $4)
     `
 
 	_, err := sr.db.Exec(ctx, saveSwipeQuery,
 		swipe.LobbyID,
-		swipe.CardID,
+		swipe.PlaceID,
 		swipe.UserID,
 		swipe.Type,
 	)
@@ -38,4 +34,30 @@ func (sr *SwipeRepository) CreateSwipe(ctx context.Context, swipe *domain.Swipe)
 		return err
 	}
 	return nil
+}
+
+func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
+	const query = `
+	SELECT lobby_id, place_id, user_id, type
+	FROM "swipe" WHERE lobby_id = $1
+`
+	rows, err := sr.db.Query(ctx, query, lobbyID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var swipes []*domain.Swipe
+	for rows.Next() {
+		var swipe domain.Swipe
+		err := rows.Scan(
+			&swipe.LobbyID,
+			&swipe.PlaceID,
+			&swipe.UserID,
+			&swipe.Type,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return swipes, nil
 }

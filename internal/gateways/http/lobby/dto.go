@@ -130,7 +130,7 @@ func swipeToOutput(swipe *domain.Swipe) *swipeOutput {
 	}
 	return &swipeOutput{
 		UserID:  swipe.UserID,
-		CardID:  swipe.CardID,
+		CardID:  swipe.PlaceID,
 		LobbyID: swipe.LobbyID,
 		Type:    string(swipe.Type),
 	}

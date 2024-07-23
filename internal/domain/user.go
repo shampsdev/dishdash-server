@@ -1,12 +1,11 @@
 package domain
 
-import (
-	"time"
-)
+import "time"
 
 type User struct {
-	ID        string
-	Name      string
-	Avatar    string
-	CreatedAt time.Time
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Avatar    string    `json:"avatar"`
+	Telegram  *int64    `json:"telegram"`
+	CreatedAt time.Time `json:"createdAt"`
 }

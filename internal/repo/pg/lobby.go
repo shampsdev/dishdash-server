@@ -2,427 +2,128 @@ package pg
 
 import (
 	"context"
-	"errors"
+	"dishdash.ru/internal/domain"
+	"fmt"
+	"github.com/Vaniog/go-postgis"
 	"math/rand/v2"
 	"time"
 
-	"dishdash.ru/internal/usecase"
-
-	"github.com/jackc/pgx/v5"
-
-	"github.com/Vaniog/go-postgis"
-
-	"dishdash.ru/internal/domain"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type LobbyRepository struct {
+type LobbyRepo struct {
 	db   *pgxpool.Pool
 	rand *rand.Rand
 }
 
-func NewLobbyRepository(db *pgxpool.Pool) *LobbyRepository {
-	return &LobbyRepository{
+func NewLobbyRepo(db *pgxpool.Pool) *LobbyRepo {
+	return &LobbyRepo{
 		db:   db,
 		rand: rand.New(rand.NewPCG(uint64(time.Now().UnixNano()), rand.Uint64())),
 	}
 }
 
-func (lr *LobbyRepository) CreateLobby(ctx context.Context, lobby *domain.Lobby) (*domain.Lobby, error) {
-	tx, err := lr.db.Begin(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer func(tx pgx.Tx, ctx context.Context) {
-		_ = tx.Rollback(ctx)
-	}(tx, ctx)
+func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string, error) {
+	const saveQuery = `
+		INSERT INTO "lobby" (id, state, price_avg, location, created_at) 
+		VALUES ($1, $2, $3, ST_GeogFromWkb($4), $5)
+`
 
-	const saveLobbyQuery = `
-		INSERT INTO "lobby" (
-			"id",
-			"location",
-			"created_at"
-		) VALUES ($1, ST_GeogFromWkb($2), $3)
-		RETURNING "id", "created_at"
-	`
-	row := tx.QueryRow(ctx, saveLobbyQuery,
-		lr.generateID(),
+	id := lr.generateID()
+	lobby.CreatedAt = time.Now().UTC()
+	_, err := lr.db.Exec(ctx, saveQuery,
+		lobby.ID,
+		lobby.State,
+		lobby.PriceAvg,
 		postgis.PointS{SRID: 4326, X: lobby.Location.Lat, Y: lobby.Location.Lon},
-		time.Now().UTC(),
+		lobby.CreatedAt,
 	)
+	if err != nil {
+		return "", fmt.Errorf("can't save lobby: %w", err)
+	}
+	return id, nil
+}
 
+func (lr *LobbyRepo) DeleteLobbyByID(ctx context.Context, id string) error {
+	const deleteQuery = `
+		DELETE FROM "lobby" WHERE id = $1
+`
+	_, err := lr.db.Exec(ctx, deleteQuery, id)
+	if err != nil {
+		return fmt.Errorf("can't delete lobby: %w", err)
+	}
+	return nil
+}
+
+func (lr *LobbyRepo) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error) {
+	const getQuery = `
+		SELECT id, state, price_avg, location, created_at
+		FROM "lobby" WHERE id = $1
+`
+	row, err := lr.db.Query(ctx, getQuery, id)
+	if err != nil {
+		return nil, fmt.Errorf("can't get lobby: %w", err)
+	}
+	defer row.Close()
+	lobby := &domain.Lobby{}
+	var loc postgis.PointS
 	err = row.Scan(
 		&lobby.ID,
+		&lobby.State,
+		&lobby.PriceAvg,
+		&loc,
 		&lobby.CreatedAt,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can't get lobby: %w", err)
 	}
-
-	const saveLobbySettingsQuery = `
-		INSERT INTO "lobbysettings" (
-			"lobby_id",
-			"price_min",
-			"price_max",
-			"max_distance"
-		) VALUES ($1, $2, $3, $4)
-		RETURNING "id"
-	`
-	settingsRow := tx.QueryRow(ctx, saveLobbySettingsQuery,
-		lobby.ID,
-		0.0,
-		1000000.0,
-		1000000000.0,
-	)
-
-	var settingsID int
-	err = settingsRow.Scan(&settingsID)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := tx.Commit(ctx); err != nil {
-		return nil, err
-	}
-
+	lobby.Location = domain.Coordinate{Lat: loc.X, Lon: loc.Y}
 	return lobby, nil
 }
 
-func (lr *LobbyRepository) NearestActiveLobby(ctx context.Context, location domain.Coordinate) (*domain.Lobby, float64, error) {
+func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error) {
 	const getQuery = `
-	SELECT lobby.id, lobby.created_at, lobby.location, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
+	SELECT lobby.id, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
     FROM lobby
     WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
-    	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1)))
+    	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1))) 
     	FROM lobby
-  	)
-	AND lobby.active
-	AND extract(epoch from now() - lobby.created_at) / 60 <= 5
+  	) AND lobby.state = 'active';
 `
 	row := lr.db.QueryRow(ctx, getQuery,
-		postgis.PointS{SRID: 4326, X: location.Lat, Y: location.Lon},
+		postgis.PointS{SRID: 4326, X: loc.Lat, Y: loc.Lon},
 	)
 
-	lobby := new(domain.Lobby)
+	id := ""
 	dist := 0.0
-	var loc postgis.PointS
 	err := row.Scan(
-		&lobby.ID,
-		&lobby.CreatedAt,
-		&loc,
+		&id,
 		&dist,
 	)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, 0, usecase.ErrLobbyNotFound
-	}
-	lobby.Location = domain.Coordinate{Lat: loc.X, Lon: loc.Y}
 	if err != nil {
-		return nil, 0, err
+		return "", 0, err
 	}
-	return lobby, dist, nil
+	return id, dist, nil
 }
 
-func (lr *LobbyRepository) DeleteLobbyByID(ctx context.Context, lobbyID string) error {
-	const deleteQuery = `
-	WITH deleted as (
-		DELETE FROM lobby
-		WHERE id = $1
-		RETURNING *
-	)
-	SELECT count(*) FROM deleted
+func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error {
+	const query = `
+		UPDATE lobby SET state = $1, price_avg = $2, location = $3 
+		WHERE id = $4
 `
-	row := lr.db.QueryRow(ctx, deleteQuery, lobbyID)
-	amount := 0
-	err := row.Scan(&amount)
+	_, err := lr.db.Exec(ctx, query, lobby.State, lobby.PriceAvg, lobby.Location, lobby.ID)
 	if err != nil {
-		return err
-	}
-	if amount == 0 {
-		return errors.New("nothing to delete")
+		return fmt.Errorf("can't update lobby: %w", err)
 	}
 	return nil
 }
 
 var letterRunes = []rune("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-func (lr *LobbyRepository) generateID() string {
+func (lr *LobbyRepo) generateID() string {
 	b := make([]rune, 5)
 	for i := range b {
 		b[i] = letterRunes[lr.rand.IntN(len(letterRunes))]
 	}
 	return string(b)
-}
-
-func (lr *LobbyRepository) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error) {
-	const getQuery = `
-	SELECT id, created_at, location
-	FROM lobby
-	WHERE id = $1
-`
-	row := lr.db.QueryRow(ctx, getQuery, id)
-
-	var lobby domain.Lobby
-	var location postgis.PointS
-
-	err := row.Scan(&lobby.ID, &lobby.CreatedAt, &location)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, usecase.ErrLobbyNotFound
-	}
-	if err != nil {
-		return nil, err
-	}
-	lobby.Location = domain.Coordinate{Lat: location.X, Lon: location.Y}
-
-	lobbySettings, err := lr.getLobbySettings(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-	lobby.LobbySettings = lobbySettings
-
-	cards, err := lr.getLobbyCards(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-	lobby.Cards = cards
-
-	matches, err := lr.getMatches(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-	lobby.Matches = matches
-
-	finalVotes, err := lr.getFinalVotes(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-	lobby.FinalVotes = finalVotes
-
-	swipes, err := lr.getSwipes(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-	lobby.Swipes = swipes
-
-	return &lobby, nil
-}
-
-func (lr *LobbyRepository) getLobbySettings(ctx context.Context, lobbyID string) (*domain.LobbySettings, error) {
-	const query = `
-		SELECT id, price_min, price_max, max_distance
-		FROM lobbysettings
-		WHERE lobby_id = $1
-	`
-	row := lr.db.QueryRow(ctx, query, lobbyID)
-
-	var lobbySettings domain.LobbySettings
-	if err := row.Scan(
-		&lobbySettings.ID,
-		&lobbySettings.PriceMin,
-		&lobbySettings.PriceMax,
-		&lobbySettings.MaxDistance,
-	); err != nil {
-		return nil, err
-	}
-
-	const queryTags = `
-		SELECT t.id, t.name, t.icon
-		FROM lobbysettings_tag lt
-		JOIN tag t ON lt.tag_id = t.id
-		WHERE lt.lobbysettings_id = $1 
-`
-
-	rows, err := lr.db.Query(ctx, queryTags, lobbySettings.ID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var tags []domain.Tag
-	for rows.Next() {
-		var tag domain.Tag
-		if err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon); err != nil {
-			return nil, err
-		}
-		tags = append(tags, tag)
-	}
-
-	lobbySettings.Tags = tags
-
-	return &lobbySettings, nil
-}
-
-func (lr *LobbyRepository) getLobbyCards(ctx context.Context, lobbyID string) ([]*domain.Card, error) {
-	const query = `
-		SELECT c.id, c.title, c.short_description, c.description, c.image, c.location, c.address, c.price_min, c.price_max
-		FROM lobby_card lc
-		JOIN card c ON lc.card_id = c.id
-		WHERE lc.lobby_id = $1
-	`
-	rows, err := lr.db.Query(ctx, query, lobbyID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var cards []*domain.Card
-	for rows.Next() {
-		var card domain.Card
-		var location postgis.PointS
-		if err := rows.Scan(&card.ID, &card.Title, &card.ShortDescription, &card.Description, &card.Image, &location, &card.Address, &card.PriceMin, &card.PriceMax); err != nil {
-			return nil, err
-		}
-		card.Location = domain.Coordinate{Lat: location.X, Lon: location.Y}
-		cards = append(cards, &card)
-	}
-
-	return cards, nil
-}
-
-func (lr *LobbyRepository) getMatches(ctx context.Context, lobbyID string) ([]*domain.Match, error) {
-	const query = `
-		SELECT m.id, m.lobby_id, m.card_id
-		FROM match m
-		WHERE m.lobby_id = $1
-	`
-	rows, err := lr.db.Query(ctx, query, lobbyID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var matches []*domain.Match
-	for rows.Next() {
-		var match domain.Match
-		if err := rows.Scan(&match.ID, &match.LobbyID, &match.CardID); err != nil {
-			return nil, err
-		}
-		matches = append(matches, &match)
-	}
-
-	return matches, nil
-}
-
-func (lr *LobbyRepository) getFinalVotes(ctx context.Context, lobbyID string) ([]*domain.FinalVote, error) {
-	const query = `
-		SELECT fv.id, fv.lobby_id, fv.card_id, fv.user_id
-		FROM final_vote fv
-		WHERE fv.lobby_id = $1
-	`
-	rows, err := lr.db.Query(ctx, query, lobbyID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var finalVotes []*domain.FinalVote
-	for rows.Next() {
-		var finalVote domain.FinalVote
-		if err := rows.Scan(&finalVote.ID, &finalVote.LobbyID, &finalVote.CardID, &finalVote.UserID); err != nil {
-			return nil, err
-		}
-		finalVotes = append(finalVotes, &finalVote)
-	}
-
-	return finalVotes, nil
-}
-
-func (lr *LobbyRepository) getSwipes(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
-	const query = `
-		SELECT sw.lobby_id, sw.card_id, sw.user_id, sw.type
-		FROM swipe sw
-		WHERE sw.lobby_id = $1
-	`
-	rows, err := lr.db.Query(ctx, query, lobbyID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var swipes []*domain.Swipe
-	for rows.Next() {
-		var swipe domain.Swipe
-		if err := rows.Scan(
-			&swipe.LobbyID,
-			&swipe.CardID,
-			&swipe.UserID,
-			&swipe.Type,
-		); err != nil {
-			return nil, err
-		}
-		swipes = append(swipes, &swipe)
-	}
-
-	return swipes, nil
-}
-
-func (lr *LobbyRepository) GetCardsForSettings(ctx context.Context, loc domain.Coordinate, settings *domain.LobbySettings) ([]*domain.Card, error) {
-	const query = `
-		SELECT 
-		    c.id,
-		    c.title, 
-		    c.short_description,
-		    c.description, 
-		    c.image, 
-		    c.location,
-		    c.address,
-		    c.price_min,
-		    c.price_max
-		FROM card c
-		JOIN card_tag ct ON c.id = ct.card_id
-		WHERE ct.tag_id = ANY($1)
-		AND ST_Distance(c.location, ST_GeogFromWkb($2)) <= $3
-		GROUP BY c.id, c.location
-		ORDER BY ST_Distance(c.location, ST_GeogFromWkb($2))
-	`
-
-	tagIDs := make([]int64, len(settings.Tags))
-	for i, tag := range settings.Tags {
-		tagIDs[i] = tag.ID
-	}
-
-	rows, err := lr.db.Query(
-		ctx,
-		query,
-		tagIDs,
-		postgis.PointS{SRID: 4326, X: loc.Lat, Y: loc.Lon},
-		settings.MaxDistance,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var cards []*domain.Card
-	for rows.Next() {
-		var card domain.Card
-		var location postgis.PointS
-		if err := rows.Scan(
-			&card.ID,
-			&card.Title,
-			&card.ShortDescription,
-			&card.Description,
-			&card.Image,
-			&location,
-			&card.Address,
-			&card.PriceMin,
-			&card.PriceMax,
-		); err != nil {
-			return nil, err
-		}
-		card.Location = domain.Coordinate{Lat: location.X, Lon: location.Y}
-		cards = append(cards, &card)
-	}
-
-	return cards, nil
-}
-
-func (lr *LobbyRepository) SetLobbyActive(ctx context.Context, id string, active bool) error {
-	const query = `
-		UPDATE lobby
-		SET active = $1
-		WHERE id = $2
-	`
-
-	_, err := lr.db.Exec(ctx, query, active, id)
-	return err
 }

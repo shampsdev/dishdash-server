@@ -38,11 +38,11 @@ func main() {
 }
 
 func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
-	cr := pg.NewCardRepository(pool)
-	tr := pg.NewTagRepository(pool)
-	lr := pg.NewLobbyRepository(pool)
-	ur := pg.NewUserRepository(pool)
-	sr := pg.NewSwipeRepository(pool)
+	cr := pg.NewPlaceRepo(pool)
+	tr := pg.NewTagRepo(pool)
+	lr := pg.NewLobbyRepo(pool)
+	ur := pg.NewUserRepo(pool)
+	sr := pg.NewSwipeRepo(pool)
 
 	return usecase.Cases{
 		Card:  usecase.NewCardUseCase(cr, tr),
