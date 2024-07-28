@@ -31,8 +31,9 @@ type SavePlaceInput struct {
 	Description      string            `json:"description"`
 	Location         domain.Coordinate `json:"location"`
 	Address          string            `json:"address"`
-	PriceMin         int               `json:"priceMin"`
-	PriceMax         int               `json:"priceMax"`
+	PriceAvg         int               `json:"priceMin"`
+	ReviewRating     float64           `json:"reviewRating"`
+	ReviewCount      int               `json:"reviewCount"`
 	Images           []string          `json:"images"`
 	Tags             []int64           `json:"tags"`
 }

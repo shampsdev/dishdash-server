@@ -30,10 +30,11 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		"images",
 		"location",
 		"address",
-		"price_min",
-	    "price_max",
+		"price_avg",
+	    "review_rating",
+		"review_count",
 		"updated_at"
-	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9)
+	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9, $10)
 	RETURNING "id"
 `
 
@@ -45,8 +46,9 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		strings.Join(place.Images, ","),
 		postgis.PointS{SRID: 4326, X: place.Location.Lon, Y: place.Location.Lat},
 		place.Address,
-		place.PriceMin,
-		place.PriceMax,
+		place.PriceAvg,
+		place.ReviewRating,
+		place.ReviewCount,
 		place.UpdatedAt,
 	)
 
@@ -69,8 +71,9 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 		"images",
 		"location",
 		"address",
-		"price_min",
-		"price_max",
+		"price_avg",
+		"review_rating",
+		"review_count",
 		"updated_at"
 	FROM "place"
 	WHERE id=$1
@@ -94,8 +97,9 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 		"images",
 		"location",
 		"address",
-		"price_min",
-		"price_max",
+		"price_avg",
+		"review_rating",
+		"review_count",
 		"updated_at"
 	FROM "place"
 `
@@ -151,8 +155,9 @@ func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]
 		place.images,
 		place.location,
 		place.address,
-		place.price_min,
-		place.price_max,
+		place.price_avg,
+		place.review_rating,
+		place.review_count,
 		place.updated_at
 	FROM place
 	JOIN place_lobby ON place.id = place_lobby.place_id
@@ -197,8 +202,9 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 		&imagesStr,
 		&loc,
 		&p.Address,
-		&p.PriceMin,
-		&p.PriceMax,
+		&p.PriceAvg,
+		&p.ReviewRating,
+		&p.ReviewCount,
 		&p.UpdatedAt,
 	)
 	p.Location = domain.Coordinate{

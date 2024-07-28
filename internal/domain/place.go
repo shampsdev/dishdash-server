@@ -12,8 +12,9 @@ type Place struct {
 	Images           []string   `json:"image"`
 	Location         Coordinate `json:"location"`
 	Address          string     `json:"address"`
-	PriceMin         int        `json:"priceMin"`
-	PriceMax         int        `json:"priceMax"`
+	PriceAvg         int        `json:"priceMin"`
+	ReviewRating     float64    `json:"reviewRating"`
+	ReviewCount      int        `json:"reviewCount"`
 	Tags             []*Tag     `json:"tags"`
 	UpdatedAt        time.Time  `json:"updatedAt"`
 }

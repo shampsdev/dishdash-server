@@ -23,8 +23,9 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 		Images:           placeInput.Images,
 		Location:         placeInput.Location,
 		Address:          placeInput.Address,
-		PriceMin:         placeInput.PriceMin,
-		PriceMax:         placeInput.PriceMax,
+		PriceAvg:         placeInput.PriceAvg,
+		ReviewRating:     placeInput.ReviewRating,
+		ReviewCount:      placeInput.ReviewCount,
 	}
 	id, err := p.pRepo.SavePlace(ctx, place)
 	if err != nil {

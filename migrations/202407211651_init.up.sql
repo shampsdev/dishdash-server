@@ -7,8 +7,9 @@ CREATE TABLE "place"
     "images"            text         NOT NULL,
     "location"          geography    NOT NULL,
     "address"           varchar(255) NOT NULL,
-    "price_min"         decimal      NOT NULL,
-    "price_max"         decimal      NOT NULL,
+    "price_avg"         decimal      NOT NULL,
+    "review_rating"     float        NOT NULL,
+    "review_count"      decimal      NOT NULL,
     "updated_at"        timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );
