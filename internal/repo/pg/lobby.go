@@ -3,8 +3,11 @@ package pg
 import (
 	"context"
 	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/repo"
+	"errors"
 	"fmt"
 	"github.com/Vaniog/go-postgis"
+	"github.com/jackc/pgx/v5"
 	"math/rand/v2"
 	"time"
 
@@ -29,7 +32,7 @@ func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string
 		VALUES ($1, $2, $3, ST_GeogFromWkb($4), $5)
 `
 
-	id := lr.generateID()
+	lobby.ID = lr.generateID()
 	lobby.CreatedAt = time.Now().UTC()
 	_, err := lr.db.Exec(ctx, saveQuery,
 		lobby.ID,
@@ -41,7 +44,7 @@ func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string
 	if err != nil {
 		return "", fmt.Errorf("can't save lobby: %w", err)
 	}
-	return id, nil
+	return lobby.ID, nil
 }
 
 func (lr *LobbyRepo) DeleteLobbyByID(ctx context.Context, id string) error {
@@ -60,14 +63,11 @@ func (lr *LobbyRepo) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby
 		SELECT id, state, price_avg, location, created_at
 		FROM "lobby" WHERE id = $1
 `
-	row, err := lr.db.Query(ctx, getQuery, id)
-	if err != nil {
-		return nil, fmt.Errorf("can't get lobby: %w", err)
-	}
-	defer row.Close()
+	row := lr.db.QueryRow(ctx, getQuery, id)
+
 	lobby := &domain.Lobby{}
 	var loc postgis.PointS
-	err = row.Scan(
+	err := row.Scan(
 		&lobby.ID,
 		&lobby.State,
 		&lobby.PriceAvg,
@@ -100,8 +100,8 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
 		&id,
 		&dist,
 	)
-	if err != nil {
-		return "", 0, err
+	if errors.Is(err, pgx.ErrNoRows) {
+		return "", 0, repo.ErrLobbyNotFound
 	}
 	return id, dist, nil
 }

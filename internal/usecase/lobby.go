@@ -4,6 +4,7 @@ import (
 	"context"
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
+	"errors"
 )
 
 type LobbyUseCase struct {
@@ -119,4 +120,21 @@ func (l LobbyUseCase) NearestActiveLobby(ctx context.Context, loc domain.Coordin
 		return nil, 0, err
 	}
 	return lobby, dist, nil
+}
+
+func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*domain.Lobby, error) {
+	lobby, dist, err := l.NearestActiveLobby(ctx, input.Location)
+	if err != nil && !errors.Is(err, repo.ErrLobbyNotFound) {
+		return nil, err
+	}
+	if dist > input.Dist || errors.Is(err, repo.ErrLobbyNotFound) {
+		lobby, err = l.SaveLobby(ctx, SaveLobbyInput{
+			Location: input.Location,
+			PriceAvg: 500,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return l.GetLobbyByID(ctx, lobby.ID)
 }

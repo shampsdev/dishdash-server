@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"dishdash.ru/internal/usecase"
-	"dishdash.ru/pkg/filter"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +14,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Success 200 {array} userOutput "List of users"
+// @Success 200 {array} domain.User "List of users"
 // @Failure 500
 // @Router /users [get]
 func GetAllUsers(userUseCase usecase.User) gin.HandlerFunc {
@@ -26,6 +25,6 @@ func GetAllUsers(userUseCase usecase.User) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, filter.Map(users, userToOutput))
+		c.JSON(http.StatusOK, users)
 	}
 }

@@ -22,6 +22,8 @@ type User interface {
 	SaveUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
+	GetAllUsers(ctx context.Context) ([]*domain.User, error)
+
 	AttachUserToLobby(ctx context.Context, userID string, lobbyID string) error
 }
 
@@ -56,12 +58,18 @@ type UpdateLobbyInput struct {
 	SaveLobbyInput
 }
 
+type FindLobbyInput struct {
+	Dist     float64           `json:"dist"`
+	Location domain.Coordinate `json:"location"`
+}
+
 type Lobby interface {
 	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*domain.Lobby, error)
 	UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInput) (*domain.Lobby, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
 
+	FindLobby(ctx context.Context, input FindLobbyInput) (*domain.Lobby, error)
 	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
 }
 

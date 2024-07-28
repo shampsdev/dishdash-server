@@ -2,8 +2,8 @@ package http
 
 import (
 	"dishdash.ru/docs"
-	"dishdash.ru/internal/gateways/http/card"
 	"dishdash.ru/internal/gateways/http/lobby"
+	"dishdash.ru/internal/gateways/http/place"
 	"dishdash.ru/internal/gateways/http/user"
 	"dishdash.ru/internal/usecase"
 
@@ -17,7 +17,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 
 	v1 := s.Router.Group("/api/v1")
 	{
-		card.SetupHandlers(v1, useCases)
+		place.SetupHandlers(v1, useCases)
 		lobby.SetupHandlers(v1, useCases)
 		user.SetupHandlers(v1, useCases)
 	}

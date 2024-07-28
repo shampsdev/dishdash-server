@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Schemes http https
 // @Param id path string true "Lobby ID"
-// @Success 200 {object} lobbyOutput "Lobby data"
+// @Success 200 {object} domain.Lobby "Lobby data"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies/{id} [get]
@@ -29,6 +29,6 @@ func GetLobbyByID(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, lobbyToOutput(lobby))
+		c.JSON(http.StatusOK, lobby)
 	}
 }

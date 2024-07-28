@@ -30,6 +30,9 @@ func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) 
 }
 
 func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error {
+	if len(tagIDs) == 0 {
+		return nil
+	}
 	batch := &pgx.Batch{}
 
 	query := `INSERT INTO place_tag (tag_id, place_id) VALUES ($1, $2)`
@@ -54,6 +57,9 @@ func (tr *TagRepo) DetachTagsFromLobby(ctx context.Context, lobbyID string) erro
 }
 
 func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error {
+	if len(tagIDs) == 0 {
+		return nil
+	}
 	batch := &pgx.Batch{}
 
 	query := `INSERT INTO lobby_tag (tag_id, lobby_id) VALUES ($1, $2)`

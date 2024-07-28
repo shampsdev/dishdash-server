@@ -1,7 +1,6 @@
 package lobby
 
 import (
-	"errors"
 	"net/http"
 
 	"dishdash.ru/internal/usecase"
@@ -15,37 +14,27 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param location body findLobbyInput true "Location + Distance (in metres)"
-// @Success 200 {object} lobbyOutput
-// @Success 201 {object} lobbyOutput
+// @Param location body usecase.FindLobbyInput true "Location + Distance (in metres)"
+// @Success 200 {object} domain.Lobby
+// @Success 201 {object} domain.Lobby
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies/find [post]
 func FindLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var locDist findLobbyInput
+		var locDist usecase.FindLobbyInput
 		err := c.BindJSON(&locDist)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		lobby, dist, err := lobbyUseCase.NearestActiveLobby(c, locDist.Location)
-		if err != nil && !errors.Is(err, usecase.ErrLobbyNotFound) {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		if dist <= locDist.Dist && !errors.Is(err, usecase.ErrLobbyNotFound) {
-			c.JSON(http.StatusOK, lobbyToOutput(lobby))
-			return
-		}
-
-		lobby, err = lobbyUseCase.CreateLobby(c, usecase.SaveLobbyInput{Location: locDist.Location})
+		lobby, err := lobbyUseCase.FindLobby(c.Request.Context(), locDist)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusCreated, lobbyToOutput(lobby))
+		c.JSON(http.StatusOK, lobby)
 	}
 }

@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Schemes http https
 // @Param id path string true "User ID"
-// @Success 200 {object} userOutput "User data"
+// @Success 200 {object} domain.User "User data"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /users/{id} [get]
@@ -29,6 +29,6 @@ func GetUserByID(userUseCase usecase.User) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, userToOutput(user))
+		c.JSON(http.StatusOK, user)
 	}
 }

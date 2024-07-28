@@ -96,6 +96,37 @@ func (ur *UserRepo) AttachUserToLobby(ctx context.Context, userID string, lobbyI
 	return nil
 }
 
+func (ur *UserRepo) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
+	const query = `
+		SELECT id, name, avatar, telegram, created_at
+		FROM "user"
+	`
+
+	rows, err := ur.db.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("could not get all users: %w", err)
+	}
+	defer rows.Close()
+
+	var users []*domain.User
+	for rows.Next() {
+		user := new(domain.User)
+		err := rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Avatar,
+			&user.Telegram,
+			&user.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
 func (ur *UserRepo) GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error) {
 	const query = `
 		SELECT id, name, avatar, telegram, created_at

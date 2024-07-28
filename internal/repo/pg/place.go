@@ -129,6 +129,9 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 }
 
 func (pr *PlaceRepo) AttachPlacesToLobby(ctx context.Context, placesIDs []int64, lobbyID string) error {
+	if len(placesIDs) == 0 {
+		return nil
+	}
 	batch := &pgx.Batch{}
 	query := `INSERT INTO place_lobby (lobby_id, place_id) VALUES ($1, $2)`
 	for _, placeID := range placesIDs {

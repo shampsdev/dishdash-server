@@ -37,7 +37,7 @@ func NearestLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, nearestLobbyOutput{
 			Dist:  dist,
-			Lobby: lobbyToOutput(lobby),
+			Lobby: lobby,
 		})
 	}
 }

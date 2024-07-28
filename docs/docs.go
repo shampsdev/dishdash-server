@@ -15,140 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/cards": {
-            "get": {
-                "description": "Get a list of cards from the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Get cards",
-                "responses": {
-                    "200": {
-                        "description": "List of cards",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/card.cardOutput"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new card in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Create a card",
-                "parameters": [
-                    {
-                        "description": "Card data",
-                        "name": "card",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecase.CardInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Saved card",
-                        "schema": {
-                            "$ref": "#/definitions/card.cardOutput"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/cards/tags": {
-            "get": {
-                "description": "Get a list of tags from the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Get tags",
-                "responses": {
-                    "200": {
-                        "description": "List of tags",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/card.tagOutput"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new tag in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Create a tag",
-                "parameters": [
-                    {
-                        "description": "Tag data",
-                        "name": "tag",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecase.TagInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Saved tag",
-                        "schema": {
-                            "$ref": "#/definitions/card.tagOutput"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/lobbies": {
             "post": {
                 "description": "Create a new lobby in the database",
@@ -169,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecase.LobbyInput"
+                            "$ref": "#/definitions/usecase.SaveLobbyInput"
                         }
                     }
                 ],
@@ -177,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/lobby.lobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -209,7 +75,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/lobby.findLobbyInput"
+                            "$ref": "#/definitions/usecase.FindLobbyInput"
                         }
                     }
                 ],
@@ -217,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/lobby.lobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/lobby.lobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -301,7 +167,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Lobby data",
                         "schema": {
-                            "$ref": "#/definitions/lobby.lobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -346,9 +212,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/lobbies/{id}/cards": {
+        "/places": {
             "get": {
-                "description": "Get cards filtered with lobby settings",
+                "description": "Get a list of places from the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -356,26 +222,119 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "lobbies"
+                    "places"
                 ],
-                "summary": "Get cards filtered with lobby settings",
+                "summary": "Get places",
+                "responses": {
+                    "200": {
+                        "description": "List of places",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Place"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new place in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Create a place",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Lobby ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Place data",
+                        "name": "place",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecase.SavePlaceInput"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "cards",
+                        "description": "Saved place",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Place"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/places/tags": {
+            "get": {
+                "description": "Get a list of tags from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Get tags",
+                "responses": {
+                    "200": {
+                        "description": "List of tags",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/lobby.cardOutput"
+                                "$ref": "#/definitions/domain.Tag"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new tag in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Create a tag",
+                "parameters": [
+                    {
+                        "description": "Tag data",
+                        "name": "tag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Tag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saved tag",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Tag"
                         }
                     },
                     "400": {
@@ -406,7 +365,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/user.userOutput"
+                                "$ref": "#/definitions/domain.User"
                             }
                         }
                     },
@@ -416,7 +375,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update a existing user in the database",
+                "description": "Update an existing user in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -434,7 +393,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecase.UserInputExtended"
+                            "$ref": "#/definitions/domain.User"
                         }
                     }
                 ],
@@ -442,7 +401,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Updated user",
                         "schema": {
-                            "$ref": "#/definitions/user.userOutput"
+                            "$ref": "#/definitions/domain.User"
                         }
                     },
                     "400": {
@@ -454,7 +413,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a new user in the database",
+                "description": "Save a new user in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -464,7 +423,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Create a user",
+                "summary": "Save a user",
                 "parameters": [
                     {
                         "description": "User data",
@@ -472,7 +431,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecase.UserInput"
+                            "$ref": "#/definitions/domain.User"
                         }
                     }
                 ],
@@ -480,7 +439,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved user",
                         "schema": {
-                            "$ref": "#/definitions/user.userOutput"
+                            "$ref": "#/definitions/domain.User"
                         }
                     },
                     "400": {
@@ -518,7 +477,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User data",
                         "schema": {
-                            "$ref": "#/definitions/user.userOutput"
+                            "$ref": "#/definitions/domain.User"
                         }
                     },
                     "400": {
@@ -532,58 +491,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "card.cardOutput": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "priceMax": {
-                    "type": "integer"
-                },
-                "priceMin": {
-                    "type": "integer"
-                },
-                "shortDescription": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/card.tagOutput"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "card.tagOutput": {
-            "type": "object",
-            "properties": {
-                "icon": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "domain.Coordinate": {
             "type": "object",
             "properties": {
@@ -595,7 +502,51 @@ const docTemplate = `{
                 }
             }
         },
-        "lobby.cardOutput": {
+        "domain.Lobby": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "places": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Place"
+                    }
+                },
+                "priceAvg": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "swipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Swipe"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Tag"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.User"
+                    }
+                }
+            }
+        },
+        "domain.Place": {
             "type": "object",
             "properties": {
                 "address": {
@@ -608,140 +559,47 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "image": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "priceMax": {
-                    "type": "integer"
-                },
                 "priceMin": {
                     "type": "integer"
+                },
+                "reviewCount": {
+                    "type": "integer"
+                },
+                "reviewRating": {
+                    "type": "number"
                 },
                 "shortDescription": {
                     "type": "string"
                 },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Tag"
+                    }
+                },
                 "title": {
                     "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },
-        "lobby.finalVoteOutput": {
+        "domain.Swipe": {
             "type": "object",
             "properties": {
                 "cardID": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
-                },
-                "lobbyID": {
-                    "type": "string"
-                },
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
-        "lobby.findLobbyInput": {
-            "type": "object",
-            "properties": {
-                "dist": {
-                    "type": "number"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                }
-            }
-        },
-        "lobby.lobbyOutput": {
-            "type": "object",
-            "properties": {
-                "cards": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/lobby.cardOutput"
-                    }
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "finalVotes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/lobby.finalVoteOutput"
-                    }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "lobbySettings": {
-                    "$ref": "#/definitions/lobby.lobbySettingsOutput"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "matches": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/lobby.matchOutput"
-                    }
-                },
-                "swipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/lobby.swipeOutput"
-                    }
-                }
-            }
-        },
-        "lobby.lobbySettingsOutput": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "maxDistance": {
-                    "type": "number"
-                },
-                "priceMax": {
-                    "type": "integer"
-                },
-                "priceMin": {
-                    "type": "integer"
-                }
-            }
-        },
-        "lobby.matchOutput": {
-            "type": "object",
-            "properties": {
-                "cardID": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "lobbyID": {
-                    "type": "string"
-                }
-            }
-        },
-        "lobby.nearestLobbyOutput": {
-            "type": "object",
-            "properties": {
-                "distance": {
-                    "type": "number"
-                },
-                "lobby": {
-                    "$ref": "#/definitions/lobby.lobbyOutput"
-                }
-            }
-        },
-        "lobby.swipeOutput": {
-            "type": "object",
-            "properties": {
-                "cardID": {
                     "type": "integer"
                 },
                 "lobbyID": {
@@ -755,7 +613,80 @@ const docTemplate = `{
                 }
             }
         },
-        "usecase.CardInput": {
+        "domain.Tag": {
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.User": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "telegram": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lobby.nearestLobbyOutput": {
+            "type": "object",
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "lobby": {
+                    "$ref": "#/definitions/domain.Lobby"
+                }
+            }
+        },
+        "usecase.FindLobbyInput": {
+            "type": "object",
+            "properties": {
+                "dist": {
+                    "type": "number"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "usecase.SaveLobbyInput": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceAvg": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "usecase.SavePlaceInput": {
             "type": "object",
             "properties": {
                 "address": {
@@ -764,17 +695,23 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "image": {
-                    "type": "string"
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "priceMax": {
-                    "type": "integer"
-                },
                 "priceMin": {
                     "type": "integer"
+                },
+                "reviewCount": {
+                    "type": "integer"
+                },
+                "reviewRating": {
+                    "type": "number"
                 },
                 "shortDescription": {
                     "type": "string"
@@ -786,64 +723,6 @@ const docTemplate = `{
                     }
                 },
                 "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecase.LobbyInput": {
-            "type": "object",
-            "properties": {
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                }
-            }
-        },
-        "usecase.TagInput": {
-            "type": "object",
-            "properties": {
-                "icon": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecase.UserInput": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "usecase.UserInputExtended": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "user.userOutput": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
                     "type": "string"
                 }
             }
