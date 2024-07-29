@@ -46,7 +46,7 @@ func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]
 		return nil, err
 	}
 	defer rows.Close()
-	var swipes []*domain.Swipe
+	swipes := make([]*domain.Swipe, 0)
 	for rows.Next() {
 		var swipe domain.Swipe
 		err := rows.Scan(

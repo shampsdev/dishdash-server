@@ -1,8 +1,9 @@
 package user
 
 import (
-	"dishdash.ru/internal/domain"
 	"net/http"
+
+	"dishdash.ru/internal/domain"
 
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"

@@ -84,7 +84,7 @@ func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (*domain.User, e
 	return user, nil
 }
 
-func (ur *UserRepo) AttachUserToLobby(ctx context.Context, userID string, lobbyID string) error {
+func (ur *UserRepo) AttachUserToLobby(ctx context.Context, userID, lobbyID string) error {
 	const query = `
 		INSERT INTO lobby_user (lobby_id, user_id)
 		VALUES ($1, $2)
@@ -108,7 +108,7 @@ func (ur *UserRepo) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 	}
 	defer rows.Close()
 
-	var users []*domain.User
+	users := make([]*domain.User, 0)
 	for rows.Next() {
 		user := new(domain.User)
 		err := rows.Scan(
@@ -134,7 +134,7 @@ func (ur *UserRepo) GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*d
 		JOIN lobby_user ON "user".id = lobby_user.user_id
 		WHERE lobby_user.lobby_id = $1
 `
-	var users []*domain.User
+	users := make([]*domain.User, 0)
 	rows, err := ur.db.Query(ctx, query, lobbyID)
 	if err != nil {
 		return nil, fmt.Errorf("could not get users by lobby id: %w", err)

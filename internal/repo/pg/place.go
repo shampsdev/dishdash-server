@@ -3,10 +3,11 @@ package pg
 import (
 	"context"
 	"fmt"
-	"github.com/jackc/pgx/v5"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/internal/domain"
 	"github.com/Vaniog/go-postgis"
@@ -110,7 +111,7 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 	}
 	defer rows.Close()
 
-	var places []*domain.Place
+	places := make([]*domain.Place, 0)
 	for rows.Next() {
 		place, err := scanPlace(rows)
 		if err != nil {
@@ -173,7 +174,7 @@ func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]
 	}
 	defer rows.Close()
 
-	var places []*domain.Place
+	places := make([]*domain.Place, 0)
 	for rows.Next() {
 		place, err := scanPlace(rows)
 		if err != nil {

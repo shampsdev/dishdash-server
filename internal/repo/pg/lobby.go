@@ -2,14 +2,16 @@ package pg
 
 import (
 	"context"
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/repo"
 	"errors"
 	"fmt"
-	"github.com/Vaniog/go-postgis"
-	"github.com/jackc/pgx/v5"
 	"math/rand/v2"
 	"time"
+
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/repo"
+
+	"github.com/Vaniog/go-postgis"
+	"github.com/jackc/pgx/v5"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

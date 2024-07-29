@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
 )
@@ -35,6 +36,6 @@ func (u UserUseCase) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 	return u.uRepo.GetAllUsers(ctx)
 }
 
-func (u UserUseCase) AttachUserToLobby(ctx context.Context, userID string, lobbyID string) error {
+func (u UserUseCase) AttachUserToLobby(ctx context.Context, userID, lobbyID string) error {
 	return u.uRepo.AttachUserToLobby(ctx, userID, lobbyID)
 }

@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+
 	"dishdash.ru/internal/domain"
 )
 
@@ -32,7 +33,7 @@ type User interface {
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 
-	AttachUserToLobby(ctx context.Context, userID string, lobbyID string) error
+	AttachUserToLobby(ctx context.Context, userID, lobbyID string) error
 	GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error)
 }
 

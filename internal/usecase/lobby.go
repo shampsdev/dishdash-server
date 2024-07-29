@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
-	"errors"
 )
 
 type LobbyUseCase struct {

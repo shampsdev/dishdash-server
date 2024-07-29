@@ -91,7 +91,7 @@ func (tr *TagRepo) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*doma
 	}
 	defer rows.Close()
 
-	var tags []*domain.Tag
+	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
 		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
@@ -122,7 +122,7 @@ func (tr *TagRepo) GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*dom
 	}
 	defer rows.Close()
 
-	var tags []*domain.Tag
+	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
 		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
@@ -151,7 +151,7 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	}
 	defer rows.Close()
 
-	var tags []*domain.Tag
+	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
 		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
