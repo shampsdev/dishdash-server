@@ -25,7 +25,7 @@ type Room struct {
 }
 
 func NewRoom(lobby *domain.Lobby) *Room {
-	return &Room{lobby: lobby}
+	return &Room{Lobby: lobby}
 }
 
 func (r *Room) AddUser(user *domain.User) error {
@@ -50,7 +50,7 @@ func (r *Room) UpdateLobby(ctx context.Context, input usecase.UpdateLobbyInput) 
 	if err != nil {
 		return err
 	}
-	r.lobby = lobby
+	r.Lobby = lobby
 	return nil
 }
 
@@ -61,11 +61,11 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 		return err
 	}
 	err = r.UpdateLobby(ctx, usecase.UpdateLobbyInput{
-		ID: r.lobby.ID,
+		ID: r.Lobby.ID,
 		SaveLobbyInput: usecase.SaveLobbyInput{
-			PriceAvg: r.lobby.PriceAvg,
-			Location: r.lobby.Location,
-			Tags: filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+			PriceAvg: r.Lobby.PriceAvg,
+			Location: r.Lobby.Location,
+			Tags: filter.Map(r.Lobby.Tags, func(t *domain.Tag) int64 {
 				return t.ID
 			}),
 			Places: filter.Map(r.places, func(p *domain.Place) int64 {
@@ -79,7 +79,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 
 func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, error) {
 	r.swipes = append(r.swipes, &domain.Swipe{
-		LobbyID: r.lobby.ID,
+		LobbyID: r.Lobby.ID,
 		PlaceID: placeID,
 		UserID:  userID,
 		Type:    t,

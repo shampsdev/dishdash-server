@@ -2,12 +2,14 @@ package room
 
 import (
 	"context"
+	"encoding/json"
+	"log"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/usecase"
 	"dishdash.ru/internal/usecase/room"
-	"encoding/json"
+
 	socketio "github.com/googollee/go-socket.io"
-	"log"
 )
 
 type Context struct {

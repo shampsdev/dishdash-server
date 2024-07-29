@@ -20,7 +20,6 @@ func (r InMemoryRepo) GetRoom(ctx context.Context, id string) (*Room, error) {
 	room, ok := r.rooms[id]
 	if !ok {
 		lobby, err := r.lobbyUseCase.GetLobbyByID(ctx, id)
-
 		if err != nil {
 			return nil, err
 		}
