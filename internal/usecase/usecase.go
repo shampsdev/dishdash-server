@@ -52,6 +52,7 @@ type SaveLobbyInput struct {
 	PriceAvg int               `json:"priceAvg"`
 	Location domain.Coordinate `json:"location"`
 	Tags     []int64           `json:"tags"`
+	Places   []int64           `json:"places"`
 }
 
 type UpdateLobbyInput struct {

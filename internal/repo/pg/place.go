@@ -149,6 +149,15 @@ func (pr *PlaceRepo) AttachPlacesToLobby(ctx context.Context, placesIDs []int64,
 	return nil
 }
 
+func (pr *PlaceRepo) DetachPlacesFromLobby(ctx context.Context, placeID string) error {
+	query := `DELETE FROM place_lobby WHERE lobby_id=$1`
+	_, err := pr.db.Exec(ctx, query, placeID)
+	if err != nil {
+		return fmt.Errorf("could not detach tags from place: %w", err)
+	}
+	return nil
+}
+
 func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error) {
 	query := `
 	SELECT 

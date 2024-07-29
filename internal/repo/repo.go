@@ -23,6 +23,7 @@ type Place interface {
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 
+	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
 	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 	GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
 }

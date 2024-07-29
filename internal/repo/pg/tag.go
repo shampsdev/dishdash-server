@@ -53,7 +53,10 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 func (tr *TagRepo) DetachTagsFromLobby(ctx context.Context, lobbyID string) error {
 	query := `DELETE FROM lobby_tag WHERE lobby_id = $1`
 	_, err := tr.db.Exec(ctx, query, lobbyID)
-	return err
+	if err != nil {
+		return fmt.Errorf("could not detach tags from lobby: %w", err)
+	}
+	return nil
 }
 
 func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error {

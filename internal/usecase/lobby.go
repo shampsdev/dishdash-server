@@ -74,6 +74,16 @@ func (l LobbyUseCase) UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInp
 		return nil, err
 	}
 
+	err = l.pRepo.DetachPlacesFromLobby(ctx, lobby.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = l.pRepo.AttachPlacesToLobby(ctx, lobbyInput.Places, lobby.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return l.GetLobbyByID(ctx, lobby.ID)
 }
 
