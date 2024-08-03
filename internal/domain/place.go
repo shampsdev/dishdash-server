@@ -12,7 +12,7 @@ type Place struct {
 	Images           []string   `json:"image"`
 	Location         Coordinate `json:"location"`
 	Address          string     `json:"address"`
-	PriceAvg         int        `json:"priceMin"`
+	PriceAvg         int        `json:"priceAvg"`
 	ReviewRating     float64    `json:"reviewRating"`
 	ReviewCount      int        `json:"reviewCount"`
 	Tags             []*Tag     `json:"tags"`
