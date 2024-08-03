@@ -62,7 +62,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
 	})
 
-	s.OnError("/", func(s socketio.Conn, e error) {
+	s.OnError("/", func(_ socketio.Conn, e error) {
 		log.Println("faced error: ", e)
 	})
 
