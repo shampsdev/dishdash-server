@@ -47,6 +47,7 @@ type Place interface {
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	// GetAllPlaces is very long operation now
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
+	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
 }
 
 type SaveLobbyInput struct {

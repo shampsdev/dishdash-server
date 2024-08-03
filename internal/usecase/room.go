@@ -84,7 +84,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	defer r.swipesMutex.Unlock()
 
 	var err error
-	r.places, err = r.placeUseCase.GetAllPlaces(ctx)
+	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.Lobby)
 	if err != nil {
 		return err
 	}

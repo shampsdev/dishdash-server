@@ -66,3 +66,7 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	}
 	return places, nil
 }
+
+func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, _ *domain.Lobby) ([]*domain.Place, error) {
+	return p.GetAllPlaces(ctx)
+}
