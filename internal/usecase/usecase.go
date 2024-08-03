@@ -7,11 +7,12 @@ import (
 )
 
 type Cases struct {
-	Tag   Tag
-	User  User
-	Place Place
-	Swipe Swipe
-	Lobby Lobby
+	Tag      Tag
+	User     User
+	Place    Place
+	Swipe    Swipe
+	Lobby    Lobby
+	RoomRepo RoomRepo
 }
 
 type Tag interface {

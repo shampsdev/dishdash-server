@@ -1,12 +1,12 @@
-package room
+package usecase
 
 import (
 	"context"
 	"fmt"
 	"slices"
+	"sync"
 
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase"
 	"dishdash.ru/pkg/filter"
 )
 
@@ -15,20 +15,42 @@ type Match struct {
 }
 
 type Room struct {
-	Lobby  *domain.Lobby
+	Lobby *domain.Lobby
+
 	Users  map[string]*domain.User
 	places []*domain.Place
 	swipes []*domain.Swipe
 
-	lobbyUseCase usecase.LobbyUseCase
-	placeUseCase usecase.Place
+	usersMutex  sync.RWMutex
+	placesMutex sync.RWMutex
+	swipesMutex sync.RWMutex
+
+	lobbyUseCase Lobby
+	placeUseCase Place
 }
 
-func NewRoom(lobby *domain.Lobby) *Room {
-	return &Room{Lobby: lobby}
+func NewRoom(
+	lobby *domain.Lobby,
+	lobbyUseCase Lobby,
+	placeUseCase Place,
+) *Room {
+	return &Room{
+		Lobby:        lobby,
+		Users:        make(map[string]*domain.User),
+		places:       make([]*domain.Place, 0),
+		swipes:       make([]*domain.Swipe, 0),
+		usersMutex:   sync.RWMutex{},
+		placesMutex:  sync.RWMutex{},
+		swipesMutex:  sync.RWMutex{},
+		lobbyUseCase: lobbyUseCase,
+		placeUseCase: placeUseCase,
+	}
 }
 
 func (r *Room) AddUser(user *domain.User) error {
+	r.usersMutex.Lock()
+	defer r.usersMutex.Unlock()
+
 	if _, has := r.Users[user.ID]; has {
 		return fmt.Errorf("user %s already exists", user.ID)
 	}
@@ -37,6 +59,9 @@ func (r *Room) AddUser(user *domain.User) error {
 }
 
 func (r *Room) RemoveUser(id string) error {
+	r.usersMutex.Lock()
+	defer r.usersMutex.Unlock()
+
 	_, has := r.Users[id]
 	if !has {
 		return fmt.Errorf("user %s not found", id)
@@ -45,7 +70,7 @@ func (r *Room) RemoveUser(id string) error {
 	return nil
 }
 
-func (r *Room) UpdateLobby(ctx context.Context, input usecase.UpdateLobbyInput) error {
+func (r *Room) UpdateLobby(ctx context.Context, input UpdateLobbyInput) error {
 	lobby, err := r.lobbyUseCase.UpdateLobby(ctx, input)
 	if err != nil {
 		return err
@@ -55,14 +80,17 @@ func (r *Room) UpdateLobby(ctx context.Context, input usecase.UpdateLobbyInput) 
 }
 
 func (r *Room) StartSwipes(ctx context.Context) error {
+	r.swipesMutex.Lock()
+	defer r.swipesMutex.Unlock()
+
 	var err error
 	r.places, err = r.placeUseCase.GetAllPlaces(ctx)
 	if err != nil {
 		return err
 	}
-	err = r.UpdateLobby(ctx, usecase.UpdateLobbyInput{
+	err = r.UpdateLobby(ctx, UpdateLobbyInput{
 		ID: r.Lobby.ID,
-		SaveLobbyInput: usecase.SaveLobbyInput{
+		SaveLobbyInput: SaveLobbyInput{
 			PriceAvg: r.Lobby.PriceAvg,
 			Location: r.Lobby.Location,
 			Tags: filter.Map(r.Lobby.Tags, func(t *domain.Tag) int64 {
@@ -78,6 +106,9 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 }
 
 func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, error) {
+	r.swipesMutex.RLock()
+	defer r.swipesMutex.RUnlock()
+
 	r.swipes = append(r.swipes, &domain.Swipe{
 		LobbyID: r.Lobby.ID,
 		PlaceID: placeID,

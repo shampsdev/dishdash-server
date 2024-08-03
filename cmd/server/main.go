@@ -44,11 +44,15 @@ func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
 	ur := pg.NewUserRepo(pool)
 	sr := pg.NewSwipeRepo(pool)
 
+	pu := usecase.NewPlaceUseCase(tr, pr)
+	lu := usecase.NewLobbyUseCase(lr, ur, tr, pr, sr)
+
 	return usecase.Cases{
-		Place: usecase.NewPlaceUseCase(tr, pr),
-		Tag:   usecase.NewTagUseCase(tr),
-		Lobby: usecase.NewLobbyUseCase(lr, ur, tr, pr, sr),
-		User:  usecase.NewUserUseCase(ur),
-		Swipe: usecase.NewSwipeUseCase(sr),
+		Place:    pu,
+		Tag:      usecase.NewTagUseCase(tr),
+		Lobby:    lu,
+		User:     usecase.NewUserUseCase(ur),
+		Swipe:    usecase.NewSwipeUseCase(sr),
+		RoomRepo: usecase.NewInMemoryRoomRepo(lu, pu),
 	}
 }
