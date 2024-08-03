@@ -2,12 +2,15 @@ package pg
 
 import (
 	"errors"
+	"fmt"
+	"github.com/golang-migrate/migrate/v4"
 	"log"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"dishdash.ru/cmd/server/config"
 
-	"github.com/golang-migrate/migrate/v4"
 	// driver for migration
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -19,6 +22,16 @@ const (
 )
 
 func init() {
+	if !config.C.DB.AutoMigrate {
+		log.Println("Database migrator is disabled")
+		return
+	}
+	if err := MigrateDB(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func MigrateDB() error {
 	dbUrl := config.C.DBUrl()
 	var (
 		attempts = defaultAttempts
@@ -26,8 +39,14 @@ func init() {
 		m        *migrate.Migrate
 	)
 
+	_, path, _, ok := runtime.Caller(0)
+	if !ok {
+		return fmt.Errorf("could not determine migration location")
+	}
+	pathToMigrationFiles := filepath.Dir(path) + "/../../../migrations"
+
 	for attempts > 0 {
-		m, err = migrate.New("file://migrations", dbUrl)
+		m, err = migrate.New(fmt.Sprintf("file:%s", pathToMigrationFiles), dbUrl)
 		if err == nil {
 			break
 		}
@@ -38,7 +57,7 @@ func init() {
 	}
 
 	if err != nil {
-		log.Fatalf("Migrate: pgdb connect error: %s", err)
+		return fmt.Errorf("could not connect to database: %w", err)
 	}
 
 	err = m.Up()
@@ -48,9 +67,10 @@ func init() {
 	}
 
 	if errors.Is(err, migrate.ErrNoChange) {
-		log.Printf("Migrate: no change")
-		return
+		log.Printf("Migrate: no changes")
+		return nil
 	}
 
 	log.Printf("Migrate: up success")
+	return nil
 }

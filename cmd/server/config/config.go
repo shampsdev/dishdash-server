@@ -15,11 +15,12 @@ type Config struct {
 		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
 	}
 	DB struct {
-		User     string `envconfig:"POSTGRES_USER"`
-		Password string `envconfig:"POSTGRES_PASSWORD"`
-		Host     string `envconfig:"POSTGRES_HOST"`
-		Port     uint16 `envconfig:"POSTGRES_PORT"`
-		Database string `envconfig:"POSTGRES_DB"`
+		User        string `envconfig:"POSTGRES_USER"`
+		Password    string `envconfig:"POSTGRES_PASSWORD"`
+		Host        string `envconfig:"POSTGRES_HOST"`
+		Port        uint16 `envconfig:"POSTGRES_PORT"`
+		Database    string `envconfig:"POSTGRES_DB"`
+		AutoMigrate bool   `envconfig:"POSTGRES_AUTOMIGRATE"`
 	}
 }
 
@@ -34,12 +35,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("can't parse config: %s", err)
 	}
-
-	printConfig(C)
 }
 
-func printConfig(c Config) {
-	data, _ := json.MarshalIndent(c, "", "\t")
+func Print() {
+	data, _ := json.MarshalIndent(C, "", "\t")
 	fmt.Println("=== CONFIG ===")
 	fmt.Println(string(data))
 	fmt.Println("==============")

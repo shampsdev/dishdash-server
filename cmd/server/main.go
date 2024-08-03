@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dishdash.ru/internal/usecase"
 	"errors"
 	"log"
 	"net/http"
@@ -12,8 +13,6 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	server "dishdash.ru/internal/gateways"
-	"dishdash.ru/internal/repo/pg"
-	"dishdash.ru/internal/usecase"
 )
 
 // @title           DishDash server
@@ -24,6 +23,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
+	config.Print()
 	pgConfig := config.C.PGXConfig()
 	pool, err := pgxpool.NewWithConfig(ctx, pgConfig)
 	if err != nil {
@@ -31,28 +31,8 @@ func main() {
 	}
 	defer pool.Close()
 
-	s := server.NewServer(setupUseCases(pool))
+	s := server.NewServer(usecase.Setup(pool))
 	if err := s.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)
-	}
-}
-
-func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
-	pr := pg.NewPlaceRepo(pool)
-	tr := pg.NewTagRepo(pool)
-	lr := pg.NewLobbyRepo(pool)
-	ur := pg.NewUserRepo(pool)
-	sr := pg.NewSwipeRepo(pool)
-
-	pu := usecase.NewPlaceUseCase(tr, pr)
-	lu := usecase.NewLobbyUseCase(lr, ur, tr, pr, sr)
-
-	return usecase.Cases{
-		Place:    pu,
-		Tag:      usecase.NewTagUseCase(tr),
-		Lobby:    lu,
-		User:     usecase.NewUserUseCase(ur),
-		Swipe:    usecase.NewSwipeUseCase(sr),
-		RoomRepo: usecase.NewInMemoryRoomRepo(lu, pu),
 	}
 }
