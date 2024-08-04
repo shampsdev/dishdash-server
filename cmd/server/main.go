@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"dishdash.ru/internal/usecase"
 	"errors"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+
+	"dishdash.ru/internal/usecase"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 

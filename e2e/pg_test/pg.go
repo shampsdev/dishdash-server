@@ -3,12 +3,14 @@ package pg_test
 //nolint: revive // test stub
 import (
 	"context"
-	"dishdash.ru/cmd/server/config"
 	"fmt"
-	"github.com/testcontainers/testcontainers-go"
 	"log"
 	"strconv"
 	"time"
+
+	"dishdash.ru/cmd/server/config"
+
+	"github.com/testcontainers/testcontainers-go"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
