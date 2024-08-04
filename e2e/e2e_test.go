@@ -20,24 +20,12 @@ type E2ETestSuite struct {
 }
 
 func (suite *E2ETestSuite) SetupSuite() {
-	setupConfig()
 	config.Print()
 	suite.testDB = pg_test.SetupTestDatabase()
 	if err := pg.MigrateDB(); err != nil {
 		suite.T().Fatal(err)
 	}
 	suite.stopServer = server_test.StartServer(suite.testDB.DbInstance)
-}
-
-func setupConfig() {
-	config.C.Server.Port = 8081
-
-	config.C.DB.User = "root"
-	config.C.DB.Password = "root"
-	config.C.DB.Host = "localhost"
-	config.C.DB.Port = 5432
-	config.C.DB.Database = "root"
-	config.C.DB.AutoMigrate = false
 }
 
 func (suite *E2ETestSuite) TearDownSuite() {

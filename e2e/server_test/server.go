@@ -23,6 +23,7 @@ func healthCheck() bool {
 }
 
 func StartServer(pool *pgxpool.Pool) context.CancelFunc {
+	config.C.Server.Port = 8081
 	ctx, stop := context.WithCancel(context.Background())
 	s := server.NewServer(usecase.Setup(pool))
 

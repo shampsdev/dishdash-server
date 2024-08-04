@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/testcontainers/testcontainers-go"
 	"log"
+	"strconv"
 	"time"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -24,6 +25,13 @@ type TestDatabase struct {
 
 func SetupTestDatabase() *TestDatabase {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+
+	config.C.DB.User = "root"
+	config.C.DB.Password = "root"
+	config.C.DB.Host = "localhost"
+	config.C.DB.Database = "root"
+	config.C.DB.AutoMigrate = false
+
 	container, dbInstance, dbAddr, err := createContainer(ctx)
 	if err != nil {
 		log.Fatal("failed to setup test", err)
@@ -70,6 +78,8 @@ func createContainer(ctx context.Context) (testcontainers.Container, *pgxpool.Po
 	if err != nil {
 		return container, nil, "", fmt.Errorf("failed to get container external port: %w", err)
 	}
+	portNum, _ := strconv.ParseInt(p.Port(), 10, 32)
+	config.C.DB.Port = uint16(portNum)
 
 	log.Println("postgres container ready and running at port: ", p.Port())
 
