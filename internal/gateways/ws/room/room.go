@@ -82,6 +82,14 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
+		broadcastToOthersInRoom(s, c.User.ID, c.Room.Lobby.ID, event.UserLeft,
+			event.UserLeftEvent{
+				ID:     c.User.ID,
+				Name:   c.User.Name,
+				Avatar: c.User.Avatar,
+			},
+		)
+
 		log.Printf("<user %s> leave <lobby %s>", c.User.ID, c.Room.Lobby.ID)
 		if len(c.Room.Users) == 0 {
 			err = cases.RoomRepo.DeleteRoom(context.Background(), c.Room.Lobby.ID)
