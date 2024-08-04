@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 	"testing"
 	"time"
 
@@ -29,13 +30,19 @@ func JoinLobby(t *testing.T) {
 	sioCli2, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
+	e1Mu := &sync.Mutex{}
 	var events1 []map[string]interface{}
+	e2Mu := &sync.Mutex{}
 	var events2 []map[string]interface{}
 
 	sioCli1.OnEvent(event.UserJoined, func(_ socketio.Conn, data map[string]interface{}) {
+		e1Mu.Lock()
+		defer e1Mu.Unlock()
 		events1 = append(events1, data)
 	})
 	sioCli2.OnEvent(event.UserJoined, func(_ socketio.Conn, data map[string]interface{}) {
+		e2Mu.Lock()
+		defer e2Mu.Unlock()
 		events2 = append(events2, data)
 	})
 
@@ -52,6 +59,7 @@ func JoinLobby(t *testing.T) {
 	})
 	time.Sleep(5 * time.Second)
 
+	e1Mu.Lock()
 	assert.Equal(t, 1, len(events1))
 	userJoinedEvent := event.UserJoinedEvent{}
 	err = mapstructure.Decode(events1[0], &userJoinedEvent)
@@ -61,6 +69,7 @@ func JoinLobby(t *testing.T) {
 		Name:   user2.Name,
 		Avatar: user2.Avatar,
 	}, userJoinedEvent)
+	e1Mu.Unlock()
 
 	assert.NoError(t, sioCli1.Close())
 	assert.NoError(t, sioCli2.Close())
