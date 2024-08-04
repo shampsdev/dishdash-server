@@ -67,6 +67,11 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	return places, nil
 }
 
-func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, _ *domain.Lobby) ([]*domain.Place, error) {
-	return p.GetAllPlaces(ctx)
+func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
+	places, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
+	if err != nil {
+		return nil, err
+	}
+
+	return places, nil
 }

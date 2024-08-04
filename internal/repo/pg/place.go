@@ -227,3 +227,62 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 	p.Images = strings.Split(imagesStr, ",")
 	return p, err
 }
+
+func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
+	query := `
+	SELECT
+		place.id,
+		place.title,
+		place.short_description,
+		place.description,
+		place.images,
+		place.location,
+		place.address,
+		place.price_avg,
+		place.review_rating,
+		place.review_count,
+		place.updated_at
+	FROM place
+	WHERE 
+	place.price_avg < $1 && place.price_avg > $2
+	`
+
+	rows, err := pr.db.Query(ctx, query,
+		lobby.PriceAvg+300,
+		lobby.PriceAvg-300,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var places []*domain.Place
+
+	for rows.Next() {
+		var place domain.Place
+		err := rows.Scan(
+			&place.ID,
+			&place.Title,
+			&place.ShortDescription,
+			&place.Description,
+			&place.Images,
+			&place.Location,
+			&place.Address,
+			&place.PriceAvg,
+			&place.ReviewRating,
+			&place.ReviewCount,
+			&place.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		places = append(places, &place)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
+	return places, nil
+}
