@@ -10,20 +10,20 @@ import (
 	"dishdash.ru/e2e/pg_test"
 	"dishdash.ru/internal/domain"
 
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-func GetAllTags(t *testing.T, host string) {
+func GetAllTags(t *testing.T) {
 	cli := http.Client{Timeout: 10 * time.Second}
 
-	resp, err := cli.Get(fmt.Sprintf("%s/places/tags", host))
-	assert.NilError(t, err)
+	resp, err := cli.Get(fmt.Sprintf("%s/places/tags", ApiHost))
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	var tags []*domain.Tag
 	err = json.NewDecoder(resp.Body).Decode(&tags)
-	assert.NilError(t, err)
-	assert.Equal(t, len(tags), len(pg_test.Tags))
+	assert.NoError(t, err)
+	assert.Equal(t, len(pg_test.Tags), len(tags))
 	for i := range tags {
-		assert.Equal(t, *tags[i], *pg_test.Tags[i])
+		assert.Equal(t, *pg_test.Tags[i], *tags[i])
 	}
 }

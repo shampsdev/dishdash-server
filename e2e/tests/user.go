@@ -6,66 +6,78 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
-	"time"
 
 	"dishdash.ru/internal/domain"
 
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-func UpdateUser(t *testing.T, host string) {
-	cli := http.Client{Timeout: 10 * time.Second}
-
+func UpdateUser(t *testing.T) {
 	user := &domain.User{
 		Name:     "name1",
 		Avatar:   "avatar1",
 		Telegram: nil,
 	}
 	b, err := json.Marshal(user)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
 
 	// Post user
-	resp, err := cli.Post(fmt.Sprintf("%s/users", host), "application/json", bytes.NewReader(b))
-	assert.NilError(t, err)
+	user = postUser(t, user)
+
+	resp, err := httpClient.Post(fmt.Sprintf("%s/users", ApiHost), "application/json", bytes.NewReader(b))
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	err = json.NewDecoder(resp.Body).Decode(user)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
 
 	// Get user
-	resp, err = cli.Get(fmt.Sprintf("%s/users/%s", host, user.ID))
-	assert.NilError(t, err)
+	resp, err = httpClient.Get(fmt.Sprintf("%s/users/%s", ApiHost, user.ID))
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	respUser := &domain.User{}
 	err = json.NewDecoder(resp.Body).Decode(respUser)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
 	assertEqualUsers(t, user, respUser)
 
 	// Update user
 	user.Avatar = "new_avatar"
 	b, err = json.Marshal(user)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
 	req, err := http.NewRequest(
 		http.MethodPut,
-		fmt.Sprintf("%s/users", host),
+		fmt.Sprintf("%s/users", ApiHost),
 		bytes.NewReader(b),
 	)
-	assert.NilError(t, err)
-	resp, err = cli.Do(req)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
+	resp, err = httpClient.Do(req)
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// Get user
-	resp, err = cli.Get(fmt.Sprintf("%s/users/%s", host, user.ID))
-	assert.NilError(t, err)
+	resp, err = httpClient.Get(fmt.Sprintf("%s/users/%s", ApiHost, user.ID))
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	err = json.NewDecoder(resp.Body).Decode(respUser)
-	assert.NilError(t, err)
+	assert.NoError(t, err)
 	assertEqualUsers(t, user, respUser)
 }
 
-func assertEqualUsers(t *testing.T, actual, exp *domain.User) {
-	assert.Equal(t, actual.ID, exp.ID)
-	assert.Equal(t, actual.Name, exp.Name)
-	assert.Equal(t, actual.Avatar, exp.Avatar)
-	assert.Equal(t, actual.Telegram, exp.Telegram)
+func assertEqualUsers(t *testing.T, exp, actual *domain.User) {
+	assert.Equal(t, exp.ID, actual.ID)
+	assert.Equal(t, exp.Name, actual.Name)
+	assert.Equal(t, exp.Avatar, actual.Avatar)
+	assert.Equal(t, exp.Telegram, actual.Telegram)
+}
+
+func postUser(t *testing.T, user *domain.User) *domain.User {
+	b, err := json.Marshal(user)
+	assert.NoError(t, err)
+
+	resp, err := httpClient.Post(fmt.Sprintf("%s/users", ApiHost), "application/json", bytes.NewReader(b))
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	respUser := &domain.User{}
+	err = json.NewDecoder(resp.Body).Decode(respUser)
+	assert.NoError(t, err)
+	return respUser
 }

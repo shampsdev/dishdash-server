@@ -38,7 +38,9 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 		}
 
 		log.Printf("create room: %s", id)
-		return NewRoom(lobby, r.lobbyUseCase, r.placesUseCase), err
+		room := NewRoom(lobby, r.lobbyUseCase, r.placesUseCase)
+		r.rooms[id] = room
+		return room, nil
 	}
 	return room, nil
 }

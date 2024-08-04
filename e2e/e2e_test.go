@@ -13,11 +13,9 @@ import (
 	"dishdash.ru/e2e/server_test"
 	"dishdash.ru/internal/usecase"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"gotest.tools/v3/assert"
 )
-
-var host string
 
 type E2ETestSuite struct {
 	suite.Suite
@@ -32,7 +30,8 @@ func (suite *E2ETestSuite) SetupSuite() {
 	suite.cases = usecase.Setup(suite.testDB.DbInstance)
 	suite.stopServer = server_test.StartServer(suite.cases)
 	config.Print()
-	host = fmt.Sprintf("http://localhost:%d/api/v1", config.C.Server.Port)
+	tests.SIOHost = fmt.Sprintf("http://localhost:%d", config.C.Server.Port)
+	tests.ApiHost = fmt.Sprintf("http://localhost:%d/api/v1", config.C.Server.Port)
 }
 
 func (suite *E2ETestSuite) TearDownSuite() {
@@ -44,15 +43,22 @@ func (suite *E2ETestSuite) TearDownSuite() {
 func (suite *E2ETestSuite) Test_GetAllTags() {
 	t := suite.T()
 	err := pg_test.ResetData(suite.cases)
-	assert.NilError(t, err)
-	tests.GetAllTags(t, host)
+	assert.NoError(t, err)
+	tests.GetAllTags(t)
 }
 
 func (suite *E2ETestSuite) Test_UpdateUser() {
 	t := suite.T()
 	err := pg_test.ResetData(suite.cases)
-	assert.NilError(t, err)
-	tests.UpdateUser(t, host)
+	assert.NoError(t, err)
+	tests.UpdateUser(t)
+}
+
+func (suite *E2ETestSuite) Test_JoinLobby() {
+	t := suite.T()
+	err := pg_test.ResetData(suite.cases)
+	assert.NoError(t, err)
+	tests.JoinLobby(t)
 }
 
 func TestE2ETestSuite(t *testing.T) {

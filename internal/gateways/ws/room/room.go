@@ -2,8 +2,9 @@ package room
 
 import (
 	"context"
-	"encoding/json"
 	"log"
+
+	"dishdash.ru/internal/gateways/ws/event"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/usecase"
@@ -23,15 +24,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		return nil
 	})
 
-	s.OnEvent("/", eventJoinLobby, func(conn socketio.Conn, msg string) {
-		var joinEvent joinLobbyEvent
-		err := json.Unmarshal([]byte(msg), &joinEvent)
-		if err != nil {
-			log.Println("error while unmarshalling join lobby: ", err)
-			_ = conn.Close()
-			return
-		}
-
+	s.OnEvent("/", event.JoinLobby, func(conn socketio.Conn, joinEvent event.JoinLobbyEvent) {
 		user, err := cases.User.GetUserByID(context.Background(), joinEvent.UserID)
 		if err != nil {
 			log.Println("error while getting user: ", err)
@@ -54,6 +47,14 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		conn.Join(room.Lobby.ID)
+		broadcastToOthersInRoom(
+			s, user.ID, room.Lobby.ID, event.UserJoined,
+			event.UserJoinedEvent{
+				ID:     user.ID,
+				Name:   user.Name,
+				Avatar: user.Avatar,
+			},
+		)
 		conn.SetContext(Context{
 			User: user,
 			Room: room,
@@ -87,6 +88,18 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			if err != nil {
 				log.Println("error while deleting room: ", err)
 			}
+		}
+	})
+}
+
+func broadcastToOthersInRoom(s *socketio.Server, userID, room, event string, args ...interface{}) {
+	s.ForEach("", room, func(conn socketio.Conn) {
+		c, ok := conn.Context().(Context)
+		if !ok {
+			return
+		}
+		if c.User.ID != userID {
+			conn.Emit(event, args...)
 		}
 	})
 }
