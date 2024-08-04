@@ -2,10 +2,11 @@ package e2e
 
 import (
 	"context"
-	"dishdash.ru/e2e/tests"
 	"fmt"
 	"testing"
 	"time"
+
+	"dishdash.ru/e2e/tests"
 
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/e2e/pg_test"

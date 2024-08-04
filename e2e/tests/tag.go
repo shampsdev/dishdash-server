@@ -1,14 +1,16 @@
 package tests
 
 import (
-	"dishdash.ru/e2e/pg_test"
-	"dishdash.ru/internal/domain"
 	"encoding/json"
 	"fmt"
-	"gotest.tools/v3/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"dishdash.ru/e2e/pg_test"
+	"dishdash.ru/internal/domain"
+
+	"gotest.tools/v3/assert"
 )
 
 func GetAllTags(t *testing.T, host string) {

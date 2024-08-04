@@ -2,13 +2,15 @@ package tests
 
 import (
 	"bytes"
-	"dishdash.ru/internal/domain"
 	"encoding/json"
 	"fmt"
-	"gotest.tools/v3/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"dishdash.ru/internal/domain"
+
+	"gotest.tools/v3/assert"
 )
 
 func UpdateUser(t *testing.T, host string) {
@@ -41,6 +43,7 @@ func UpdateUser(t *testing.T, host string) {
 	// Update user
 	user.Avatar = "new_avatar"
 	b, err = json.Marshal(user)
+	assert.NilError(t, err)
 	req, err := http.NewRequest(
 		http.MethodPut,
 		fmt.Sprintf("%s/users", host),
@@ -60,7 +63,7 @@ func UpdateUser(t *testing.T, host string) {
 	assertEqualUsers(t, user, respUser)
 }
 
-func assertEqualUsers(t *testing.T, actual *domain.User, exp *domain.User) {
+func assertEqualUsers(t *testing.T, actual, exp *domain.User) {
 	assert.Equal(t, actual.ID, exp.ID)
 	assert.Equal(t, actual.Name, exp.Name)
 	assert.Equal(t, actual.Avatar, exp.Avatar)
