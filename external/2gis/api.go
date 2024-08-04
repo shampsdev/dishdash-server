@@ -1,12 +1,15 @@
 package twogis
 
 import (
+	"dishdash.ru/cmd/server/config"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 )
+
+var ApiKey = config.C.TwoGisApi.Key
 
 func GetParamsMap(tags string, twogisApi string, lon, lat float64, radius int) map[string]string {
 	return map[string]string{

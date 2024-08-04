@@ -22,6 +22,9 @@ type Config struct {
 		Database    string `envconfig:"POSTGRES_DB"`
 		AutoMigrate bool   `envconfig:"POSTGRES_AUTOMIGRATE"`
 	}
+	TwoGisApi struct {
+		Key string `envconfig:"TWOGIS_API_KEY"`
+	}
 }
 
 var C Config
@@ -34,6 +37,9 @@ func init() {
 	err = envconfig.Process("", &C)
 	if err != nil {
 		log.Fatalf("can't parse config: %s", err)
+	}
+	if C.TwoGisApi.Key == "" {
+		log.Fatalf("[FATAL] TwoGisApi.ApiKey is null or not set")
 	}
 }
 
