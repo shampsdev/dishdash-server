@@ -102,7 +102,7 @@ func SetupHandlers(s *socketio.Server, useCases usecase.Cases) {
 		}
 		// cards, err := useCases.Lobby.GetCardsForSettings(context.Background(), user.Lobby.Location, &user.Lobby.Settings)
 
-		cards, err := useCases.Card.GetAllCards(context.Background());
+		cards, err := useCases.Card.GetAllCards(context.Background())
 
 		if err == nil {
 			user.Lobby.SetCards(cards)
