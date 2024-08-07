@@ -61,6 +61,13 @@ func (suite *E2ETestSuite) Test_JoinLobby() {
 	tests.JoinLobby(t)
 }
 
+func (suite *E2ETestSuite) Test_SwipeLobby() {
+	t := suite.T()
+	err := pg_test.ResetData(suite.cases)
+	assert.NoError(t, err)
+	tests.SwipeLobby(t)
+}
+
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
 }

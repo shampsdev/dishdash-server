@@ -110,10 +110,15 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
 
 func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error {
 	const query = `
-		UPDATE lobby SET state = $1, price_avg = $2, location = $3 
+		UPDATE lobby SET state = $1, price_avg = $2, location = ST_GeogFromWkb($3) 
 		WHERE id = $4
 `
-	_, err := lr.db.Exec(ctx, query, lobby.State, lobby.PriceAvg, lobby.Location, lobby.ID)
+	_, err := lr.db.Exec(ctx, query,
+		lobby.State,
+		lobby.PriceAvg,
+		postgis.PointS{SRID: 4326, X: lobby.Location.Lat, Y: lobby.Location.Lon},
+		lobby.ID,
+	)
 	if err != nil {
 		return fmt.Errorf("can't update lobby: %w", err)
 	}

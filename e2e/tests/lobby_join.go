@@ -62,8 +62,7 @@ func JoinLobby(t *testing.T) {
 	e1Mu.Lock()
 	assert.Equal(t, 1, len(events1))
 	userJoinedEvent := event.UserJoinedEvent{}
-	err = mapstructure.Decode(events1[0], &userJoinedEvent)
-	assert.NoError(t, err)
+	assert.NoError(t, mapstructure.Decode(events1[0], &userJoinedEvent))
 	assert.Equal(t, event.UserJoinedEvent{
 		ID:     user2.ID,
 		Name:   user2.Name,

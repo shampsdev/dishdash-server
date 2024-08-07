@@ -11,15 +11,20 @@ import (
 )
 
 type Match struct {
+	ID    int
 	Place *domain.Place
 }
 
 type Room struct {
 	Lobby *domain.Lobby
 
-	Users  map[string]*domain.User
-	places []*domain.Place
-	swipes []*domain.Swipe
+	Users           map[string]*domain.User
+	UsersPlace      map[string]*domain.Place
+	UsersPlaceMutex sync.Mutex
+
+	Places  []*domain.Place
+	swipes  []*domain.Swipe
+	matches []*Match
 
 	usersMutex  sync.RWMutex
 	placesMutex sync.RWMutex
@@ -37,7 +42,8 @@ func NewRoom(
 	return &Room{
 		Lobby:        lobby,
 		Users:        make(map[string]*domain.User),
-		places:       make([]*domain.Place, 0),
+		Places:       make([]*domain.Place, 0),
+		UsersPlace:   make(map[string]*domain.Place),
 		swipes:       make([]*domain.Swipe, 0),
 		usersMutex:   sync.RWMutex{},
 		placesMutex:  sync.RWMutex{},
@@ -84,7 +90,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	defer r.swipesMutex.Unlock()
 
 	var err error
-	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.Lobby)
+	r.Places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.Lobby)
 	if err != nil {
 		return err
 	}
@@ -96,11 +102,17 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 			Tags: filter.Map(r.Lobby.Tags, func(t *domain.Tag) int64 {
 				return t.ID
 			}),
-			Places: filter.Map(r.places, func(p *domain.Place) int64 {
+			Places: filter.Map(r.Places, func(p *domain.Place) int64 {
 				return p.ID
 			}),
 		},
 	})
+
+	r.UsersPlaceMutex.Lock()
+	defer r.UsersPlaceMutex.Unlock()
+	for id := range r.Users {
+		r.UsersPlace[id] = r.Places[0]
+	}
 
 	return err
 }
@@ -123,10 +135,20 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 	match := new(Match)
 
 	if len(matches) > len(r.Users)/2 {
-		match = &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
+		match = &Match{Place: r.Places[slices.IndexFunc(r.Places, func(place *domain.Place) bool {
 			return place.ID == placeID
 		})]}
+		match.ID = len(r.matches)
+		r.matches = append(r.matches, match)
 	}
+
+	pIdx := slices.IndexFunc(r.Places, func(place *domain.Place) bool {
+		return place.ID == placeID
+	})
+
+	r.UsersPlaceMutex.Lock()
+	defer r.UsersPlaceMutex.Unlock()
+	r.UsersPlace[userID] = r.Places[(pIdx+1)%len(r.Places)]
 
 	return match, nil
 }

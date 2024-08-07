@@ -28,8 +28,8 @@ func NewInMemoryRoomRepo(lobbyUseCase Lobby, placeUseCase Place) *InMemoryRoomRe
 }
 
 func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error) {
-	r.roomsMutex.RLock()
-	defer r.roomsMutex.RUnlock()
+	r.roomsMutex.Lock()
+	defer r.roomsMutex.Unlock()
 	room, ok := r.rooms[id]
 	if !ok {
 		lobby, err := r.lobbyUseCase.GetLobbyByID(ctx, id)
@@ -46,8 +46,8 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 }
 
 func (r *InMemoryRoomRepo) DeleteRoom(_ context.Context, id string) error {
-	r.roomsMutex.RLock()
-	defer r.roomsMutex.RUnlock()
+	r.roomsMutex.Lock()
+	defer r.roomsMutex.Unlock()
 	delete(r.rooms, id)
 	log.Printf("deleted room: %s", id)
 	return nil

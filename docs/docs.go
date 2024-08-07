@@ -231,7 +231,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Place"
+                                "$ref": "#/definitions/domain.Card"
                             }
                         }
                     },
@@ -254,7 +254,7 @@ const docTemplate = `{
                 "summary": "Create a place",
                 "parameters": [
                     {
-                        "description": "Place data",
+                        "description": "Card data",
                         "name": "place",
                         "in": "body",
                         "required": true,
@@ -267,7 +267,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved place",
                         "schema": {
-                            "$ref": "#/definitions/domain.Place"
+                            "$ref": "#/definitions/domain.Card"
                         }
                     },
                     "400": {
@@ -517,7 +517,7 @@ const docTemplate = `{
                 "places": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Place"
+                        "$ref": "#/definitions/domain.Card"
                     }
                 },
                 "priceAvg": {
@@ -546,7 +546,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Place": {
+        "domain.Card": {
             "type": "object",
             "properties": {
                 "address": {
