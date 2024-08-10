@@ -228,28 +228,60 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 	return p, err
 }
 
+func parseTagsToQuery(lobby *domain.Lobby) string {
+	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) = %d"
+	var queryTags string
+	for _, tag := range lobby.Tags {
+		queryTags += fmt.Sprintf("'%s', ", tag)
+	}
+	queryTags = strings.TrimSuffix(queryTags, ", ")
+	size := len(lobby.Tags)
+
+	return fmt.Sprintf(query, queryTags, size)
+}
+
 func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
 	query := `
-	SELECT
-		place.id,
-		place.title,
-		place.short_description,
-		place.description,
-		place.images,
-		place.location,
-		place.address,
-		place.price_avg,
-		place.review_rating,
-		place.review_count,
-		place.updated_at
-	FROM place
-	WHERE 
-	place.price_avg < $1 && place.price_avg > $2
+		SELECT
+			p.id,
+			p.title,
+			p.short_description,
+			p.description,
+			p.images,
+			p.location,
+			p.address,
+			p.price_avg,
+			p.review_rating,
+			p.review_count,
+			p.updated_at,
+			t.name,
+			t.icon
+		FROM place p
+		JOIN place_tag pt ON p.id = pt.place_id
+		JOIN tag t ON pt.tag_id = t.id
+		WHERE ST_DWithin(
+				p.location,
+				ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
+				4000
+			)
+		  AND p.id IN (
+				SELECT pt.place_id 
+				FROM place_tag pt
+				JOIN tag t ON pt.tag_id = t.id
+				GROUP BY pt.place_id
+				%s
+			)
+		  AND p.price_avg >  $3
+		  AND p.price_avg < $4;
 	`
 
+	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
+
 	rows, err := pr.db.Query(ctx, query,
-		lobby.PriceAvg+300,
+		lobby.Location.Lon,
+		lobby.Location.Lat,
 		lobby.PriceAvg-300,
+		lobby.PriceAvg+300,
 	)
 
 	if err != nil {
