@@ -19,8 +19,8 @@ type Room struct {
 	Lobby *domain.Lobby
 
 	Users           map[string]*domain.User
-	UsersPlace      map[string]*domain.Place
-	UsersPlaceMutex sync.Mutex
+	usersPlace      map[string]*domain.Place
+	usersPlaceMutex sync.RWMutex
 
 	Places  []*domain.Place
 	swipes  []*domain.Swipe
@@ -43,7 +43,7 @@ func NewRoom(
 		Lobby:        lobby,
 		Users:        make(map[string]*domain.User),
 		Places:       make([]*domain.Place, 0),
-		UsersPlace:   make(map[string]*domain.Place),
+		usersPlace:   make(map[string]*domain.Place),
 		swipes:       make([]*domain.Swipe, 0),
 		usersMutex:   sync.RWMutex{},
 		placesMutex:  sync.RWMutex{},
@@ -51,6 +51,12 @@ func NewRoom(
 		lobbyUseCase: lobbyUseCase,
 		placeUseCase: placeUseCase,
 	}
+}
+
+func (r *Room) GetNextPlaceForUser(id string) *domain.Place {
+	r.usersPlaceMutex.RLock()
+	defer r.usersPlaceMutex.RUnlock()
+	return r.usersPlace[id]
 }
 
 func (r *Room) AddUser(user *domain.User) error {
@@ -108,10 +114,10 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 		},
 	})
 
-	r.UsersPlaceMutex.Lock()
-	defer r.UsersPlaceMutex.Unlock()
+	r.usersPlaceMutex.Lock()
+	defer r.usersPlaceMutex.Unlock()
 	for id := range r.Users {
-		r.UsersPlace[id] = r.Places[0]
+		r.usersPlace[id] = r.Places[0]
 	}
 
 	return err
@@ -146,9 +152,9 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 		return place.ID == placeID
 	})
 
-	r.UsersPlaceMutex.Lock()
-	defer r.UsersPlaceMutex.Unlock()
-	r.UsersPlace[userID] = r.Places[(pIdx+1)%len(r.Places)]
+	r.usersPlaceMutex.Lock()
+	defer r.usersPlaceMutex.Unlock()
+	r.usersPlace[userID] = r.Places[(pIdx+1)%len(r.Places)]
 
 	return match, nil
 }

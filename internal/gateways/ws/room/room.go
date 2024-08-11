@@ -47,6 +47,10 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		conn.Join(room.Lobby.ID)
+		conn.SetContext(Context{
+			User: user,
+			Room: room,
+		})
 		broadcastToOthersInRoom(
 			s, user.ID, room.Lobby.ID, event.UserJoined,
 			event.UserJoinedEvent{
@@ -55,10 +59,6 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				Avatar: user.Avatar,
 			},
 		)
-		conn.SetContext(Context{
-			User: user,
-			Room: room,
-		})
 
 		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
 	})
@@ -99,19 +99,18 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			_ = conn.Close()
 		}
 
-		c.Room.UsersPlaceMutex.Lock()
 		s.ForEach("", c.Room.Lobby.ID, func(conn socketio.Conn) {
 			c, ok := conn.Context().(Context)
 			if !ok {
 				_ = conn.Close()
 			}
-			p := c.Room.UsersPlace[c.User.ID]
+
+			p := c.Room.GetNextPlaceForUser(c.User.ID)
 			conn.Emit(event.Place, event.PlaceEvent{
 				ID:   p.ID,
 				Card: p,
 			})
 		})
-		c.Room.UsersPlaceMutex.Unlock()
 		log.Printf("start swipes in <lobby %s>", c.Room.Lobby.ID)
 	})
 
@@ -121,7 +120,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
-		m, err := c.Room.Swipe(c.User.ID, c.Room.UsersPlace[c.User.ID].ID, se.SwipeType)
+		m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
 		if err != nil {
 			log.Println("error while swiping: ", err)
 			_ = conn.Close()
@@ -135,7 +134,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 					Card: m.Place,
 				})
 		}
-		p := c.Room.UsersPlace[c.User.ID]
+		p := c.Room.GetNextPlaceForUser(c.User.ID)
 		conn.Emit(event.Place, event.PlaceEvent{
 			ID:   p.ID,
 			Card: p,
