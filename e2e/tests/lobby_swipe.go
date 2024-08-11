@@ -1,10 +1,11 @@
 package tests
 
 import (
-	"dishdash.ru/internal/gateways/ws/event"
 	"sync"
 	"testing"
 	"time"
+
+	"dishdash.ru/internal/gateways/ws/event"
 
 	"dishdash.ru/internal/domain"
 	socketio "github.com/googollee/go-socket.io"
