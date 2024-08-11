@@ -1,12 +1,13 @@
 package twogis
 
 import (
-	"dishdash.ru/cmd/server/config"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	"dishdash.ru/cmd/server/config"
 )
 
 var ApiKey = config.C.TwoGisApi.Key

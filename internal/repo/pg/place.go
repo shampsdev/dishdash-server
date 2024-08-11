@@ -232,7 +232,7 @@ func parseTagsToQuery(lobby *domain.Lobby) string {
 	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) = %d"
 	var queryTags string
 	for _, tag := range lobby.Tags {
-		queryTags += fmt.Sprintf("'%s', ", tag)
+		queryTags += fmt.Sprintf("'%s', ", tag.Name)
 	}
 	queryTags = strings.TrimSuffix(queryTags, ", ")
 	size := len(lobby.Tags)
@@ -283,7 +283,6 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		lobby.PriceAvg-300,
 		lobby.PriceAvg+300,
 	)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
