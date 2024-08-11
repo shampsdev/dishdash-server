@@ -14,7 +14,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param id path string true "Lobby id"
+// @Param id path string true "lobby id"
 // @Success 200
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"

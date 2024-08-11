@@ -14,8 +14,8 @@ import (
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param id path string true "Lobby ID"
-// @Success 200 {object} domain.Lobby "Lobby data"
+// @Param id path string true "lobby ID"
+// @Success 200 {object} domain.Lobby "lobby data"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies/{id} [get]

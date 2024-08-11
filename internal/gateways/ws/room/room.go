@@ -46,13 +46,13 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
-		conn.Join(room.Lobby.ID)
+		conn.Join(room.ID)
 		conn.SetContext(Context{
 			User: user,
 			Room: room,
 		})
 		broadcastToOthersInRoom(
-			s, user.ID, room.Lobby.ID, event.UserJoined,
+			s, user.ID, room.ID, event.UserJoined,
 			event.UserJoinedEvent{
 				ID:     user.ID,
 				Name:   user.Name,
@@ -71,14 +71,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		ctx := context.Background()
-		err := c.Room.UpdateLobby(ctx, usecase.UpdateLobbyInput{
-			ID: c.Room.Lobby.ID,
-			SaveLobbyInput: usecase.SaveLobbyInput{
-				PriceAvg: (se.PriceMin + se.PriceMax) / 2,
-				Location: c.Room.Lobby.Location,
-				Tags:     se.Tags,
-			},
-		})
+		err := c.Room.UpdateLobby(ctx, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
 		if err != nil {
 			log.Println("error while updating lobby: ", err)
 			_ = conn.Close()
@@ -99,7 +92,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			_ = conn.Close()
 		}
 
-		s.ForEach("", c.Room.Lobby.ID, func(conn socketio.Conn) {
+		s.ForEach("", c.Room.ID, func(conn socketio.Conn) {
 			c, ok := conn.Context().(Context)
 			if !ok {
 				_ = conn.Close()
@@ -111,7 +104,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				Card: p,
 			})
 		})
-		log.Printf("start swipes in <lobby %s>", c.Room.Lobby.ID)
+		log.Printf("start swipes in <lobby %s>", c.Room.ID)
 	})
 
 	s.OnEvent("/", event.Swipe, func(conn socketio.Conn, se event.SwipeEvent) {
@@ -128,7 +121,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		if m != nil {
-			s.BroadcastToRoom("/", c.Room.Lobby.ID, event.Match,
+			s.BroadcastToRoom("/", c.Room.ID, event.Match,
 				event.MatchEvent{
 					ID:   m.ID,
 					Card: m.Place,
@@ -160,7 +153,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
-		broadcastToOthersInRoom(s, c.User.ID, c.Room.Lobby.ID, event.UserLeft,
+		broadcastToOthersInRoom(s, c.User.ID, c.Room.ID, event.UserLeft,
 			event.UserLeftEvent{
 				ID:     c.User.ID,
 				Name:   c.User.Name,
@@ -168,9 +161,9 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			},
 		)
 
-		log.Printf("<user %s> leave <lobby %s>", c.User.ID, c.Room.Lobby.ID)
-		if len(c.Room.Users) == 0 {
-			err = cases.RoomRepo.DeleteRoom(context.Background(), c.Room.Lobby.ID)
+		log.Printf("<user %s> leave <lobby %s>", c.User.ID, c.Room.ID)
+		if c.Room.Empty() {
+			err = cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
 			if err != nil {
 				log.Println("error while deleting room: ", err)
 			}

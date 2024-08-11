@@ -30,7 +30,7 @@ const docTemplate = `{
                 "summary": "Create a lobby",
                 "parameters": [
                     {
-                        "description": "Lobby data",
+                        "description": "lobby data",
                         "name": "lobby",
                         "in": "body",
                         "required": true,
@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/domain.lobby"
                         }
                     },
                     "400": {
@@ -83,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/domain.lobby"
                         }
                     },
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/domain.lobby"
                         }
                     },
                     "400": {
@@ -127,7 +127,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Nearest Lobby + Distance (in metres)",
+                        "description": "Nearest lobby + Distance (in metres)",
                         "schema": {
                             "$ref": "#/definitions/lobby.nearestLobbyOutput"
                         }
@@ -157,7 +157,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Lobby ID",
+                        "description": "lobby ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -165,9 +165,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lobby data",
+                        "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/domain.lobby"
                         }
                     },
                     "400": {
@@ -193,7 +193,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Lobby id",
+                        "description": "lobby id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -502,7 +502,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Lobby": {
+        "domain.lobby": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -654,7 +654,7 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "lobby": {
-                    "$ref": "#/definitions/domain.Lobby"
+                    "$ref": "#/definitions/domain.lobby"
                 }
             }
         },

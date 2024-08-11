@@ -16,13 +16,14 @@ type Match struct {
 }
 
 type Room struct {
-	Lobby *domain.Lobby
+	ID    string
+	lobby *domain.Lobby
 
-	Users           map[string]*domain.User
+	users           map[string]*domain.User
 	usersPlace      map[string]*domain.Place
 	usersPlaceMutex sync.RWMutex
 
-	Places  []*domain.Place
+	places  []*domain.Place
 	swipes  []*domain.Swipe
 	matches []*Match
 
@@ -40,9 +41,10 @@ func NewRoom(
 	placeUseCase Place,
 ) *Room {
 	return &Room{
-		Lobby:        lobby,
-		Users:        make(map[string]*domain.User),
-		Places:       make([]*domain.Place, 0),
+		ID:           lobby.ID,
+		lobby:        lobby,
+		users:        make(map[string]*domain.User),
+		places:       make([]*domain.Place, 0),
 		usersPlace:   make(map[string]*domain.Place),
 		swipes:       make([]*domain.Swipe, 0),
 		usersMutex:   sync.RWMutex{},
@@ -63,10 +65,10 @@ func (r *Room) AddUser(user *domain.User) error {
 	r.usersMutex.Lock()
 	defer r.usersMutex.Unlock()
 
-	if _, has := r.Users[user.ID]; has {
+	if _, has := r.users[user.ID]; has {
 		return fmt.Errorf("user %s already exists", user.ID)
 	}
-	r.Users[user.ID] = user
+	r.users[user.ID] = user
 	return nil
 }
 
@@ -74,20 +76,32 @@ func (r *Room) RemoveUser(id string) error {
 	r.usersMutex.Lock()
 	defer r.usersMutex.Unlock()
 
-	_, has := r.Users[id]
+	_, has := r.users[id]
 	if !has {
 		return fmt.Errorf("user %s not found", id)
 	}
-	delete(r.Users, id)
+	delete(r.users, id)
 	return nil
 }
 
-func (r *Room) UpdateLobby(ctx context.Context, input UpdateLobbyInput) error {
-	lobby, err := r.lobbyUseCase.UpdateLobby(ctx, input)
+func (r *Room) Empty() bool {
+	return len(r.users) == 0
+}
+
+func (r *Room) UpdateLobby(ctx context.Context, priceAvg int, tagIDs []int64, placeIDs []int64) error {
+	lobby, err := r.lobbyUseCase.UpdateLobby(ctx, UpdateLobbyInput{
+		ID: r.lobby.ID,
+		SaveLobbyInput: SaveLobbyInput{
+			PriceAvg: priceAvg,
+			Location: r.lobby.Location,
+			Tags:     tagIDs,
+			Places:   placeIDs,
+		},
+	})
 	if err != nil {
 		return err
 	}
-	r.Lobby = lobby
+	r.lobby = lobby
 	return nil
 }
 
@@ -96,28 +110,22 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	defer r.swipesMutex.Unlock()
 
 	var err error
-	r.Places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.Lobby)
+	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
 	if err != nil {
 		return err
 	}
-	err = r.UpdateLobby(ctx, UpdateLobbyInput{
-		ID: r.Lobby.ID,
-		SaveLobbyInput: SaveLobbyInput{
-			PriceAvg: r.Lobby.PriceAvg,
-			Location: r.Lobby.Location,
-			Tags: filter.Map(r.Lobby.Tags, func(t *domain.Tag) int64 {
-				return t.ID
-			}),
-			Places: filter.Map(r.Places, func(p *domain.Place) int64 {
-				return p.ID
-			}),
-		},
-	})
+	err = r.UpdateLobby(ctx, r.lobby.PriceAvg,
+		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+			return t.ID
+		}),
+		filter.Map(r.places, func(p *domain.Place) int64 {
+			return p.ID
+		}))
 
 	r.usersPlaceMutex.Lock()
 	defer r.usersPlaceMutex.Unlock()
-	for id := range r.Users {
-		r.usersPlace[id] = r.Places[0]
+	for id := range r.users {
+		r.usersPlace[id] = r.places[0]
 	}
 
 	return err
@@ -128,7 +136,7 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 	defer r.swipesMutex.RUnlock()
 
 	r.swipes = append(r.swipes, &domain.Swipe{
-		LobbyID: r.Lobby.ID,
+		LobbyID: r.lobby.ID,
 		PlaceID: placeID,
 		UserID:  userID,
 		Type:    t,
@@ -140,21 +148,21 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 
 	var match *Match
 
-	if len(matches) > len(r.Users)/2 {
-		match = &Match{Place: r.Places[slices.IndexFunc(r.Places, func(place *domain.Place) bool {
+	if len(matches) > len(r.users)/2 {
+		match = &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
 			return place.ID == placeID
 		})]}
 		match.ID = len(r.matches)
 		r.matches = append(r.matches, match)
 	}
 
-	pIdx := slices.IndexFunc(r.Places, func(place *domain.Place) bool {
+	pIdx := slices.IndexFunc(r.places, func(place *domain.Place) bool {
 		return place.ID == placeID
 	})
 
 	r.usersPlaceMutex.Lock()
 	defer r.usersPlaceMutex.Unlock()
-	r.usersPlace[userID] = r.Places[(pIdx+1)%len(r.Places)]
+	r.usersPlace[userID] = r.places[(pIdx+1)%len(r.places)]
 
 	return match, nil
 }
