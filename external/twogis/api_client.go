@@ -21,18 +21,6 @@ var (
 	ApiUrl = config.C.TwoGisApi.Url
 )
 
-type SimplePlace struct {
-	Name         string   `json:"name"`
-	Address      string   `json:"address"`
-	Lat          float64  `json:"lat"`
-	Lon          float64  `json:"lon"`
-	PhotoURL     string   `json:"photo_url"`
-	ReviewRating float64  `json:"review_rating"`
-	ReviewCount  int      `json:"review_count"`
-	Rubrics      []string `json:"rubrics"`
-	AveragePrice int      `json:"average_price"`
-}
-
 func joinTags(tags []string) string {
 	return strings.Join(tags, ",")
 }
@@ -91,14 +79,14 @@ func GetPlacesFromApi(params map[string]string) (string, error) {
 	return string(body), nil
 }
 
-func ParseApiResponse(responseBody string) ([]SimplePlace, error) {
+func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
 	var response ApiResponse
 	err := json.Unmarshal([]byte(responseBody), &response)
 	if err != nil {
 		return nil, err
 	}
 
-	var simplePlaces []SimplePlace
+	var twoGisPlaces []domain.TwoGisPlace
 	for _, item := range response.Result.Items {
 		var photoURL string
 		if len(item.ExternalContent) > 0 {
@@ -123,7 +111,7 @@ func ParseApiResponse(responseBody string) ([]SimplePlace, error) {
 			}
 		}
 
-		simplePlaces = append(simplePlaces, SimplePlace{
+		twoGisPlaces = append(twoGisPlaces, domain.TwoGisPlace{
 			Name:         item.Name,
 			Address:      item.AddressName,
 			Lat:          item.Point.Lat,
@@ -136,10 +124,10 @@ func ParseApiResponse(responseBody string) ([]SimplePlace, error) {
 		})
 	}
 
-	return simplePlaces, nil
+	return twoGisPlaces, nil
 }
 
-func FetchSimplePlacesForLobbyFromAPI(lobby *domain.Lobby) ([]SimplePlace, error) {
+func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]domain.TwoGisPlace, error) {
 	params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat)
 
 	apiResponse, err := GetPlacesFromApi(params)

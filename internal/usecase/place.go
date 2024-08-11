@@ -2,6 +2,9 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+
+	"dishdash.ru/external/twogis"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
@@ -71,6 +74,14 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 	places, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(places) <= 5 {
+		simplePlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Print(simplePlaces)
 	}
 
 	return places, nil
