@@ -57,7 +57,7 @@ func JoinLobby(t *testing.T) {
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
-	time.Sleep(5 * time.Second)
+	time.Sleep(waitTime)
 
 	e1Mu.Lock()
 	assert.Equal(t, 1, len(events1))

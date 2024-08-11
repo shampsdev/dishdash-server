@@ -1,16 +1,18 @@
 package tests
 
 import (
-	"github.com/mitchellh/mapstructure"
 	"reflect"
 	"time"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 func toTimeHookFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data interface{},
+	) (interface{}, error) {
 		if t != reflect.TypeOf(time.Time{}) {
 			return data, nil
 		}

@@ -132,7 +132,7 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 		return swipe.PlaceID == placeID && swipe.Type == domain.LIKE
 	})
 
-	match := new(Match)
+	var match *Match
 
 	if len(matches) > len(r.Users)/2 {
 		match = &Match{Place: r.Places[slices.IndexFunc(r.Places, func(place *domain.Place) bool {
