@@ -11,7 +11,8 @@ import (
 )
 
 type Config struct {
-	Server struct {
+	DevMode bool `default:"false" envconfig:"DEV_MODE"`
+	Server  struct {
 		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
 	}
 	DB struct {
@@ -24,6 +25,7 @@ type Config struct {
 	}
 	TwoGisApi struct {
 		Key string `envconfig:"TWOGIS_API_KEY"`
+		Url string `envconfig:"TWOGIS_API_URL"`
 	}
 }
 
@@ -38,16 +40,25 @@ func init() {
 	if err != nil {
 		log.Fatalf("can't parse config: %s", err)
 	}
+	if C.TwoGisApi.Url == "" {
+		C.TwoGisApi.Url = "https://catalog.api.2gis.com/3.0/items"
+		log.Println("[WARNING] No two gis api url, using default one: " + C.TwoGisApi.Url)
+	}
 	if C.TwoGisApi.Key == "" {
-		log.Fatalf("[FATAL] TwoGisApi.ApiKey is null or not set")
+		log.Println("[FATAL] TwoGisApi.ApiKey is null or not set")
 	}
 }
 
 func Print() {
-	data, _ := json.MarshalIndent(C, "", "\t")
-	fmt.Println("=== CONFIG ===")
-	fmt.Println(string(data))
-	fmt.Println("==============")
+	if C.DevMode {
+		log.Println("[INFO] Launched in DEV mode")
+		data, _ := json.MarshalIndent(C, "", "\t")
+		fmt.Println("=== CONFIG ===")
+		fmt.Println(string(data))
+		fmt.Println("==============")
+	} else {
+		log.Println("[INFO] Launched in production mode")
+	}
 }
 
 func (c Config) DBUrl() string {

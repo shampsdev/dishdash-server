@@ -17,6 +17,16 @@ type Lobby struct {
 	Places []*Place `json:"places"`
 }
 
+func (l *Lobby) TagNames() []string {
+	var names []string
+	for _, tag := range l.Tags {
+		if tag != nil {
+			names = append(names, tag.Name)
+		}
+	}
+	return names
+}
+
 type LobbyState string
 
 var (
