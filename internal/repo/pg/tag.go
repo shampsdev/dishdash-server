@@ -3,6 +3,7 @@ package pg
 import (
 	"context"
 	"fmt"
+
 	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/internal/domain"
@@ -48,9 +49,8 @@ func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([
 		UNION ALL
 		SELECT id
 		FROM s;`, rubric).Scan(&id)
-
 		if err != nil {
-			return nil, nil
+			return []int64{}, err // TODO check, mb could be better
 		}
 		placeTags = append(placeTags, id)
 	}
