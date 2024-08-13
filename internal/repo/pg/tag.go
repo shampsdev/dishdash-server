@@ -3,7 +3,6 @@ package pg
 import (
 	"context"
 	"fmt"
-
 	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/internal/domain"
@@ -27,6 +26,35 @@ func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) 
 		return 0, fmt.Errorf("could not insert tag: %w", err)
 	}
 	return id, err
+}
+
+func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
+	var placeTags []int64
+	for _, rubric := range place.Rubrics {
+		var id int64
+		err := tr.db.QueryRow(ctx, `
+		WITH s AS (
+			SELECT id, name, icon
+			FROM tag
+			WHERE name = $1
+		), i AS (
+			INSERT INTO tag (name, icon)
+			SELECT $1, ''
+			WHERE NOT EXISTS (SELECT 1 FROM s)
+			RETURNING id
+		)
+		SELECT id
+		FROM i
+		UNION ALL
+		SELECT id
+		FROM s;`, rubric).Scan(&id)
+
+		if err != nil {
+			return nil, nil
+		}
+		placeTags = append(placeTags, id)
+	}
+	return placeTags, nil
 }
 
 func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error {
