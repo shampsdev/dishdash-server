@@ -127,13 +127,21 @@ func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
 	return twoGisPlaces, nil
 }
 
-func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]domain.TwoGisPlace, error) {
+// TODO tags!!!!
+func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.Place, error) {
 	params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat)
 
 	apiResponse, err := GetPlacesFromApi(params)
 	if err != nil {
-		return ParseApiResponse(apiResponse)
+		return nil, err
 	}
 
-	return nil, nil
+	apiPlaces, _ := ParseApiResponse(apiResponse)
+
+	places := make([]*domain.Place, len(apiPlaces))
+
+	for i, apiPlace := range apiPlaces {
+		places[i] = apiPlace.ToPlace()
+	}
+	return places, nil
 }

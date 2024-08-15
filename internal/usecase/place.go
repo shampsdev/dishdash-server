@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 
 	"dishdash.ru/external/twogis"
 
@@ -70,6 +69,26 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	return places, nil
 }
 
+func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Place {
+	uniquePlaces := make([]*domain.Place, 0)
+	uniquePlaces = append(uniquePlaces, placesFromBD...)
+
+	for _, apiPlace := range placesFromApi {
+		exists := false
+		for _, bdPlace := range uniquePlaces {
+			if apiPlace.Equals(bdPlace) {
+				exists = true
+				break
+			}
+		}
+		if !exists {
+			uniquePlaces = append(uniquePlaces, apiPlace)
+		}
+	}
+
+	return uniquePlaces
+}
+
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
 	places, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
@@ -77,11 +96,11 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 	}
 
 	if len(places) <= 5 {
-		simplePlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
+		apiPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Print(simplePlaces)
+		return getUniquePlaces(apiPlaces, places), nil
 	}
 
 	return places, nil

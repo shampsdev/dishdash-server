@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 type TwoGisPlace struct {
 	Name         string   `json:"name"`
@@ -14,8 +16,8 @@ type TwoGisPlace struct {
 	AveragePrice int      `json:"average_price"`
 }
 
-func (twoGisPlace *TwoGisPlace) ToPlace() Place {
-	return Place{
+func (twoGisPlace *TwoGisPlace) ToPlace() *Place {
+	return &Place{
 		ID:               0,
 		Title:            twoGisPlace.Name,
 		ShortDescription: twoGisPlace.Address,
@@ -26,7 +28,7 @@ func (twoGisPlace *TwoGisPlace) ToPlace() Place {
 		PriceAvg:         twoGisPlace.AveragePrice,
 		ReviewRating:     twoGisPlace.ReviewRating,
 		ReviewCount:      twoGisPlace.ReviewCount,
-		Tags:             nil,
+		Tags:             nil, // apiTagRepo.SaveApiTag(ctx, &place)
 		UpdatedAt:        time.Now(),
 	}
 }

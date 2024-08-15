@@ -18,3 +18,7 @@ type Place struct {
 	Tags             []*Tag     `json:"tags"`
 	UpdatedAt        time.Time  `json:"updatedAt"`
 }
+
+func (place Place) Equals(other *Place) bool {
+	return place.Title == other.Title && place.Address == other.Address
+}

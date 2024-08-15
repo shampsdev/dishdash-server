@@ -9,6 +9,7 @@ import (
 type Tag interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) (int64, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
+	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
 	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)

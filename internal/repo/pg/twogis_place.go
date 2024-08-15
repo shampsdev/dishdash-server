@@ -40,7 +40,7 @@ func (apr *ApiPlaceRepo) SaveApiPlace(ctx context.Context, twogisPlace *domain.T
 
 	placeRepo := NewPlaceRepo(apr.db)
 
-	id, err := placeRepo.SavePlace(ctx, &place)
+	id, err := placeRepo.SavePlace(ctx, place)
 	if err != nil {
 		log.Printf("Error saving new place: %v\n", err)
 		return 0, err
