@@ -141,7 +141,12 @@ func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.Place, error) {
 	places := make([]*domain.Place, len(apiPlaces))
 
 	for i, apiPlace := range apiPlaces {
-		places[i] = apiPlace.ToPlace()
+		place := apiPlace.ToPlace()
+
+		for _, rubric := range apiPlace.Rubrics {
+			fmt.Println(rubric) // TODO тут как-то привязать тег
+		}
+		places[i] = place
 	}
 	return places, nil
 }
