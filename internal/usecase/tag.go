@@ -27,3 +27,7 @@ func (t TagUseCase) SaveTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, 
 func (t TagUseCase) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	return t.tRepo.GetAllTags(ctx)
 }
+
+func (t TagUseCase) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
+	return t.tRepo.SaveApiTag(ctx, place)
+}

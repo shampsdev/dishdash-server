@@ -18,6 +18,7 @@ type Cases struct {
 type Tag interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
+	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 }
 
 type User interface {
