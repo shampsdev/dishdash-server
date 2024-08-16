@@ -25,18 +25,20 @@ func joinTags(tags []string) string {
 	return strings.Join(tags, ",")
 }
 
-func getParamsMap(tags []string, lon, lat float64, radiusOptional ...int) map[string]string {
+func getParamsMap(tags []string, lon, lat float64, page, pageSize int, radiusOptional ...int) map[string]string {
 	radius := 4000
 	if len(radiusOptional) > 0 && radiusOptional[0] > 0 {
 		radius = radiusOptional[0]
 	}
 
 	return map[string]string{
-		"q":      joinTags(tags),
-		"point":  fmt.Sprintf("%f,%f", lon, lat),
-		"fields": "items.point,items.name,items.description,items.external_content,items.rubrics,items.reviews,items.attribute_groups,items.schedule",
-		"radius": strconv.Itoa(radius),
-		"key":    ApiKey,
+		"q":         joinTags(tags),
+		"point":     fmt.Sprintf("%f,%f", lon, lat),
+		"fields":    "items.point,items.name,items.description,items.external_content,items.rubrics,items.reviews,items.attribute_groups,items.schedule",
+		"radius":    strconv.Itoa(radius),
+		"page":      strconv.Itoa(page),
+		"page_size": strconv.Itoa(pageSize),
+		"key":       ApiKey,
 	}
 }
 
@@ -129,18 +131,39 @@ func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
 
 // TODO tags!!!!
 func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.Place, error) {
-	params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat)
+	var allApiPlaces []domain.TwoGisPlace
+	page := 1
+	pageSize := 10
 
-	apiResponse, err := GetPlacesFromApi(params)
-	if err != nil {
-		return nil, err
+	for {
+		params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat, page, pageSize)
+
+		apiResponse, err := GetPlacesFromApi(params)
+		if err != nil {
+			return nil, err
+		}
+
+		apiPlaces, err := ParseApiResponse(apiResponse)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(apiPlaces) == 0 {
+			break
+		}
+
+		allApiPlaces = append(allApiPlaces, apiPlaces...)
+
+		if len(apiPlaces) < pageSize {
+			break
+		}
+
+		page++
 	}
 
-	apiPlaces, _ := ParseApiResponse(apiResponse)
+	places := make([]*domain.Place, len(allApiPlaces))
 
-	places := make([]*domain.Place, len(apiPlaces))
-
-	for i, apiPlace := range apiPlaces {
+	for i, apiPlace := range allApiPlaces {
 		place := apiPlace.ToPlace()
 
 		for _, rubric := range apiPlace.Rubrics {
