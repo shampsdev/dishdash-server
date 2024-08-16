@@ -89,19 +89,26 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 	return uniquePlaces
 }
 
+// TODO tags!!!! and saving apiPlace
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
-	places, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
+	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(places) <= 5 {
-		apiPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
+	if len(dbPlaces) <= 5 {
+		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
 		if err != nil {
 			return nil, err
 		}
-		return getUniquePlaces(apiPlaces, places), nil
+		apiPlaces := make([]*domain.Place, len(twoGisPlaces))
+		for i, twoGisPlace := range twoGisPlaces {
+			parsedPlace := twoGisPlace.ToPlace()
+			apiPlaces[i] = parsedPlace
+		}
+
+		return getUniquePlaces(apiPlaces, dbPlaces), nil
 	}
 
-	return places, nil
+	return dbPlaces, nil
 }

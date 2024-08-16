@@ -81,14 +81,14 @@ func GetPlacesFromApi(params map[string]string) (string, error) {
 	return string(body), nil
 }
 
-func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
+func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 	var response ApiResponse
 	err := json.Unmarshal([]byte(responseBody), &response)
 	if err != nil {
 		return nil, err
 	}
 
-	var twoGisPlaces []domain.TwoGisPlace
+	var twoGisPlaces []*domain.TwoGisPlace
 	for _, item := range response.Result.Items {
 		var photoURL string
 		if len(item.ExternalContent) > 0 {
@@ -113,7 +113,7 @@ func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
 			}
 		}
 
-		twoGisPlaces = append(twoGisPlaces, domain.TwoGisPlace{
+		twoGisPlaces = append(twoGisPlaces, &domain.TwoGisPlace{
 			Name:         item.Name,
 			Address:      item.AddressName,
 			Lat:          item.Point.Lat,
@@ -129,9 +129,8 @@ func ParseApiResponse(responseBody string) ([]domain.TwoGisPlace, error) {
 	return twoGisPlaces, nil
 }
 
-// TODO tags!!!!
-func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.Place, error) {
-	var allApiPlaces []domain.TwoGisPlace
+func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.TwoGisPlace, error) {
+	var allApiPlaces []*domain.TwoGisPlace
 	page := 1
 	pageSize := 10
 
@@ -161,15 +160,5 @@ func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.Place, error) {
 		page++
 	}
 
-	places := make([]*domain.Place, len(allApiPlaces))
-
-	for i, apiPlace := range allApiPlaces {
-		place := apiPlace.ToPlace()
-
-		for _, rubric := range apiPlace.Rubrics {
-			fmt.Println(rubric) // TODO тут как-то привязать тег
-		}
-		places[i] = place
-	}
-	return places, nil
+	return allApiPlaces, nil
 }
