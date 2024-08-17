@@ -43,6 +43,14 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 	return place, nil
 }
 
+func (p PlaceUseCase) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
+	placeId, err := p.pRepo.SaveTwoGisPlace(ctx, twogisPlace)
+	if err != nil {
+		return 0, err
+	}
+	return placeId, nil
+}
+
 func (p PlaceUseCase) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
 	place, err := p.pRepo.GetPlaceByID(ctx, id)
 	if err != nil {
@@ -89,7 +97,6 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 	return uniquePlaces
 }
 
-// TODO tags!!!! and saving apiPlace
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
 	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
@@ -104,7 +111,19 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 		apiPlaces := make([]*domain.Place, len(twoGisPlaces))
 		for i, twoGisPlace := range twoGisPlaces {
 			parsedPlace := twoGisPlace.ToPlace()
+			tags, err := p.tRepo.SaveApiTag(ctx, twoGisPlace)
+			if err != nil {
+				return nil, err
+			}
 			apiPlaces[i] = parsedPlace
+			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
+			if err != nil {
+				return nil, err
+			}
+			err = p.tRepo.AttachTagsToPlace(ctx, tags, placeId)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return getUniquePlaces(apiPlaces, dbPlaces), nil
