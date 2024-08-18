@@ -49,7 +49,7 @@ definitions:
         type: array
       location:
         $ref: '#/definitions/domain.Coordinate'
-      priceMin:
+      priceAvg:
         type: integer
       reviewCount:
         type: integer
@@ -119,6 +119,10 @@ definitions:
     properties:
       location:
         $ref: '#/definitions/domain.Coordinate'
+      places:
+        items:
+          type: integer
+        type: array
       priceAvg:
         type: integer
       tags:
@@ -165,7 +169,7 @@ paths:
       - application/json
       description: Create a new lobby in the database
       parameters:
-      - description: Lobby data
+      - description: lobby data
         in: body
         name: lobby
         required: true
@@ -191,7 +195,7 @@ paths:
       - application/json
       description: delete a lobby in the database
       parameters:
-      - description: Lobby id
+      - description: lobby id
         in: path
         name: id
         required: true
@@ -213,7 +217,7 @@ paths:
       - application/json
       description: Get a lobby from the database by ID
       parameters:
-      - description: Lobby ID
+      - description: lobby ID
         in: path
         name: id
         required: true
@@ -222,7 +226,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Lobby data
+          description: lobby data
           schema:
             $ref: '#/definitions/domain.Lobby'
         "400":
@@ -278,7 +282,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Nearest Lobby + Distance (in metres)
+          description: Nearest lobby + Distance (in metres)
           schema:
             $ref: '#/definitions/lobby.nearestLobbyOutput'
         "400":

@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/domain.lobby"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -83,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.lobby"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.lobby"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -167,7 +167,7 @@ const docTemplate = `{
                     "200": {
                         "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/domain.lobby"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -231,7 +231,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Card"
+                                "$ref": "#/definitions/domain.Place"
                             }
                         }
                     },
@@ -254,7 +254,7 @@ const docTemplate = `{
                 "summary": "Create a place",
                 "parameters": [
                     {
-                        "description": "Card data",
+                        "description": "Place data",
                         "name": "place",
                         "in": "body",
                         "required": true,
@@ -267,7 +267,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved place",
                         "schema": {
-                            "$ref": "#/definitions/domain.Card"
+                            "$ref": "#/definitions/domain.Place"
                         }
                     },
                     "400": {
@@ -502,7 +502,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.lobby": {
+        "domain.Lobby": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -517,7 +517,7 @@ const docTemplate = `{
                 "places": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Card"
+                        "$ref": "#/definitions/domain.Place"
                     }
                 },
                 "priceAvg": {
@@ -546,7 +546,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Card": {
+        "domain.Place": {
             "type": "object",
             "properties": {
                 "address": {
@@ -567,7 +567,7 @@ const docTemplate = `{
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "priceMin": {
+                "priceAvg": {
                     "type": "integer"
                 },
                 "reviewCount": {
@@ -654,7 +654,7 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "lobby": {
-                    "$ref": "#/definitions/domain.lobby"
+                    "$ref": "#/definitions/domain.Lobby"
                 }
             }
         },
@@ -674,6 +674,12 @@ const docTemplate = `{
             "properties": {
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
+                },
+                "places": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "priceAvg": {
                     "type": "integer"
