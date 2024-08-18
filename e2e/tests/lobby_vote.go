@@ -1,13 +1,14 @@
 package tests
 
 import (
+	"testing"
+	"time"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/gateways/ws/event"
 	"dishdash.ru/internal/usecase"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func LobbyVote(t *testing.T) *SocketIOSession {
