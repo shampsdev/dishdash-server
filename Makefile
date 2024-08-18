@@ -28,8 +28,11 @@ lint: # Lint (github.com/golangci/golangci-lint)
 lint-fix: # Lint fix
 	golangci-lint run --fix
 
-test-e2e: # Test e2e
+test-e2e-race: # Test e2e
 	go test -v -race e2e/e2e_test.go
+
+test-e2e: # Test e2e
+	go test -v e2e/e2e_test.go
 
 update-golden-e2e: # Update golden
 	go test -v -race e2e/e2e_test.go -update-golden
