@@ -182,4 +182,8 @@ func assertMaps(t *testing.T, exp, actual map[string]interface{}) {
 			assert.Equal(t, vExp, vActual)
 		}
 	}
+
+	for k := range actual {
+		assert.Contains(t, exp, k)
+	}
 }
