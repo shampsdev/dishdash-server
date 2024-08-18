@@ -60,6 +60,7 @@ func NewRoom(
 		places:       make([]*domain.Place, 0),
 		usersPlace:   make(map[string]*domain.Place),
 		swipes:       make([]*domain.Swipe, 0),
+		matchVotes:   make(map[string]VoteOption),
 		lobbyUseCase: lobbyUseCase,
 		placeUseCase: placeUseCase,
 	}
@@ -213,6 +214,7 @@ func (r *Room) Vote(userID string, option VoteOption) {
 		} else {
 			r.state = Swiping
 		}
+		r.matchVotes = make(map[string]VoteOption)
 	}
 }
 

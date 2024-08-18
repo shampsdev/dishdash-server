@@ -81,6 +81,11 @@ var sessionTests = []sessionTest{
 		GoldenFile: "lobby_swipe",
 		Run:        tests.LobbySwipe,
 	},
+	{
+		Name:       "LobbyVote",
+		GoldenFile: "lobby_vote",
+		Run:        tests.LobbyVote,
+	},
 }
 
 func (suite *E2ETestSuite) Test_SessionTests() {

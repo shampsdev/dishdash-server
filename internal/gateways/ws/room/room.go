@@ -2,7 +2,6 @@ package room
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
 
@@ -119,7 +118,6 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
-		fmt.Println("Swipe", c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID)
 		m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
 		if err != nil {
 			log.Println("error while swiping: ", err)
@@ -135,7 +133,6 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				})
 		}
 		p := c.Room.GetNextPlaceForUser(c.User.ID)
-		fmt.Println("Card", c.User.ID, p.ID)
 		conn.Emit(event.Place, event.PlaceEvent{
 			ID:   p.ID,
 			Card: p,
