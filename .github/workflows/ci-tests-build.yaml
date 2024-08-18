@@ -28,4 +28,4 @@ jobs:
       - name: E2E Test
         run: |
           go mod tidy
-          go test -v -race -coverpkg=./... e2e/e2e_test.go
+          make test-e2e

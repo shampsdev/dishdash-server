@@ -1,6 +1,9 @@
 package event
 
-import "dishdash.ru/internal/domain"
+import (
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/usecase"
+)
 
 const (
 	JoinLobby      = "joinLobby"
@@ -11,6 +14,10 @@ const (
 	Place          = "card"
 	Swipe          = "swipe"
 	Match          = "match"
+	Vote           = "vote"
+	Voted          = "voted"
+	ReleaseMatch   = "releaseMatch"
+	Finish         = "finish"
 )
 
 type JoinLobbyEvent struct {
@@ -39,7 +46,7 @@ type SettingsUpdateEvent struct {
 
 type PlaceEvent struct {
 	ID   int64         `json:"id"`
-	Card *domain.Place `json:"card" mapstructure:"card"`
+	Card *domain.Place `json:"card"`
 }
 
 type SwipeEvent struct {
@@ -48,5 +55,24 @@ type SwipeEvent struct {
 
 type MatchEvent struct {
 	ID   int           `json:"id"`
-	Card *domain.Place `json:"card" mapstructure:"card"`
+	Card *domain.Place `json:"card"`
+}
+
+type VoteEvent struct {
+	ID     int64              `json:"id"`
+	Option usecase.VoteOption `json:"option"`
+}
+
+type VotedEvent struct {
+	ID     int64              `json:"id"`
+	Option usecase.VoteOption `json:"option"`
+	User   struct {
+		ID     string `json:"id"`
+		Name   string `json:"name"`
+		Avatar string `json:"avatar"`
+	}
+}
+
+type FinishEvent struct {
+	Result *domain.Place `json:"result"`
 }

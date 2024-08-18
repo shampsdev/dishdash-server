@@ -2,7 +2,9 @@ package room
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"sync"
 
 	"dishdash.ru/internal/gateways/ws/event"
 
@@ -13,6 +15,7 @@ import (
 )
 
 type Context struct {
+	lock sync.RWMutex
 	User *domain.User
 	Room *usecase.Room
 }
@@ -47,10 +50,13 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		conn.Join(room.ID)
-		conn.SetContext(Context{
+		c := &Context{
 			User: user,
 			Room: room,
-		})
+		}
+		c.lock.Lock()
+		conn.SetContext(c)
+		c.lock.Unlock()
 		broadcastToOthersInRoom(
 			s, user.ID, room.ID, event.UserJoined,
 			event.UserJoinedEvent{
@@ -64,7 +70,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnEvent("/", event.SettingsUpdate, func(conn socketio.Conn, se event.SettingsUpdateEvent) {
-		c, ok := conn.Context().(Context)
+		c, ok := conn.Context().(*Context)
 		if !ok {
 			_ = conn.Close()
 			return
@@ -80,7 +86,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnEvent("/", event.StartSwipes, func(conn socketio.Conn) {
-		c, ok := conn.Context().(Context)
+		c, ok := conn.Context().(*Context)
 		if !ok {
 			_ = conn.Close()
 			return
@@ -93,7 +99,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		s.ForEach("", c.Room.ID, func(conn socketio.Conn) {
-			c, ok := conn.Context().(Context)
+			c, ok := conn.Context().(*Context)
 			if !ok {
 				_ = conn.Close()
 			}
@@ -108,11 +114,12 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnEvent("/", event.Swipe, func(conn socketio.Conn, se event.SwipeEvent) {
-		c, ok := conn.Context().(Context)
+		c, ok := conn.Context().(*Context)
 		if !ok {
 			_ = conn.Close()
 			return
 		}
+		fmt.Println("Swipe", c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID)
 		m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
 		if err != nil {
 			log.Println("error while swiping: ", err)
@@ -128,6 +135,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				})
 		}
 		p := c.Room.GetNextPlaceForUser(c.User.ID)
+		fmt.Println("Card", c.User.ID, p.ID)
 		conn.Emit(event.Place, event.PlaceEvent{
 			ID:   p.ID,
 			Card: p,
@@ -138,8 +146,39 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		log.Println("faced error: ", e)
 	})
 
+	s.OnEvent("/", event.Vote, func(conn socketio.Conn, ve event.VoteEvent) {
+		c, ok := conn.Context().(*Context)
+		if !ok {
+			_ = conn.Close()
+			return
+		}
+		c.Room.Vote(c.User.ID, ve.Option)
+		s.BroadcastToRoom("/", c.Room.ID, event.Voted, event.VotedEvent{
+			ID:     ve.ID,
+			Option: ve.Option,
+			User: struct {
+				ID     string `json:"id"`
+				Name   string `json:"name"`
+				Avatar string `json:"avatar"`
+			}{
+				ID:     c.User.ID,
+				Name:   c.User.Name,
+				Avatar: c.User.Avatar,
+			},
+		})
+
+		if c.Room.Swiping() || c.Room.Finished() {
+			s.BroadcastToRoom("/", c.Room.ID, event.ReleaseMatch)
+		}
+		if c.Room.Finished() {
+			s.BroadcastToRoom("/", c.Room.ID, event.Finish, event.FinishEvent{
+				Result: c.Room.Result(),
+			})
+		}
+	})
+
 	s.OnDisconnect("/", func(conn socketio.Conn, msg string) {
-		c, ok := conn.Context().(Context)
+		c, ok := conn.Context().(*Context)
 		if !ok {
 			log.Println("disconnected: ", msg)
 			_ = conn.Close()
@@ -173,10 +212,12 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 
 func broadcastToOthersInRoom(s *socketio.Server, userID, room, event string, args ...interface{}) {
 	s.ForEach("", room, func(conn socketio.Conn) {
-		c, ok := conn.Context().(Context)
+		c, ok := conn.Context().(*Context)
 		if !ok {
 			return
 		}
+		c.lock.RLock()
+		defer c.lock.RUnlock()
 		if c.User.ID != userID {
 			conn.Emit(event, args...)
 		}

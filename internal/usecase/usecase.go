@@ -22,6 +22,7 @@ type Tag interface {
 
 type User interface {
 	SaveUser(ctx context.Context, user *domain.User) (*domain.User, error)
+	SaveUserWithID(ctx context.Context, user *domain.User, id string) error
 	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)

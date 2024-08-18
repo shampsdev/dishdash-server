@@ -10,26 +10,39 @@ import (
 	"dishdash.ru/pkg/filter"
 )
 
+type State string
+
+var (
+	Swiping  State = "swiping"
+	Voting   State = "voting"
+	Finished State = "finished"
+)
+
+type VoteOption int
+
+var (
+	VoteDislike VoteOption
+	VoteLike    VoteOption = 1
+)
+
 type Match struct {
 	ID    int
 	Place *domain.Place
 }
 
 type Room struct {
-	ID    string
+	ID   string
+	lock sync.RWMutex
+
 	lobby *domain.Lobby
 
-	users           map[string]*domain.User
-	usersPlace      map[string]*domain.Place
-	usersPlaceMutex sync.RWMutex
-
-	places  []*domain.Place
-	swipes  []*domain.Swipe
-	matches []*Match
-
-	usersMutex  sync.RWMutex
-	placesMutex sync.RWMutex
-	swipesMutex sync.RWMutex
+	state      State
+	users      map[string]*domain.User
+	usersPlace map[string]*domain.Place
+	places     []*domain.Place
+	swipes     []*domain.Swipe
+	matches    []*Match
+	matchVotes map[string]VoteOption
 
 	lobbyUseCase Lobby
 	placeUseCase Place
@@ -47,23 +60,20 @@ func NewRoom(
 		places:       make([]*domain.Place, 0),
 		usersPlace:   make(map[string]*domain.Place),
 		swipes:       make([]*domain.Swipe, 0),
-		usersMutex:   sync.RWMutex{},
-		placesMutex:  sync.RWMutex{},
-		swipesMutex:  sync.RWMutex{},
 		lobbyUseCase: lobbyUseCase,
 		placeUseCase: placeUseCase,
 	}
 }
 
 func (r *Room) GetNextPlaceForUser(id string) *domain.Place {
-	r.usersPlaceMutex.RLock()
-	defer r.usersPlaceMutex.RUnlock()
+	r.lock.RLock()
+	defer r.lock.RUnlock()
 	return r.usersPlace[id]
 }
 
 func (r *Room) AddUser(user *domain.User) error {
-	r.usersMutex.Lock()
-	defer r.usersMutex.Unlock()
+	r.lock.Lock()
+	defer r.lock.Unlock()
 
 	if _, has := r.users[user.ID]; has {
 		return fmt.Errorf("user %s already exists", user.ID)
@@ -73,8 +83,8 @@ func (r *Room) AddUser(user *domain.User) error {
 }
 
 func (r *Room) RemoveUser(id string) error {
-	r.usersMutex.Lock()
-	defer r.usersMutex.Unlock()
+	r.lock.Lock()
+	defer r.lock.Unlock()
 
 	_, has := r.users[id]
 	if !has {
@@ -85,10 +95,36 @@ func (r *Room) RemoveUser(id string) error {
 }
 
 func (r *Room) Empty() bool {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
 	return len(r.users) == 0
 }
 
-func (r *Room) UpdateLobby(ctx context.Context, priceAvg int, tagIDs []int64, placeIDs []int64) error {
+func (r *Room) Voting() bool {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.state == Voting
+}
+
+func (r *Room) Swiping() bool {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.state == Swiping
+}
+
+func (r *Room) Finished() bool {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.state == Finished
+}
+
+func (r *Room) UpdateLobby(ctx context.Context, priceAvg int, tagIDs, placeIDs []int64) error {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+	return r.updateLobby(ctx, priceAvg, tagIDs, placeIDs)
+}
+
+func (r *Room) updateLobby(ctx context.Context, priceAvg int, tagIDs, placeIDs []int64) error {
 	lobby, err := r.lobbyUseCase.UpdateLobby(ctx, UpdateLobbyInput{
 		ID: r.lobby.ID,
 		SaveLobbyInput: SaveLobbyInput{
@@ -106,15 +142,15 @@ func (r *Room) UpdateLobby(ctx context.Context, priceAvg int, tagIDs []int64, pl
 }
 
 func (r *Room) StartSwipes(ctx context.Context) error {
-	r.swipesMutex.Lock()
-	defer r.swipesMutex.Unlock()
+	r.lock.Lock()
+	defer r.lock.Unlock()
 
 	var err error
 	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
 	if err != nil {
 		return err
 	}
-	err = r.UpdateLobby(ctx, r.lobby.PriceAvg,
+	err = r.updateLobby(ctx, r.lobby.PriceAvg,
 		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
 			return t.ID
 		}),
@@ -122,8 +158,6 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 			return p.ID
 		}))
 
-	r.usersPlaceMutex.Lock()
-	defer r.usersPlaceMutex.Unlock()
 	for id := range r.users {
 		r.usersPlace[id] = r.places[0]
 	}
@@ -132,8 +166,8 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 }
 
 func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, error) {
-	r.swipesMutex.RLock()
-	defer r.swipesMutex.RUnlock()
+	r.lock.Lock()
+	defer r.lock.Unlock()
 
 	r.swipes = append(r.swipes, &domain.Swipe{
 		LobbyID: r.lobby.ID,
@@ -142,27 +176,51 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 		Type:    t,
 	})
 
-	matches := filter.Filter(r.swipes, func(swipe *domain.Swipe) bool {
+	pIdx := slices.IndexFunc(r.places, func(place *domain.Place) bool {
+		return place.ID == placeID
+	})
+	r.usersPlace[userID] = r.places[(pIdx+1)%len(r.places)]
+
+	likes := filter.Count(r.swipes, func(swipe *domain.Swipe) bool {
 		return swipe.PlaceID == placeID && swipe.Type == domain.LIKE
 	})
-
-	var match *Match
-
-	if len(matches) > len(r.users)/2 {
-		match = &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
+	if likes > len(r.users)/2 {
+		match := &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
 			return place.ID == placeID
 		})]}
 		match.ID = len(r.matches)
 		r.matches = append(r.matches, match)
+		r.state = Voting
+		return match, nil
 	}
 
-	pIdx := slices.IndexFunc(r.places, func(place *domain.Place) bool {
-		return place.ID == placeID
-	})
+	return nil, nil
+}
 
-	r.usersPlaceMutex.Lock()
-	defer r.usersPlaceMutex.Unlock()
-	r.usersPlace[userID] = r.places[(pIdx+1)%len(r.places)]
+func (r *Room) Result() *domain.Place {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.matches[len(r.matches)-1].Place
+}
 
-	return match, nil
+func (r *Room) Vote(userID string, option VoteOption) {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+	r.matchVotes[userID] = option
+	if len(r.matchVotes) == len(r.users) {
+		if r.allVotedLike() {
+			r.state = Finished
+		} else {
+			r.state = Swiping
+		}
+	}
+}
+
+func (r *Room) allVotedLike() bool {
+	for _, vote := range r.matchVotes {
+		if vote == VoteDislike {
+			return false
+		}
+	}
+	return true
 }

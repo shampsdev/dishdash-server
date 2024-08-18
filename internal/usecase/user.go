@@ -24,6 +24,10 @@ func (u UserUseCase) SaveUser(ctx context.Context, user *domain.User) (*domain.U
 	return user, err
 }
 
+func (u UserUseCase) SaveUserWithID(ctx context.Context, user *domain.User, id string) error {
+	return u.uRepo.SaveUserWithID(ctx, user, id)
+}
+
 func (u UserUseCase) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
 	return u.uRepo.UpdateUser(ctx, user)
 }

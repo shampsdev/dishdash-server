@@ -14,15 +14,13 @@ import (
 
 func UpdateUser(t *testing.T) {
 	user := &domain.User{
+		ID:       "1",
 		Name:     "name1",
 		Avatar:   "avatar1",
 		Telegram: nil,
 	}
 	b, err := json.Marshal(user)
 	assert.NoError(t, err)
-
-	// Post user
-	user = postUser(t, user)
 
 	resp, err := httpClient.Post(fmt.Sprintf("%s/users", ApiHost), "application/json", bytes.NewReader(b))
 	assert.NoError(t, err)
@@ -69,11 +67,11 @@ func assertEqualUsers(t *testing.T, exp, actual *domain.User) {
 	assert.Equal(t, exp.Telegram, actual.Telegram)
 }
 
-func postUser(t *testing.T, user *domain.User) *domain.User {
+func postUserWithID(t *testing.T, user *domain.User) *domain.User {
 	b, err := json.Marshal(user)
 	assert.NoError(t, err)
 
-	resp, err := httpClient.Post(fmt.Sprintf("%s/users", ApiHost), "application/json", bytes.NewReader(b))
+	resp, err := httpClient.Post(fmt.Sprintf("%s/users/with_id", ApiHost), "application/json", bytes.NewReader(b))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	respUser := &domain.User{}

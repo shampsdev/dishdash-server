@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sync"
 	"testing"
 	"time"
 
@@ -14,13 +13,12 @@ import (
 	"dishdash.ru/internal/usecase"
 
 	socketio "github.com/googollee/go-socket.io"
-	"github.com/mitchellh/mapstructure"
 	"github.com/stretchr/testify/assert"
 )
 
-func JoinLobby(t *testing.T) {
-	user1 := postUser(t, &domain.User{Name: "user1", Avatar: "avatar1"})
-	user2 := postUser(t, &domain.User{Name: "user2", Avatar: "avatar2"})
+func LobbyJoin(t *testing.T) *SocketIOSession {
+	user1 := postUserWithID(t, &domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
+	user2 := postUserWithID(t, &domain.User{ID: "id2", Name: "user2", Avatar: "avatar2"})
 
 	lobby := findLobby(t)
 
@@ -30,48 +28,32 @@ func JoinLobby(t *testing.T) {
 	sioCli2, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
-	e1Mu := &sync.Mutex{}
-	var events1 []map[string]interface{}
-	e2Mu := &sync.Mutex{}
-	var events2 []map[string]interface{}
+	sioSess := newSocketIOSession()
+	sioSess.addUser(user1.Name)
+	sioSess.addUser(user2.Name)
 
-	sioCli1.OnEvent(event.UserJoined, func(_ socketio.Conn, data map[string]interface{}) {
-		e1Mu.Lock()
-		defer e1Mu.Unlock()
-		events1 = append(events1, data)
-	})
-	sioCli2.OnEvent(event.UserJoined, func(_ socketio.Conn, data map[string]interface{}) {
-		e2Mu.Lock()
-		defer e2Mu.Unlock()
-		events2 = append(events2, data)
-	})
+	sioCli1.OnEvent(event.UserJoined, sioSess.sioAddFunc(user1.Name, event.UserJoined))
+	sioCli2.OnEvent(event.UserJoined, sioSess.sioAddFunc(user2.Name, event.UserJoined))
 
 	assert.NoError(t, sioCli1.Connect())
 	assert.NoError(t, sioCli2.Connect())
 
+	sioSess.newStep("Joining lobby")
 	sioCli1.Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
+	time.Sleep(waitTime)
 	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
 	time.Sleep(waitTime)
 
-	e1Mu.Lock()
-	assert.Equal(t, 1, len(events1))
-	userJoinedEvent := event.UserJoinedEvent{}
-	assert.NoError(t, mapstructure.Decode(events1[0], &userJoinedEvent))
-	assert.Equal(t, event.UserJoinedEvent{
-		ID:     user2.ID,
-		Name:   user2.Name,
-		Avatar: user2.Avatar,
-	}, userJoinedEvent)
-	e1Mu.Unlock()
-
 	assert.NoError(t, sioCli1.Close())
 	assert.NoError(t, sioCli2.Close())
+
+	return sioSess
 }
 
 func findLobby(t *testing.T) *domain.Lobby {

@@ -40,6 +40,24 @@ func (ur *UserRepo) SaveUser(ctx context.Context, user *domain.User) (string, er
 	return id, nil
 }
 
+func (ur *UserRepo) SaveUserWithID(ctx context.Context, user *domain.User, id string) error {
+	const query = `
+		INSERT INTO "user" (id, name, avatar, telegram, created_at)
+		VALUES ($1, $2, $3, $4, $5)
+	`
+	_, err := ur.db.Exec(ctx, query,
+		id,
+		user.Name,
+		user.Avatar,
+		user.Telegram,
+		user.CreatedAt,
+	)
+	if err != nil {
+		return fmt.Errorf("could not insert user: %w", err)
+	}
+	return nil
+}
+
 func (ur *UserRepo) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
 	const query = `
         UPDATE "user"
