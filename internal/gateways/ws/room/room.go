@@ -143,7 +143,10 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		log.Println("faced error: ", e)
 	})
 
+	voteLock := sync.RWMutex{}
 	s.OnEvent("/", event.Vote, func(conn socketio.Conn, ve event.VoteEvent) {
+		voteLock.Lock()
+		defer voteLock.Unlock()
 		c, ok := conn.Context().(*Context)
 		if !ok {
 			_ = conn.Close()
