@@ -277,8 +277,8 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
 
 	rows, err := pr.db.Query(ctx, query,
-		lobby.Location.Lat,
 		lobby.Location.Lon,
+		lobby.Location.Lat,
 		lobby.PriceAvg-300,
 		lobby.PriceAvg+300,
 	)

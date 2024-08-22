@@ -60,7 +60,7 @@ func findLobby(t *testing.T) *domain.Lobby {
 	findLobbyInput := usecase.FindLobbyInput{
 		Dist: 0,
 		// ИТМО - Кронверкский проспект, 49
-		Location: domain.Coordinate{Lon: 59.956363, Lat: 30.310011},
+		Location: domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
 	}
 	b, err := json.Marshal(findLobbyInput)
 	assert.NoError(t, err)
