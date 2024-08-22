@@ -170,3 +170,31 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 
 	return tags, nil
 }
+
+func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
+	var placeTags []int64
+	for _, rubric := range place.Rubrics {
+		var id int64
+		err := tr.db.QueryRow(ctx, `
+		WITH s AS (
+			SELECT id, name, icon
+			FROM tag
+			WHERE name = $1
+		), i AS (
+			INSERT INTO tag (name, icon)
+			SELECT $1, ''
+			WHERE NOT EXISTS (SELECT 1 FROM s)
+			RETURNING id
+		)
+		SELECT id
+		FROM i
+		UNION ALL
+		SELECT id
+		FROM s;`, rubric).Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		placeTags = append(placeTags, id)
+	}
+	return placeTags, nil
+}

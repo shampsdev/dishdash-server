@@ -9,6 +9,7 @@ import (
 type Tag interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) (int64, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
+	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
 	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
@@ -20,12 +21,14 @@ type Tag interface {
 
 type Place interface {
 	SavePlace(ctx context.Context, place *domain.Place) (int64, error)
+	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 
 	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
 	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 	GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
+	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
 }
 
 type User interface {

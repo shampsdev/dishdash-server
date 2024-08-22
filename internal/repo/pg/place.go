@@ -227,3 +227,122 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 	p.Images = strings.Split(imagesStr, ",")
 	return p, err
 }
+
+func parseTagsToQuery(lobby *domain.Lobby) string {
+	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) = %d"
+	var queryTags string
+	for _, tag := range lobby.Tags {
+		queryTags += fmt.Sprintf("'%s', ", tag.Name)
+	}
+	queryTags = strings.TrimSuffix(queryTags, ", ")
+	size := len(lobby.Tags)
+
+	return fmt.Sprintf(query, queryTags, size)
+}
+
+func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
+	query := `
+		SELECT
+			p.id,
+			p.title,
+			p.short_description,
+			p.description,
+			p.images,
+			p.location,
+			p.address,
+			p.price_avg,
+			p.review_rating,
+			p.review_count,
+			p.updated_at,
+			t.name,
+			t.icon
+		FROM place p
+		JOIN place_tag pt ON p.id = pt.place_id
+		JOIN tag t ON pt.tag_id = t.id
+		WHERE ST_DWithin(
+				p.location,
+				ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
+				4000
+			)
+		  AND p.id IN (
+				SELECT pt.place_id 
+				FROM place_tag pt
+				JOIN tag t ON pt.tag_id = t.id
+				GROUP BY pt.place_id
+				%s
+			)
+		  AND p.price_avg >  $3
+		  AND p.price_avg < $4;
+	`
+
+	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
+
+	rows, err := pr.db.Query(ctx, query,
+		lobby.Location.Lon,
+		lobby.Location.Lat,
+		lobby.PriceAvg-300,
+		lobby.PriceAvg+300,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var places []*domain.Place
+
+	for rows.Next() {
+		var place domain.Place
+		err := rows.Scan(
+			&place.ID,
+			&place.Title,
+			&place.ShortDescription,
+			&place.Description,
+			&place.Images,
+			&place.Location,
+			&place.Address,
+			&place.PriceAvg,
+			&place.ReviewRating,
+			&place.ReviewCount,
+			&place.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		places = append(places, &place)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
+	return places, nil
+}
+
+func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
+	var exists bool
+
+	err := pr.db.QueryRow(ctx, `
+    SELECT EXISTS (
+        SELECT 1
+        FROM "place"
+        WHERE "title" = $1 AND "address" = $2
+    );`, twogisPlace.Name, twogisPlace.Address).Scan(&exists)
+	if err != nil {
+		return 0, fmt.Errorf("error checking existence of place: %w", err)
+	}
+
+	if exists {
+		log.Printf("[INFO] Place with title '%s' and address '%s' already exists", twogisPlace.Name, twogisPlace.Address)
+		return 0, nil
+	}
+
+	place := twogisPlace.ToPlace()
+
+	id, err := pr.SavePlace(ctx, place)
+	if err != nil {
+		log.Printf("Error saving new place: %v\n", err)
+		return 0, err
+	}
+
+	return id, nil
+}

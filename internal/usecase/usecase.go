@@ -18,6 +18,7 @@ type Cases struct {
 type Tag interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
+	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 }
 
 type User interface {
@@ -45,6 +46,7 @@ type SavePlaceInput struct {
 
 type Place interface {
 	SavePlace(ctx context.Context, placeInput SavePlaceInput) (*domain.Place, error)
+	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	// GetAllPlaces is very long operation now
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
