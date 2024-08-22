@@ -30,9 +30,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-08-18T20:12:00.614407Z"
+                "updatedAt": "2024-08-22T21:21:39.628974Z"
               },
               "id": 0
             }
@@ -93,9 +104,25 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-18T20:12:00.615165Z"
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
               },
               "id": 1
             }
@@ -151,9 +178,25 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-18T20:12:00.615165Z"
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
               }
             }
           }
@@ -192,9 +235,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-08-18T20:12:00.614407Z"
+                "updatedAt": "2024-08-22T21:21:39.628974Z"
               },
               "id": 0
             }
@@ -255,9 +309,25 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-18T20:12:00.615165Z"
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
               },
               "id": 1
             }
@@ -313,9 +383,25 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [],
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-18T20:12:00.615165Z"
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
               }
             }
           }

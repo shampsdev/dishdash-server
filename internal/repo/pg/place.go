@@ -253,9 +253,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			p.price_avg,
 			p.review_rating,
 			p.review_count,
-			p.updated_at,
-			t.name,
-			t.icon
+			p.updated_at
 		FROM place p
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id
@@ -271,15 +269,16 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 				GROUP BY pt.place_id
 				%s
 			)
-		  AND p.price_avg >  $3
-		  AND p.price_avg < $4;
+		  AND p.price_avg > $3
+		  AND p.price_avg < $4
+		  GROUP BY p.id;
 	`
 
 	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
 
 	rows, err := pr.db.Query(ctx, query,
-		lobby.Location.Lon,
 		lobby.Location.Lat,
+		lobby.Location.Lon,
 		lobby.PriceAvg-300,
 		lobby.PriceAvg+300,
 	)
@@ -291,24 +290,11 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 	var places []*domain.Place
 
 	for rows.Next() {
-		var place domain.Place
-		err := rows.Scan(
-			&place.ID,
-			&place.Title,
-			&place.ShortDescription,
-			&place.Description,
-			&place.Images,
-			&place.Location,
-			&place.Address,
-			&place.PriceAvg,
-			&place.ReviewRating,
-			&place.ReviewCount,
-			&place.UpdatedAt,
-		)
+		place, err := scanPlace(rows)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		places = append(places, &place)
+		places = append(places, place)
 	}
 
 	if err = rows.Err(); err != nil {

@@ -40,6 +40,11 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 		return nil, err
 	}
 
+	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return place, nil
 }
 
@@ -99,6 +104,13 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
 	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
+	for _, place := range dbPlaces {
+		place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if err != nil {
 		return nil, err
 	}

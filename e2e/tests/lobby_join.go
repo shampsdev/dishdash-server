@@ -58,8 +58,9 @@ func LobbyJoin(t *testing.T) *SocketIOSession {
 
 func findLobby(t *testing.T) *domain.Lobby {
 	findLobbyInput := usecase.FindLobbyInput{
-		Dist:     0,
-		Location: domain.Coordinate{Lon: 2, Lat: 2},
+		Dist: 0,
+		// ИТМО - Кронверкский проспект, 49
+		Location: domain.Coordinate{Lon: 59.956363, Lat: 30.310011},
 	}
 	b, err := json.Marshal(findLobbyInput)
 	assert.NoError(t, err)

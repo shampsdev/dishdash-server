@@ -14,6 +14,7 @@ var Tags = []*domain.Tag{
 	{Name: "bar", Icon: "bar.png"},
 	{Name: "cafe", Icon: "cafe.png"},
 	{Name: "coffee", Icon: "coffee.png"},
+	{Name: "food", Icon: "food.png"},
 }
 
 var Places = []*domain.Place{
@@ -27,7 +28,7 @@ var Places = []*domain.Place{
 		PriceAvg:         450,
 		ReviewRating:     4.5,
 		ReviewCount:      1000,
-		Tags:             []*domain.Tag{Tags[1]},
+		Tags:             []*domain.Tag{Tags[1], Tags[3]},
 	},
 	{
 		Title:            "Zoomer Coffee",
@@ -39,7 +40,7 @@ var Places = []*domain.Place{
 		PriceAvg:         120,
 		ReviewRating:     4.6,
 		ReviewCount:      1000,
-		Tags:             []*domain.Tag{Tags[1], Tags[2]},
+		Tags:             []*domain.Tag{Tags[1], Tags[2], Tags[3]},
 	},
 	{
 		Title:            "ЛюдиЛюбят",
@@ -51,7 +52,7 @@ var Places = []*domain.Place{
 		PriceAvg:         300,
 		ReviewRating:     4.7,
 		ReviewCount:      1000,
-		Tags:             []*domain.Tag{Tags[1], Tags[2]},
+		Tags:             []*domain.Tag{Tags[1], Tags[2], Tags[3]},
 	},
 	{
 		Title:            "Cous-Cous",
@@ -63,7 +64,7 @@ var Places = []*domain.Place{
 		PriceAvg:         320,
 		ReviewRating:     4.8,
 		ReviewCount:      1000,
-		Tags:             []*domain.Tag{Tags[0], Tags[1]},
+		Tags:             []*domain.Tag{Tags[0], Tags[1], Tags[3]},
 	},
 	{
 		Title:            "Шавафель",
@@ -75,7 +76,7 @@ var Places = []*domain.Place{
 		PriceAvg:         320,
 		ReviewRating:     4.5,
 		ReviewCount:      1000,
-		Tags:             []*domain.Tag{Tags[1]},
+		Tags:             []*domain.Tag{Tags[1], Tags[3]},
 	},
 }
 

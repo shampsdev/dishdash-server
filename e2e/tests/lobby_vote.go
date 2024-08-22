@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"dishdash.ru/e2e/pg_test"
 	"testing"
 	"time"
 
@@ -47,6 +48,12 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
+	})
+	sioCli1.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+		PriceMin:    300,
+		PriceMax:    300,
+		MaxDistance: 4000,
+		Tags:        []int64{pg_test.Tags[3].ID},
 	})
 	time.Sleep(waitTime)
 
