@@ -1,6 +1,5 @@
 package twogis
 
-import "C"
 import (
 	"encoding/json"
 	"fmt"
