@@ -1,9 +1,10 @@
 package tests
 
 import (
-	"dishdash.ru/e2e/pg_test"
 	"testing"
 	"time"
+
+	"dishdash.ru/e2e/pg_test"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/gateways/ws/event"
