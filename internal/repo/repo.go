@@ -6,35 +6,53 @@ import (
 	"dishdash.ru/internal/domain"
 )
 
-type Card interface {
-	CreateCard(ctx context.Context, card *domain.Card) (int64, error)
-	GetCardByID(ctx context.Context, id int64) (*domain.Card, error)
-	GetAllCards(ctx context.Context) ([]*domain.Card, error)
-}
-
 type Tag interface {
-	CreateTag(ctx context.Context, tag *domain.Tag) (int64, error)
-	AttachTagsToCard(ctx context.Context, tagIDs []int64, cardID int64) error
-	GetTagsByCardID(ctx context.Context, cardID int64) ([]*domain.Tag, error)
+	SaveTag(ctx context.Context, tag *domain.Tag) (int64, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
+	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
+
+	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
+	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
+
+	AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error
+	DetachTagsFromLobby(ctx context.Context, lobbyID string) error
+	GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Tag, error)
 }
 
-type Lobby interface {
-	CreateLobby(ctx context.Context, lobby *domain.Lobby) (*domain.Lobby, error)
-	DeleteLobbyByID(ctx context.Context, lobbyID string) error
-	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (lobby *domain.Lobby, dist float64, err error)
-	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
-	GetCardsForSettings(ctx context.Context, loc domain.Coordinate, settings *domain.LobbySettings) ([]*domain.Card, error)
-	SetLobbyActive(ctx context.Context, id string, active bool) error
+type Place interface {
+	SavePlace(ctx context.Context, place *domain.Place) (int64, error)
+	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
+	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
+	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
+
+	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
+	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
+	GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
+	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
 }
 
 type User interface {
-	CreateUser(ctx context.Context, user *domain.User) (string, error)
-	UpdateUser(ctx context.Context, user *domain.User) (string, error)
+	SaveUser(ctx context.Context, user *domain.User) (string, error)
+	SaveUserWithID(ctx context.Context, user *domain.User, id string) error
+	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
+
+	AttachUserToLobby(ctx context.Context, userID, lobbyID string) error
+	GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error)
+}
+
+type Lobby interface {
+	SaveLobby(ctx context.Context, lobby *domain.Lobby) (string, error)
+	DeleteLobbyByID(ctx context.Context, id string) error
+	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
+	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
+
+	NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error)
 }
 
 type Swipe interface {
-	CreateSwipe(ctx context.Context, swipe *domain.Swipe) error
+	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
+
+	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
 }

@@ -1,38 +1,4 @@
 definitions:
-  card.cardOutput:
-    properties:
-      address:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      image:
-        type: string
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-      priceMax:
-        type: integer
-      priceMin:
-        type: integer
-      shortDescription:
-        type: string
-      tags:
-        items:
-          $ref: '#/definitions/card.tagOutput'
-        type: array
-      title:
-        type: string
-    type: object
-  card.tagOutput:
-    properties:
-      icon:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
   domain.Coordinate:
     properties:
       lat:
@@ -40,7 +6,36 @@ definitions:
       lon:
         type: number
     type: object
-  lobby.cardOutput:
+  domain.Lobby:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      places:
+        items:
+          $ref: '#/definitions/domain.Place'
+        type: array
+      priceAvg:
+        type: integer
+      state:
+        type: string
+      swipes:
+        items:
+          $ref: '#/definitions/domain.Swipe'
+        type: array
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/domain.User'
+        type: array
+    type: object
+  domain.Place:
     properties:
       address:
         type: string
@@ -49,93 +44,33 @@ definitions:
       id:
         type: integer
       image:
-        type: string
+        items:
+          type: string
+        type: array
       location:
         $ref: '#/definitions/domain.Coordinate'
-      priceMax:
+      priceAvg:
         type: integer
-      priceMin:
+      reviewCount:
         type: integer
+      reviewRating:
+        type: number
       shortDescription:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
       title:
         type: string
+      updatedAt:
+        type: string
     type: object
-  lobby.finalVoteOutput:
+  domain.Swipe:
     properties:
       cardID:
         type: integer
       id:
-        type: integer
-      lobbyID:
-        type: string
-      userID:
-        type: string
-    type: object
-  lobby.findLobbyInput:
-    properties:
-      dist:
-        type: number
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-    type: object
-  lobby.lobbyOutput:
-    properties:
-      cards:
-        items:
-          $ref: '#/definitions/lobby.cardOutput'
-        type: array
-      createdAt:
-        type: string
-      finalVotes:
-        items:
-          $ref: '#/definitions/lobby.finalVoteOutput'
-        type: array
-      id:
-        type: string
-      lobbySettings:
-        $ref: '#/definitions/lobby.lobbySettingsOutput'
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-      matches:
-        items:
-          $ref: '#/definitions/lobby.matchOutput'
-        type: array
-      swipes:
-        items:
-          $ref: '#/definitions/lobby.swipeOutput'
-        type: array
-    type: object
-  lobby.lobbySettingsOutput:
-    properties:
-      id:
-        type: integer
-      maxDistance:
-        type: number
-      priceMax:
-        type: integer
-      priceMin:
-        type: integer
-    type: object
-  lobby.matchOutput:
-    properties:
-      cardID:
-        type: integer
-      id:
-        type: integer
-      lobbyID:
-        type: string
-    type: object
-  lobby.nearestLobbyOutput:
-    properties:
-      distance:
-        type: number
-      lobby:
-        $ref: '#/definitions/lobby.lobbyOutput'
-    type: object
-  lobby.swipeOutput:
-    properties:
-      cardID:
         type: integer
       lobbyID:
         type: string
@@ -144,20 +79,75 @@ definitions:
       userID:
         type: string
     type: object
-  usecase.CardInput:
+  domain.Tag:
+    properties:
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.User:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      telegram:
+        type: integer
+    type: object
+  lobby.nearestLobbyOutput:
+    properties:
+      distance:
+        type: number
+      lobby:
+        $ref: '#/definitions/domain.Lobby'
+    type: object
+  usecase.FindLobbyInput:
+    properties:
+      dist:
+        type: number
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+    type: object
+  usecase.SaveLobbyInput:
+    properties:
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      places:
+        items:
+          type: integer
+        type: array
+      priceAvg:
+        type: integer
+      tags:
+        items:
+          type: integer
+        type: array
+    type: object
+  usecase.SavePlaceInput:
     properties:
       address:
         type: string
       description:
         type: string
-      image:
-        type: string
+      images:
+        items:
+          type: string
+        type: array
       location:
         $ref: '#/definitions/domain.Coordinate'
-      priceMax:
-        type: integer
       priceMin:
         type: integer
+      reviewCount:
+        type: integer
+      reviewRating:
+        type: number
       shortDescription:
         type: string
       tags:
@@ -167,156 +157,31 @@ definitions:
       title:
         type: string
     type: object
-  usecase.LobbyInput:
-    properties:
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-    type: object
-  usecase.TagInput:
-    properties:
-      icon:
-        type: string
-      name:
-        type: string
-    type: object
-  usecase.UserInput:
-    properties:
-      avatar:
-        type: string
-      name:
-        type: string
-    type: object
-  usecase.UserInputExtended:
-    properties:
-      avatar:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  user.userOutput:
-    properties:
-      avatar:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-    type: object
 info:
   contact: {}
   description: Manage cards, lobbies, swipes
   title: DishDash server
   version: "2.0"
 paths:
-  /cards:
-    get:
-      consumes:
-      - application/json
-      description: Get a list of cards from the database
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: List of cards
-          schema:
-            items:
-              $ref: '#/definitions/card.cardOutput'
-            type: array
-        "500":
-          description: Internal Server Error
-      summary: Get cards
-      tags:
-      - cards
-    post:
-      consumes:
-      - application/json
-      description: Create a new card in the database
-      parameters:
-      - description: Card data
-        in: body
-        name: card
-        required: true
-        schema:
-          $ref: '#/definitions/usecase.CardInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Saved card
-          schema:
-            $ref: '#/definitions/card.cardOutput'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Create a card
-      tags:
-      - cards
-  /cards/tags:
-    get:
-      consumes:
-      - application/json
-      description: Get a list of tags from the database
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: List of tags
-          schema:
-            items:
-              $ref: '#/definitions/card.tagOutput'
-            type: array
-        "500":
-          description: Internal Server Error
-      summary: Get tags
-      tags:
-      - cards
-    post:
-      consumes:
-      - application/json
-      description: Create a new tag in the database
-      parameters:
-      - description: Tag data
-        in: body
-        name: tag
-        required: true
-        schema:
-          $ref: '#/definitions/usecase.TagInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Saved tag
-          schema:
-            $ref: '#/definitions/card.tagOutput'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Create a tag
-      tags:
-      - cards
   /lobbies:
     post:
       consumes:
       - application/json
       description: Create a new lobby in the database
       parameters:
-      - description: Lobby data
+      - description: lobby data
         in: body
         name: lobby
         required: true
         schema:
-          $ref: '#/definitions/usecase.LobbyInput'
+          $ref: '#/definitions/usecase.SaveLobbyInput'
       produces:
       - application/json
       responses:
         "200":
           description: Saved lobby
           schema:
-            $ref: '#/definitions/lobby.lobbyOutput'
+            $ref: '#/definitions/domain.Lobby'
         "400":
           description: Bad Request
         "500":
@@ -330,7 +195,7 @@ paths:
       - application/json
       description: delete a lobby in the database
       parameters:
-      - description: Lobby id
+      - description: lobby id
         in: path
         name: id
         required: true
@@ -352,7 +217,7 @@ paths:
       - application/json
       description: Get a lobby from the database by ID
       parameters:
-      - description: Lobby ID
+      - description: lobby ID
         in: path
         name: id
         required: true
@@ -361,41 +226,14 @@ paths:
       - application/json
       responses:
         "200":
-          description: Lobby data
+          description: lobby data
           schema:
-            $ref: '#/definitions/lobby.lobbyOutput'
+            $ref: '#/definitions/domain.Lobby'
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
       summary: Get lobby by ID
-      tags:
-      - lobbies
-  /lobbies/{id}/cards:
-    get:
-      consumes:
-      - application/json
-      description: Get cards filtered with lobby settings
-      parameters:
-      - description: Lobby ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: cards
-          schema:
-            items:
-              $ref: '#/definitions/lobby.cardOutput'
-            type: array
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Get cards filtered with lobby settings
       tags:
       - lobbies
   /lobbies/find:
@@ -409,18 +247,18 @@ paths:
         name: location
         required: true
         schema:
-          $ref: '#/definitions/lobby.findLobbyInput'
+          $ref: '#/definitions/usecase.FindLobbyInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/lobby.lobbyOutput'
+            $ref: '#/definitions/domain.Lobby'
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/lobby.lobbyOutput'
+            $ref: '#/definitions/domain.Lobby'
         "400":
           description: Bad Request
         "500":
@@ -444,7 +282,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Nearest Lobby + Distance (in metres)
+          description: Nearest lobby + Distance (in metres)
           schema:
             $ref: '#/definitions/lobby.nearestLobbyOutput'
         "400":
@@ -454,6 +292,94 @@ paths:
       summary: find nearest lobby
       tags:
       - lobbies
+  /places:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of places from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of places
+          schema:
+            items:
+              $ref: '#/definitions/domain.Place'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get places
+      tags:
+      - places
+    post:
+      consumes:
+      - application/json
+      description: Create a new place in the database
+      parameters:
+      - description: Place data
+        in: body
+        name: place
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.SavePlaceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved place
+          schema:
+            $ref: '#/definitions/domain.Place'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create a place
+      tags:
+      - places
+  /places/tags:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of tags from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tags
+          schema:
+            items:
+              $ref: '#/definitions/domain.Tag'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get tags
+      tags:
+      - places
+    post:
+      consumes:
+      - application/json
+      description: Create a new tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create a tag
+      tags:
+      - places
   /users:
     get:
       consumes:
@@ -466,7 +392,7 @@ paths:
           description: List of users
           schema:
             items:
-              $ref: '#/definitions/user.userOutput'
+              $ref: '#/definitions/domain.User'
             type: array
         "500":
           description: Internal Server Error
@@ -476,46 +402,46 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new user in the database
+      description: Save a new user in the database
       parameters:
       - description: User data
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/usecase.UserInput'
+          $ref: '#/definitions/domain.User'
       produces:
       - application/json
       responses:
         "200":
           description: Saved user
           schema:
-            $ref: '#/definitions/user.userOutput'
+            $ref: '#/definitions/domain.User'
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Create a user
+      summary: Save a user
       tags:
       - users
     put:
       consumes:
       - application/json
-      description: Update a existing user in the database
+      description: Update an existing user in the database
       parameters:
       - description: User data
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/usecase.UserInputExtended'
+          $ref: '#/definitions/domain.User'
       produces:
       - application/json
       responses:
         "200":
           description: Updated user
           schema:
-            $ref: '#/definitions/user.userOutput'
+            $ref: '#/definitions/domain.User'
         "400":
           description: Bad Request
         "500":
@@ -540,7 +466,7 @@ paths:
         "200":
           description: User data
           schema:
-            $ref: '#/definitions/user.userOutput'
+            $ref: '#/definitions/domain.User'
         "400":
           description: Bad Request
         "500":

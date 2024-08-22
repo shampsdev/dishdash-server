@@ -3,25 +3,20 @@ package usecase
 import (
 	"context"
 
-	"dishdash.ru/internal/repo"
-
 	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/repo"
 )
 
 type TagUseCase struct {
-	tagRepo repo.Tag
+	tRepo repo.Tag
 }
 
-func NewTagUseCase(tagRepo repo.Tag) *TagUseCase {
-	return &TagUseCase{tagRepo: tagRepo}
+func NewTagUseCase(tRepo repo.Tag) *TagUseCase {
+	return &TagUseCase{tRepo: tRepo}
 }
 
-func (t *TagUseCase) CreateTag(ctx context.Context, tagInput TagInput) (*domain.Tag, error) {
-	tag := &domain.Tag{
-		Name: tagInput.Name,
-		Icon: tagInput.Icon,
-	}
-	id, err := t.tagRepo.CreateTag(ctx, tag)
+func (t TagUseCase) SaveTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error) {
+	id, err := t.tRepo.SaveTag(ctx, tag)
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +24,10 @@ func (t *TagUseCase) CreateTag(ctx context.Context, tagInput TagInput) (*domain.
 	return tag, nil
 }
 
-func (t *TagUseCase) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
-	return t.tagRepo.GetAllTags(ctx)
+func (t TagUseCase) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
+	return t.tRepo.GetAllTags(ctx)
+}
+
+func (t TagUseCase) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
+	return t.tRepo.SaveApiTag(ctx, place)
 }

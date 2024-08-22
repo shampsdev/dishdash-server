@@ -1,9 +1,7 @@
-package card
+package place
 
 import (
 	"net/http"
-
-	"dishdash.ru/pkg/filter"
 
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
@@ -12,13 +10,13 @@ import (
 // GetAllTags godoc
 // @Summary Get tags
 // @Description Get a list of tags from the database
-// @Tags cards
+// @Tags places
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Success 200 {array} tagOutput "List of tags"
+// @Success 200 {array} domain.Tag "List of tags"
 // @Failure 500
-// @Router /cards/tags [get]
+// @Router /places/tags [get]
 func GetAllTags(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tags, err := tagUseCase.GetAllTags(c)
@@ -27,6 +25,6 @@ func GetAllTags(tagUseCase usecase.Tag) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, filter.Map(tags, tagToOutput))
+		c.JSON(http.StatusOK, tags)
 	}
 }

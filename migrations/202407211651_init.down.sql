@@ -1,0 +1,9 @@
+DROP TABLE "swipe";
+DROP TABLE "lobby_user";
+DROP TABLE "place_lobby";
+DROP TABLE "lobby_tag";
+DROP TABLE "lobby";
+DROP TABLE "user";
+DROP TABLE "place_tag";
+DROP TABLE "tag";
+DROP TABLE "place";

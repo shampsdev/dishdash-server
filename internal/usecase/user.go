@@ -2,52 +2,44 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
 )
 
 type UserUseCase struct {
-	userRepo repo.User
+	uRepo repo.User
 }
 
-func NewUserUseCase(userRepo repo.User) *UserUseCase {
-	return &UserUseCase{userRepo: userRepo}
+func NewUserUseCase(uRepo repo.User) *UserUseCase {
+	return &UserUseCase{uRepo: uRepo}
 }
 
-func (u *UserUseCase) CreateUser(ctx context.Context, userInput UserInput) (*domain.User, error) {
-	user := &domain.User{
-		Name:      userInput.Name,
-		Avatar:    userInput.Avatar,
-		CreatedAt: time.Now(),
-	}
-	id, err := u.userRepo.CreateUser(ctx, user)
+func (u UserUseCase) SaveUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+	id, err := u.uRepo.SaveUser(ctx, user)
 	if err != nil {
 		return nil, err
 	}
 	user.ID = id
-	return user, nil
+	return user, err
 }
 
-func (u *UserUseCase) UpdateUser(ctx context.Context, userInput UserInputExtended) (*domain.User, error) {
-	user := &domain.User{
-		ID:     userInput.ID,
-		Name:   userInput.Name,
-		Avatar: userInput.Avatar,
-	}
-	id, err := u.userRepo.UpdateUser(ctx, user)
-	if err != nil {
-		return nil, err
-	}
-	user.ID = id
-	return user, nil
+func (u UserUseCase) SaveUserWithID(ctx context.Context, user *domain.User, id string) error {
+	return u.uRepo.SaveUserWithID(ctx, user, id)
 }
 
-func (u *UserUseCase) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
-	return u.userRepo.GetUserByID(ctx, id)
+func (u UserUseCase) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+	return u.uRepo.UpdateUser(ctx, user)
 }
 
-func (u *UserUseCase) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
-	return u.userRepo.GetAllUsers(ctx)
+func (u UserUseCase) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
+	return u.uRepo.GetUserByID(ctx, id)
+}
+
+func (u UserUseCase) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
+	return u.uRepo.GetAllUsers(ctx)
+}
+
+func (u UserUseCase) AttachUserToLobby(ctx context.Context, userID, lobbyID string) error {
+	return u.uRepo.AttachUserToLobby(ctx, userID, lobbyID)
 }

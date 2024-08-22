@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/googollee/go-socket.io/engineio/transport/polling"
+
 	"github.com/googollee/go-socket.io/engineio"
 	"github.com/googollee/go-socket.io/engineio/transport"
 	"github.com/googollee/go-socket.io/engineio/transport/websocket"
@@ -55,13 +57,13 @@ func (s *Server) Run(ctx context.Context) error {
 func newSocketIOServer() *socketio.Server {
 	wt := websocket.Default
 	// TODO legal CheckOrigin
-	wt.CheckOrigin = func(_ *http.Request) bool {
-		return true
-	}
+	wt.CheckOrigin = func(_ *http.Request) bool { return true }
+	pt := polling.Default
+	pt.CheckOrigin = func(_ *http.Request) bool { return true }
 
 	server := socketio.NewServer(&engineio.Options{
 		Transports: []transport.Transport{
-			wt,
+			wt, pt,
 		},
 	})
 

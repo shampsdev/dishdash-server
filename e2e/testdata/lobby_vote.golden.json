@@ -1,0 +1,412 @@
+{
+  "user1": {
+    "Steps": [
+      {
+        "Name": "Joining lobby",
+        "Events": []
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "Swipe both likes (1)",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная",
+                "updatedAt": "2024-08-22T21:21:39.628974Z"
+              },
+              "id": 0
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Vote like and dislike",
+        "Events": [
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 0,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 0,
+              "option": 0
+            }
+          },
+          {
+            "EventName": "releaseMatch",
+            "Data": null
+          }
+        ]
+      },
+      {
+        "Name": "Swipe both likes (2)",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
+              },
+              "id": 1
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Vote both likes",
+        "Events": [
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 1,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 1,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "releaseMatch",
+            "Data": null
+          },
+          {
+            "EventName": "finish",
+            "Data": {
+              "result": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "user2": {
+    "Steps": [
+      {
+        "Name": "Joining lobby",
+        "Events": []
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "Swipe both likes (1)",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная",
+                "updatedAt": "2024-08-22T21:21:39.628974Z"
+              },
+              "id": 0
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Vote like and dislike",
+        "Events": [
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 0,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 0,
+              "option": 0
+            }
+          },
+          {
+            "EventName": "releaseMatch",
+            "Data": null
+          }
+        ]
+      },
+      {
+        "Name": "Swipe both likes (2)",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
+              },
+              "id": 1
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Vote both likes",
+        "Events": [
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 1,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 1,
+              "option": 1
+            }
+          },
+          {
+            "EventName": "releaseMatch",
+            "Data": null
+          },
+          {
+            "EventName": "finish",
+            "Data": {
+              "result": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-08-22T21:21:39.632377Z"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

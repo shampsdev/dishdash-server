@@ -1,10 +1,11 @@
 package domain
 
 type Swipe struct {
-	LobbyID string
-	CardID  int64
-	UserID  string
-	Type    SwipeType
+	ID      int64     `json:"id"`
+	LobbyID string    `json:"lobbyID"`
+	PlaceID int64     `json:"cardID"`
+	UserID  string    `json:"userID"`
+	Type    SwipeType `json:"type"`
 }
 
 type SwipeType string

@@ -11,16 +11,21 @@ import (
 )
 
 type Config struct {
-	Server struct {
-		Port        uint16 `envconfig:"HTTP_PORT" default:"8000"`
-		AllowOrigin string `envconfig:"ALLOW_ORIGIN" default:"*"`
+	DevMode bool `default:"false" envconfig:"DEV_MODE"`
+	Server  struct {
+		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
 	}
 	DB struct {
-		User     string `envconfig:"POSTGRES_USER"`
-		Password string `envconfig:"POSTGRES_PASSWORD"`
-		Host     string `envconfig:"POSTGRES_HOST"`
-		Port     uint16 `envconfig:"POSTGRES_PORT"`
-		Database string `envconfig:"POSTGRES_DB"`
+		User        string `envconfig:"POSTGRES_USER"`
+		Password    string `envconfig:"POSTGRES_PASSWORD"`
+		Host        string `envconfig:"POSTGRES_HOST"`
+		Port        uint16 `envconfig:"POSTGRES_PORT"`
+		Database    string `envconfig:"POSTGRES_DB"`
+		AutoMigrate bool   `envconfig:"POSTGRES_AUTOMIGRATE"`
+	}
+	TwoGisApi struct {
+		Key string `envconfig:"TWOGIS_API_KEY"`
+		Url string `envconfig:"TWOGIS_API_URL"`
 	}
 }
 
@@ -35,15 +40,25 @@ func init() {
 	if err != nil {
 		log.Fatalf("can't parse config: %s", err)
 	}
-
-	printConfig(C)
+	if C.TwoGisApi.Url == "" {
+		C.TwoGisApi.Url = "https://catalog.api.2gis.com/3.0/items"
+		log.Println("[WARNING] No two gis api url, using default one: " + C.TwoGisApi.Url)
+	}
+	if C.TwoGisApi.Key == "" {
+		log.Println("[FATAL] TwoGisApi.ApiKey is null or not set")
+	}
 }
 
-func printConfig(c Config) {
-	data, _ := json.MarshalIndent(c, "", "\t")
-	fmt.Println("=== CONFIG ===")
-	fmt.Println(string(data))
-	fmt.Println("==============")
+func Print() {
+	if C.DevMode {
+		log.Println("[INFO] Launched in DEV mode")
+		data, _ := json.MarshalIndent(C, "", "\t")
+		fmt.Println("=== CONFIG ===")
+		fmt.Println(string(data))
+		fmt.Println("==============")
+	} else {
+		log.Println("[INFO] Launched in production mode")
+	}
 }
 
 func (c Config) DBUrl() string {

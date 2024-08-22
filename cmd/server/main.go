@@ -8,12 +8,12 @@ import (
 	"os"
 	"os/signal"
 
+	"dishdash.ru/internal/usecase"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/cmd/server/config"
 	server "dishdash.ru/internal/gateways"
-	"dishdash.ru/internal/repo/pg"
-	"dishdash.ru/internal/usecase"
 )
 
 // @title           DishDash server
@@ -24,6 +24,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
+	config.Print()
 	pgConfig := config.C.PGXConfig()
 	pool, err := pgxpool.NewWithConfig(ctx, pgConfig)
 	if err != nil {
@@ -31,24 +32,8 @@ func main() {
 	}
 	defer pool.Close()
 
-	s := server.NewServer(setupUseCases(pool))
+	s := server.NewServer(usecase.Setup(pool))
 	if err := s.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("error during server shutdown: %v", err)
-	}
-}
-
-func setupUseCases(pool *pgxpool.Pool) usecase.Cases {
-	cr := pg.NewCardRepository(pool)
-	tr := pg.NewTagRepository(pool)
-	lr := pg.NewLobbyRepository(pool)
-	ur := pg.NewUserRepository(pool)
-	sr := pg.NewSwipeRepository(pool)
-
-	return usecase.Cases{
-		Card:  usecase.NewCardUseCase(cr, tr),
-		Tag:   usecase.NewTagUseCase(tr),
-		Lobby: usecase.NewLobbyUseCase(lr),
-		User:  usecase.NewUserUseCase(ur),
-		Swipe: usecase.NewSwipeUseCase(sr),
 	}
 }
