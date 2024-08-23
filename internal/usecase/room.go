@@ -146,6 +146,14 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
+	// TODO: Remove nahui
+	if len(r.lobby.Tags) == 0 {
+		err := r.updateLobby(ctx, 500, []int64{4}, nil)
+		if err != nil {
+			return err
+		}
+	}
+
 	var err error
 	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
 	if err != nil {
