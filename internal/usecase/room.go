@@ -72,6 +72,31 @@ func (r *Room) GetNextPlaceForUser(id string) *domain.Place {
 	return r.usersPlace[id]
 }
 
+func (r *Room) Users() []*domain.User {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	users := make([]*domain.User, 0)
+	for _, user := range r.users {
+		users = append(users, user)
+	}
+	return users
+}
+
+func (r *Room) Settings() UpdateLobbyInput {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return UpdateLobbyInput{
+		ID: r.ID,
+		SaveLobbyInput: SaveLobbyInput{
+			PriceAvg: r.lobby.PriceAvg,
+			Location: r.lobby.Location,
+			Tags: filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+				return t.ID
+			}),
+		},
+	}
+}
+
 func (r *Room) AddUser(user *domain.User) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()

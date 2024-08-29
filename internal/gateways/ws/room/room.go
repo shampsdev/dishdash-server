@@ -56,13 +56,33 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		c.lock.Lock()
 		conn.SetContext(c)
 		c.lock.Unlock()
-		s.BroadcastToRoom("", room.ID, event.UserJoined,
+		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
+
+		broadcastToOthersInRoom(s, c.User.ID, c.Room.ID, event.UserJoined,
 			event.UserJoinedEvent{
 				ID:     user.ID,
 				Name:   user.Name,
 				Avatar: user.Avatar,
 			})
-		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
+
+		for _, u := range c.Room.Users() {
+			conn.Emit(event.UserJoined, event.UserJoinedEvent{
+				ID:     u.ID,
+				Name:   u.Name,
+				Avatar: u.Avatar,
+			})
+		}
+		settings := c.Room.Settings()
+		conn.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+			PriceMin:    settings.PriceAvg - 300,
+			PriceMax:    settings.PriceAvg + 300,
+			MaxDistance: 4000,
+			Tags:        settings.Tags,
+		})
+
+		if c.Room.Swiping() {
+			conn.Emit(event.StartSwipes)
+		}
 	})
 
 	s.OnEvent("/", event.SettingsUpdate, func(conn socketio.Conn, se event.SettingsUpdateEvent) {
@@ -205,6 +225,20 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			if err != nil {
 				log.Println("error while deleting room: ", err)
 			}
+		}
+	})
+}
+
+func broadcastToOthersInRoom(s *socketio.Server, userID, room, event string, args ...interface{}) {
+	s.ForEach("", room, func(conn socketio.Conn) {
+		c, ok := conn.Context().(*Context)
+		if !ok {
+			return
+		}
+		c.lock.RLock()
+		defer c.lock.RUnlock()
+		if c.User.ID != userID {
+			conn.Emit(event, args...)
 		}
 	})
 }

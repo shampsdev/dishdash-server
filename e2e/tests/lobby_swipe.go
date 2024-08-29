@@ -41,24 +41,26 @@ func LobbySwipe(t *testing.T) *SocketIOSession {
 	assert.NoError(t, sioCli1.Connect())
 	assert.NoError(t, sioCli2.Connect())
 
-	sioSess.newStep("Joining lobby")
+	sioSess.newStep("User1 join lobby")
 	sioCli1.Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
 	time.Sleep(waitTime)
-	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
-		LobbyID: lobby.ID,
-		UserID:  user2.ID,
-	})
 
-	time.Sleep(waitTime)
 	sioSess.newStep("Settings update")
 	sioCli1.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
 		PriceMin:    300,
 		PriceMax:    300,
 		MaxDistance: 4000,
 		Tags:        []int64{pg_test.Tags[3].ID},
+	})
+	time.Sleep(waitTime)
+
+	sioSess.newStep("User2 join lobby")
+	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
+		LobbyID: lobby.ID,
+		UserID:  user2.ID,
 	})
 	time.Sleep(waitTime)
 
