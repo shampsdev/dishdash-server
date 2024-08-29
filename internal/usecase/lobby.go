@@ -88,6 +88,11 @@ func (l LobbyUseCase) UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInp
 }
 
 func (l LobbyUseCase) DeleteLobbyByID(ctx context.Context, id string) error {
+	err := l.tRepo.DetachTagsFromLobby(ctx, id)
+	if err != nil {
+		return err
+	}
+
 	return l.lRepo.DeleteLobbyByID(ctx, id)
 }
 
