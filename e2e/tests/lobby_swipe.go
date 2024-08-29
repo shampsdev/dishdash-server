@@ -31,6 +31,8 @@ func LobbySwipe(t *testing.T) *SocketIOSession {
 
 	sioCli1.OnEvent(event.UserJoined, sioSess.sioAddFunc(user1.Name, event.UserJoined))
 	sioCli2.OnEvent(event.UserJoined, sioSess.sioAddFunc(user2.Name, event.UserJoined))
+	sioCli1.OnEvent(event.SettingsUpdate, sioSess.sioAddFunc(user1.Name, event.SettingsUpdate))
+	sioCli2.OnEvent(event.SettingsUpdate, sioSess.sioAddFunc(user2.Name, event.SettingsUpdate))
 	sioCli1.OnEvent(event.Place, sioSess.sioAddFunc(user1.Name, event.Place))
 	sioCli2.OnEvent(event.Place, sioSess.sioAddFunc(user2.Name, event.Place))
 	sioCli1.OnEvent(event.Match, sioSess.sioAddFunc(user1.Name, event.Match))
@@ -49,6 +51,9 @@ func LobbySwipe(t *testing.T) *SocketIOSession {
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
+
+	time.Sleep(waitTime)
+	sioSess.newStep("Settings update")
 	sioCli1.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
 		PriceMin:    300,
 		PriceMax:    300,

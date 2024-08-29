@@ -12,7 +12,9 @@ import (
 	"time"
 
 	socketio "github.com/googollee/go-socket.io"
+	"github.com/jinzhu/copier"
 	"github.com/stretchr/testify/assert"
+	goassert "gotest.tools/v3/assert"
 )
 
 var (
@@ -162,28 +164,32 @@ func assertEventStep(t *testing.T, exp, actual eventStep) {
 	}
 }
 
-var ignoredFields = map[string]struct{}{
-	"updatedAt": {},
-	"createdAt": {},
+var ignoredFields = []string{
+	"updatedAt",
+	"createdAt",
 }
 
 func assertMaps(t *testing.T, exp, actual map[string]interface{}) {
-	for k, vExp := range exp {
-		_, has := ignoredFields[k]
-		if has {
-			continue
-		}
-		vActual, ok := actual[k]
-		assert.True(t, ok)
-		assert.Equal(t, reflect.TypeOf(vExp).Kind(), reflect.TypeOf(vActual).Kind())
-		if reflect.TypeOf(vExp).Kind() == reflect.Map {
-			assertMaps(t, vExp.(map[string]interface{}), vActual.(map[string]interface{}))
-		} else {
-			assert.Equal(t, vExp, vActual)
+	var expCopy, actualCopy map[string]interface{}
+	assert.NoError(t, copier.Copy(&expCopy, &exp))
+	assert.NoError(t, copier.Copy(&actualCopy, &actual))
+	removeDeepKeys(expCopy, ignoredFields)
+	removeDeepKeys(actualCopy, ignoredFields)
+	goassert.DeepEqual(t, expCopy, actualCopy)
+}
+
+func removeDeepKeys(m map[string]interface{}, keys []string) map[string]interface{} {
+	for _, key := range keys {
+		delete(m, key)
+	}
+
+	for key, value := range m {
+		if reflect.ValueOf(value).Kind() == reflect.Map {
+			if converted, ok := value.(map[string]interface{}); ok {
+				m[key] = removeDeepKeys(converted, keys)
+			}
 		}
 	}
 
-	for k := range actual {
-		assert.Contains(t, exp, k)
-	}
+	return m
 }

@@ -7,9 +7,33 @@
           {
             "EventName": "userJoined",
             "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
               "avatar": "avatar2",
               "id": "id2",
               "name": "user2"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Settings update",
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ]
             }
           }
         ]
@@ -48,7 +72,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-08-22T21:20:49.425888Z"
+                "updatedAt": "2024-08-29T19:17:01.768452Z"
               },
               "id": 1
             }
@@ -94,7 +118,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-22T21:20:49.428903Z"
+                "updatedAt": "2024-08-29T19:17:01.771769Z"
               },
               "id": 2
             }
@@ -104,47 +128,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "card",
-            "Data": {
-              "card": {
-                "address": "Саблинская ул., 12, Санкт-Петербург",
-                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
-                "id": 3,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9556,
-                  "lon": 30.2658
-                },
-                "priceAvg": 300,
-                "reviewCount": 1000,
-                "reviewRating": 4.7,
-                "shortDescription": "Пекарня, Кондитерская",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "coffee.png",
-                    "id": 3,
-                    "name": "coffee"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "ЛюдиЛюбят",
-                "updatedAt": "2024-08-22T21:20:49.430939Z"
-              },
-              "id": 3
-            }
-          },
           {
             "EventName": "match",
             "Data": {
@@ -181,9 +164,50 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-22T21:20:49.428903Z"
+                "updatedAt": "2024-08-29T19:17:01.771769Z"
               },
               "id": 0
+            }
+          },
+          {
+            "EventName": "card",
+            "Data": {
+              "card": {
+                "address": "Саблинская ул., 12, Санкт-Петербург",
+                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                "id": 3,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9556,
+                  "lon": 30.2658
+                },
+                "priceAvg": 300,
+                "reviewCount": 1000,
+                "reviewRating": 4.7,
+                "shortDescription": "Пекарня, Кондитерская",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "ЛюдиЛюбят",
+                "updatedAt": "2024-08-29T19:17:01.77362Z"
+              },
+              "id": 3
             }
           }
         ]
@@ -194,7 +218,32 @@
     "Steps": [
       {
         "Name": "Joining lobby",
-        "Events": []
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Settings update",
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ]
+            }
+          }
+        ]
       },
       {
         "Name": "Start swipes",
@@ -230,7 +279,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-08-22T21:20:49.425888Z"
+                "updatedAt": "2024-08-29T19:17:01.768452Z"
               },
               "id": 1
             }
@@ -276,7 +325,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-22T21:20:49.428903Z"
+                "updatedAt": "2024-08-29T19:17:01.771769Z"
               },
               "id": 2
             }
@@ -286,47 +335,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
-                "id": 2,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9606,
-                  "lon": 30.2871
-                },
-                "priceAvg": 120,
-                "reviewCount": 1000,
-                "reviewRating": 4.6,
-                "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "coffee.png",
-                    "id": 3,
-                    "name": "coffee"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-22T21:20:49.428903Z"
-              },
-              "id": 0
-            }
-          },
           {
             "EventName": "card",
             "Data": {
@@ -363,9 +371,50 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2024-08-22T21:20:49.430939Z"
+                "updatedAt": "2024-08-29T19:17:01.77362Z"
               },
               "id": 3
+            }
+          },
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-08-29T19:17:01.771769Z"
+              },
+              "id": 0
             }
           }
         ]

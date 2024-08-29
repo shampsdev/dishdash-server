@@ -91,9 +91,16 @@ var sessionTests = []sessionTest{
 func (suite *E2ETestSuite) Test_SessionTests() {
 	for _, td := range sessionTests {
 		suite.T().Run(td.Name, func(t *testing.T) {
+			var s *tests.SocketIOSession
+			defer func() {
+				if t.Failed() && s != nil {
+					_ = s.Save(goldenPath("ERROR_" + td.GoldenFile))
+				}
+			}()
+
 			err := pg_test.ResetData(suite.cases)
 			assert.NoError(t, err)
-			s := td.Run(t)
+			s = td.Run(t)
 			gp := goldenPath(td.GoldenFile)
 			if *updateGolden {
 				assert.NoError(t, s.Save(gp))
@@ -101,9 +108,6 @@ func (suite *E2ETestSuite) Test_SessionTests() {
 				exp, err := tests.LoadSocketIOSession(gp)
 				assert.NoError(t, err)
 				tests.AssertSocketIOSession(t, exp, s)
-				if t.Failed() {
-					assert.NoError(t, s.Save(goldenPath("ERROR_"+td.GoldenFile)))
-				}
 			}
 		})
 	}

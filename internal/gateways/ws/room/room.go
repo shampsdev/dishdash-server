@@ -56,15 +56,12 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		c.lock.Lock()
 		conn.SetContext(c)
 		c.lock.Unlock()
-		broadcastToOthersInRoom(
-			s, user.ID, room.ID, event.UserJoined,
+		s.BroadcastToRoom("", room.ID, event.UserJoined,
 			event.UserJoinedEvent{
 				ID:     user.ID,
 				Name:   user.Name,
 				Avatar: user.Avatar,
-			},
-		)
-
+			})
 		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
 	})
 
@@ -82,6 +79,8 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			_ = conn.Close()
 			return
 		}
+
+		s.BroadcastToRoom("", c.Room.ID, event.SettingsUpdate, se)
 	})
 
 	s.OnEvent("/", event.StartSwipes, func(conn socketio.Conn) {
@@ -192,13 +191,13 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
-		broadcastToOthersInRoom(s, c.User.ID, c.Room.ID, event.UserLeft,
+		s.LeaveRoom("", c.Room.ID, conn)
+		s.BroadcastToRoom("", c.Room.ID, event.UserLeft,
 			event.UserLeftEvent{
 				ID:     c.User.ID,
 				Name:   c.User.Name,
 				Avatar: c.User.Avatar,
-			},
-		)
+			})
 
 		log.Printf("<user %s> leave <lobby %s>", c.User.ID, c.Room.ID)
 		if c.Room.Empty() {
@@ -206,20 +205,6 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			if err != nil {
 				log.Println("error while deleting room: ", err)
 			}
-		}
-	})
-}
-
-func broadcastToOthersInRoom(s *socketio.Server, userID, room, event string, args ...interface{}) {
-	s.ForEach("", room, func(conn socketio.Conn) {
-		c, ok := conn.Context().(*Context)
-		if !ok {
-			return
-		}
-		c.lock.RLock()
-		defer c.lock.RUnlock()
-		if c.User.ID != userID {
-			conn.Emit(event, args...)
 		}
 	})
 }

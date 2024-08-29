@@ -8,6 +8,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/googollee/go-socket.io v1.8.0-rc.1
 	github.com/jackc/pgx/v5 v5.6.0
+	github.com/jinzhu/copier v0.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/stretchr/testify v1.9.0
@@ -17,6 +18,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.32.0
 	github.com/tj/go-spin v1.1.0
 	golang.org/x/sync v0.7.0
+	gotest.tools/v3 v3.5.1
 )
 
 require (
@@ -57,6 +59,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/gomodule/redigo v1.9.2 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
