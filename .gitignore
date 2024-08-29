@@ -25,4 +25,3 @@ go.work
 
 # Dev
 .env
-.DS_Store

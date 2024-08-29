@@ -56,12 +56,14 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		c.lock.Lock()
 		conn.SetContext(c)
 		c.lock.Unlock()
-		s.BroadcastToRoom("/", room.ID, event.UserJoined,
+		broadcastToOthersInRoom(
+			s, user.ID, room.ID, event.UserJoined,
 			event.UserJoinedEvent{
 				ID:     user.ID,
 				Name:   user.Name,
 				Avatar: user.Avatar,
-			})
+			},
+		)
 
 		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
 	})
