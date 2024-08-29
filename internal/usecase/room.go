@@ -77,9 +77,7 @@ func (r *Room) AddUser(user *domain.User) error {
 	defer r.lock.Unlock()
 
 	if _, has := r.users[user.ID]; has {
-		// return fmt.Errorf("user %s already exists", user.ID)
-		// temporary fix, see issue BCKND-13
-		return nil
+		return fmt.Errorf("user %s already exists", user.ID)
 	}
 	r.users[user.ID] = user
 	return nil
