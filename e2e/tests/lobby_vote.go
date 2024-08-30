@@ -29,14 +29,15 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	sioSess.addUser(user1.Name)
 	sioSess.addUser(user2.Name)
 
-	sioCli1.OnEvent(event.Match, sioSess.sioAddFunc(user1.Name, event.Match))
-	sioCli2.OnEvent(event.Match, sioSess.sioAddFunc(user2.Name, event.Match))
-	sioCli1.OnEvent(event.Voted, sioSess.sioAddFunc(user1.Name, event.Voted))
-	sioCli2.OnEvent(event.Voted, sioSess.sioAddFunc(user2.Name, event.Voted))
-	sioCli1.OnEvent(event.ReleaseMatch, sioSess.sioAddFunc(user1.Name, event.ReleaseMatch))
-	sioCli2.OnEvent(event.ReleaseMatch, sioSess.sioAddFunc(user2.Name, event.ReleaseMatch))
-	sioCli1.OnEvent(event.Finish, sioSess.sioAddFunc(user1.Name, event.Finish))
-	sioCli2.OnEvent(event.Finish, sioSess.sioAddFunc(user2.Name, event.Finish))
+	listenEvent := func(eventName string) {
+		sioCli1.OnEvent(eventName, sioSess.sioAddFunc(user1.Name, eventName))
+		sioCli2.OnEvent(eventName, sioSess.sioAddFunc(user2.Name, eventName))
+	}
+
+	listenEvent(event.Match)
+	listenEvent(event.Voted)
+	listenEvent(event.ReleaseMatch)
+	listenEvent(event.Finish)
 
 	assert.NoError(t, sioCli1.Connect())
 	assert.NoError(t, sioCli2.Connect())

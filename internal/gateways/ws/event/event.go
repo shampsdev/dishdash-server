@@ -18,6 +18,8 @@ const (
 	Voted          = "voted"
 	ReleaseMatch   = "releaseMatch"
 	Finish         = "finish"
+
+	Error = "error"
 )
 
 type JoinLobbyEvent struct {
@@ -38,6 +40,7 @@ type UserLeftEvent struct {
 }
 
 type SettingsUpdateEvent struct {
+	UserID      string  `json:"userId"`
 	PriceMin    int     `json:"priceMin"`
 	PriceMax    int     `json:"priceMax"`
 	MaxDistance int     `json:"maxDistance"`
@@ -75,4 +78,8 @@ type VotedEvent struct {
 
 type FinishEvent struct {
 	Result *domain.Place `json:"result"`
+}
+
+type ErrorEvent struct {
+	Error string `json:"error"`
 }

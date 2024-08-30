@@ -2,6 +2,7 @@ package room
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"sync"
 
@@ -20,6 +21,25 @@ type Context struct {
 }
 
 func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
+	handleError := func(conn socketio.Conn, err error) {
+		log.Printf("[ERROR] %s", err.Error())
+		conn.Emit(event.Error, event.ErrorEvent{
+			Error: err.Error(),
+		})
+		if err := conn.Close(); err != nil {
+			log.Printf("Error while closing connection: %v", err)
+		}
+	}
+
+	getContext := func(conn socketio.Conn) (*Context, bool) {
+		c, ok := conn.Context().(*Context)
+		if !ok {
+			handleError(conn, fmt.Errorf("invalid connection type"))
+			return nil, false
+		}
+		return c, ok
+	}
+
 	s.OnConnect("/", func(s socketio.Conn) error {
 		log.Println("connected: ", s.ID())
 		s.SetContext("")
@@ -29,22 +49,19 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	s.OnEvent("/", event.JoinLobby, func(conn socketio.Conn, joinEvent event.JoinLobbyEvent) {
 		user, err := cases.User.GetUserByID(context.Background(), joinEvent.UserID)
 		if err != nil {
-			log.Println("error while getting user: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while getting user: %w", err))
 			return
 		}
 
 		room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
 		if err != nil {
-			log.Println("error while getting room: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while getting room: %w", err))
 			return
 		}
 
 		err = room.AddUser(user)
 		if err != nil {
-			log.Println("error while adding user to room: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while adding user to room: %w", err))
 			return
 		}
 
@@ -86,40 +103,38 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnEvent("/", event.SettingsUpdate, func(conn socketio.Conn, se event.SettingsUpdateEvent) {
-		c, ok := conn.Context().(*Context)
+		c, ok := getContext(conn)
 		if !ok {
-			_ = conn.Close()
 			return
 		}
 
 		ctx := context.Background()
 		err := c.Room.UpdateLobby(ctx, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
 		if err != nil {
-			log.Println("error while updating lobby: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while updating lobby: %w", err))
 			return
 		}
 
+		se.UserID = c.User.ID
 		s.BroadcastToRoom("", c.Room.ID, event.SettingsUpdate, se)
 	})
 
 	s.OnEvent("/", event.StartSwipes, func(conn socketio.Conn) {
-		c, ok := conn.Context().(*Context)
+		c, ok := getContext(conn)
 		if !ok {
-			_ = conn.Close()
 			return
 		}
 
 		err := c.Room.StartSwipes(context.Background())
 		if err != nil {
-			log.Println("error while starting swipes: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while starting swipes: %w", err))
+			return
 		}
 
 		s.ForEach("", c.Room.ID, func(conn socketio.Conn) {
-			c, ok := conn.Context().(*Context)
+			c, ok := getContext(conn)
 			if !ok {
-				_ = conn.Close()
+				return
 			}
 
 			p := c.Room.GetNextPlaceForUser(c.User.ID)
@@ -132,15 +147,13 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnEvent("/", event.Swipe, func(conn socketio.Conn, se event.SwipeEvent) {
-		c, ok := conn.Context().(*Context)
+		c, ok := getContext(conn)
 		if !ok {
-			_ = conn.Close()
 			return
 		}
 		m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
 		if err != nil {
-			log.Println("error while swiping: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while swiping: %w", err))
 			return
 		}
 
@@ -166,9 +179,8 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	s.OnEvent("/", event.Vote, func(conn socketio.Conn, ve event.VoteEvent) {
 		voteLock.Lock()
 		defer voteLock.Unlock()
-		c, ok := conn.Context().(*Context)
+		c, ok := getContext(conn)
 		if !ok {
-			_ = conn.Close()
 			return
 		}
 		c.Room.Vote(c.User.ID, ve.Option)
@@ -197,17 +209,15 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	})
 
 	s.OnDisconnect("/", func(conn socketio.Conn, msg string) {
-		c, ok := conn.Context().(*Context)
+		c, ok := getContext(conn)
 		if !ok {
 			log.Println("disconnected: ", msg)
-			_ = conn.Close()
 			return
 		}
 
 		err := c.Room.RemoveUser(c.User.ID)
 		if err != nil {
-			log.Println("error while removing user from room: ", err)
-			_ = conn.Close()
+			handleError(conn, fmt.Errorf("error while removing user from room: %w", err))
 			return
 		}
 

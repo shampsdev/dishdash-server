@@ -29,14 +29,16 @@ func LobbySwipe(t *testing.T) *SocketIOSession {
 	sioSess.addUser(user1.Name)
 	sioSess.addUser(user2.Name)
 
-	sioCli1.OnEvent(event.UserJoined, sioSess.sioAddFunc(user1.Name, event.UserJoined))
-	sioCli2.OnEvent(event.UserJoined, sioSess.sioAddFunc(user2.Name, event.UserJoined))
-	sioCli1.OnEvent(event.SettingsUpdate, sioSess.sioAddFunc(user1.Name, event.SettingsUpdate))
-	sioCli2.OnEvent(event.SettingsUpdate, sioSess.sioAddFunc(user2.Name, event.SettingsUpdate))
-	sioCli1.OnEvent(event.Place, sioSess.sioAddFunc(user1.Name, event.Place))
-	sioCli2.OnEvent(event.Place, sioSess.sioAddFunc(user2.Name, event.Place))
-	sioCli1.OnEvent(event.Match, sioSess.sioAddFunc(user1.Name, event.Match))
-	sioCli2.OnEvent(event.Match, sioSess.sioAddFunc(user2.Name, event.Match))
+	listenEvent := func(eventName string) {
+		sioCli1.OnEvent(eventName, sioSess.sioAddFunc(user1.Name, eventName))
+		sioCli2.OnEvent(eventName, sioSess.sioAddFunc(user2.Name, eventName))
+	}
+
+	listenEvent(event.Error)
+	listenEvent(event.UserJoined)
+	listenEvent(event.SettingsUpdate)
+	listenEvent(event.Place)
+	listenEvent(event.Match)
 
 	assert.NoError(t, sioCli1.Connect())
 	assert.NoError(t, sioCli2.Connect())
