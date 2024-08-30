@@ -84,19 +84,20 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 }
 
 func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Place {
+	// TODO: better asymptotic
 	uniquePlaces := make([]*domain.Place, 0)
-	uniquePlaces = append(uniquePlaces, placesFromBD...)
+	uniquePlaces = append(uniquePlaces, placesFromApi...)
 
-	for _, apiPlace := range placesFromApi {
+	for _, bdPlace := range placesFromBD {
 		exists := false
-		for _, bdPlace := range uniquePlaces {
-			if apiPlace.Equals(bdPlace) {
+		for _, apiPlace := range uniquePlaces {
+			if bdPlace.Equals(apiPlace) {
 				exists = true
 				break
 			}
 		}
 		if !exists {
-			uniquePlaces = append(uniquePlaces, apiPlace)
+			uniquePlaces = append(uniquePlaces, bdPlace)
 		}
 	}
 
@@ -121,18 +122,19 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 		if err != nil {
 			return nil, err
 		}
-		apiPlaces := make([]*domain.Place, len(twoGisPlaces))
-		for i, twoGisPlace := range twoGisPlaces {
+		apiPlaces := make([]*domain.Place, 0)
+		for _, twoGisPlace := range twoGisPlaces {
 			parsedPlace := twoGisPlace.ToPlace()
 			tags, err := p.tRepo.SaveApiTag(ctx, twoGisPlace)
 			if err != nil {
 				return nil, err
 			}
-			apiPlaces[i] = parsedPlace
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
 			if errors.Is(err, repo.ErrPlaceExists) {
-				break
+				continue
 			}
+			parsedPlace.ID = placeId
+			apiPlaces = append(apiPlaces, parsedPlace)
 			if err != nil {
 				return nil, err
 			}

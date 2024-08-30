@@ -25,7 +25,7 @@ VALUES (1, 'Пловная', 'Ресторан узбекской кухни',
         '2024-07-22 00:00:00'),
        (2, 'Zoomer Coffee', 'Лучший кофе у ИТМО', 'Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.',
         'https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL',
-            '0101000020E610000062BD512B4C4F3E40D190F12895FA4D40', 'Сытнинская ул., 4П, Санкт-Петербург', 120, 4.6, 1000,
+        '0101000020E610000062BD512B4C4F3E40D190F12895FA4D40', 'Сытнинская ул., 4П, Санкт-Петербург', 120, 4.6, 1000,
         '2024-07-22 00:00:00'),
        (3, 'ЛюдиЛюбят', 'Пекарня, Кондитерская', 'ЛюдиЛюбят - отличная пекарня с классными комбо на обед.',
         'https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL',
@@ -40,10 +40,20 @@ VALUES (1, 'Пловная', 'Ресторан узбекской кухни',
         '0101000020E6100000EB353D2828513E4048533D997FFA4D40', 'Кронверкский проспект, 27', 320, 4.5, 1000,
         '2024-07-22 00:00:00');
 
+SELECT nextval('place_id_seq');
+SELECT nextval('place_id_seq');
+SELECT nextval('place_id_seq');
+SELECT nextval('place_id_seq');
+SELECT nextval('place_id_seq');
+
 INSERT INTO "tag" ("id", "name", "icon")
-VALUES (1, 'bar', 'bar.png'),
-       (2, 'cafe', 'cafe.png'),
-       (3, 'coffee', 'coffee.png');
+VALUES (1, 'Бар', 'bar.png'),
+       (2, 'Кафе', 'cafe.png'),
+       (3, 'Кофейни', 'coffee.png');
+
+SELECT nextval('tag_id_seq');
+SELECT nextval('tag_id_seq');
+SELECT nextval('tag_id_seq');
 
 INSERT INTO "place_tag" ("place_id", "tag_id")
 VALUES (1, 2),

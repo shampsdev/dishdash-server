@@ -173,7 +173,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 
 	// TODO: Remove nahui
 	if len(r.lobby.Tags) == 0 {
-		err := r.updateLobby(ctx, 500, []int64{4}, nil)
+		err := r.updateLobby(ctx, 500, []int64{3}, nil)
 		if err != nil {
 			return err
 		}
