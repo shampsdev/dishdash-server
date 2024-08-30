@@ -231,15 +231,14 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 }
 
 func parseTagsToQuery(lobby *domain.Lobby) string {
-	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) = %d"
+	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) > 0"
 	var queryTags string
 	for _, tag := range lobby.Tags {
 		queryTags += fmt.Sprintf("'%s', ", tag.Name)
 	}
 	queryTags = strings.TrimSuffix(queryTags, ", ")
-	size := len(lobby.Tags)
 
-	return fmt.Sprintf(query, queryTags, size)
+	return fmt.Sprintf(query, queryTags)
 }
 
 func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
