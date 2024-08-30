@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"dishdash.ru/external/twogis"
 
@@ -129,6 +130,9 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 			}
 			apiPlaces[i] = parsedPlace
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
+			if errors.Is(err, repo.ErrPlaceExists) {
+				break
+			}
 			if err != nil {
 				return nil, err
 			}

@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"dishdash.ru/internal/repo"
 	"fmt"
 	"log"
 	"strings"
@@ -319,7 +320,7 @@ func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.Tw
 
 	if exists {
 		log.Printf("[INFO] Place with title '%s' and address '%s' already exists", twogisPlace.Name, twogisPlace.Address)
-		return 0, nil
+		return 0, repo.ErrPlaceExists
 	}
 
 	place := twogisPlace.ToPlace()
