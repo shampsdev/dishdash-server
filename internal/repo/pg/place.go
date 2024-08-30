@@ -144,7 +144,7 @@ func (pr *PlaceRepo) AttachPlacesToLobby(ctx context.Context, placesIDs []int64,
 
 	_, err := br.Exec()
 	if err != nil {
-		return fmt.Errorf("could not attach tags to place: %w", err)
+		return fmt.Errorf("could not attach places to lobby: %w", err)
 	}
 	return nil
 }

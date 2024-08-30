@@ -75,7 +75,7 @@ func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyI
 
 	_, err := br.Exec()
 	if err != nil {
-		return fmt.Errorf("could not attach tags to place: %w", err)
+		return fmt.Errorf("could not attach tags to lobby: %w", err)
 	}
 	return nil
 }
