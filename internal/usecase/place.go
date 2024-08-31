@@ -142,13 +142,13 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 			// TODO: check lobby params before addint to unique
 			log.Printf("[INFO] Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
-			
+
 			tags, err := p.tRepo.SaveApiTag(ctx, twoGisPlace)
 			if err != nil {
 				log.Printf("[ERROR] Failed to save tags for 2GIS place: %s, error: %v", twoGisPlace.Name, err)
 				return nil, err
 			}
-			
+
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
 			if errors.Is(err, repo.ErrPlaceExists) {
 				log.Printf("[INFO] Place already exists in DB, skipping 2GIS place: %s", twoGisPlace.Name)
@@ -158,7 +158,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 				log.Printf("[ERROR] Failed to save 2GIS place: %s, error: %v", twoGisPlace.Name, err)
 				return nil, err
 			}
-			
+
 			parsedPlace.ID = placeId
 			apiPlaces = append(apiPlaces, parsedPlace)
 
@@ -171,7 +171,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 
 		filteredPlaces := make([]*domain.Place, 0)
 		for _, place := range apiPlaces {
-			if place.PriceAvg > lobby.PriceAvg- priceAvgLowerDelta && place.PriceAvg < lobby.PriceAvg+ priceAvgUpperDelta {
+			if place.PriceAvg > lobby.PriceAvg-priceAvgLowerDelta && place.PriceAvg < lobby.PriceAvg+priceAvgUpperDelta {
 				filteredPlaces = append(filteredPlaces, place)
 			}
 		}
@@ -184,4 +184,3 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 	log.Printf("[INFO] Returning DB places for lobby ID: %s", lobby.ID)
 	return dbPlaces, nil
 }
-

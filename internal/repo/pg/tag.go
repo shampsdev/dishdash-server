@@ -173,13 +173,13 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 }
 
 func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
-    var placeTags []int64
-    log.Printf("Starting to process tags for place Name: %v", place.Name)
+	var placeTags []int64
+	log.Printf("Starting to process tags for place Name: %v", place.Name)
 
-    for _, rubric := range place.Rubrics {
-        var id int64
-        log.Printf("Processing tag: %s", rubric)
-        err := tr.db.QueryRow(ctx, `
+	for _, rubric := range place.Rubrics {
+		var id int64
+		log.Printf("Processing tag: %s", rubric)
+		err := tr.db.QueryRow(ctx, `
         WITH s AS (
             SELECT id
             FROM tag
@@ -194,14 +194,14 @@ func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([
         UNION ALL
         SELECT id FROM s
         `, rubric).Scan(&id)
-        if err != nil {
-            log.Printf("Error inserting or fetching tag '%s': %v", rubric, err) 
-            continue
-        }
-        log.Printf("Tag processed successfully: %d", id) 
-        placeTags = append(placeTags, id)
-    }
+		if err != nil {
+			log.Printf("Error inserting or fetching tag '%s': %v", rubric, err)
+			continue
+		}
+		log.Printf("Tag processed successfully: %d", id)
+		placeTags = append(placeTags, id)
+	}
 
-    log.Printf("Finished processing tags for place: %v", place.Name)
-    return placeTags, nil
+	log.Printf("Finished processing tags for place: %v", place.Name)
+	return placeTags, nil
 }
