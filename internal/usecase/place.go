@@ -129,7 +129,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 		}
 	}
 
-	if len(dbPlaces) <= 5 {
+	if len(dbPlaces) < config.C.Defaults.MinDBPlaces {
 		log.Printf("[INFO] Fewer than 5 places found in DB for lobby ID: %s, fetching from 2GIS API.", lobby.ID)
 		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
 		if err != nil {
