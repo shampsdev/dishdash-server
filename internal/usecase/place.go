@@ -133,6 +133,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 
 		apiPlaces := make([]*domain.Place, 0)
 		for _, twoGisPlace := range twoGisPlaces {
+			// TODO: check lobby params before addint to unique
 			log.Printf("[INFO] Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
 			

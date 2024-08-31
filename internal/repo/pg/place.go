@@ -281,6 +281,9 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		lobby.PriceAvg-300,
 		lobby.PriceAvg+300,
 	)
+	
+	log.Printf("[INFO] Lobby settings: priceavg: %d - %d", lobby.PriceAvg-300, lobby.PriceAvg+300)
+	
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
@@ -300,6 +303,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
+	log.Print(fmt.Sprintf("[DEBUG] Total places from database: %d", len(places)))
 	return places, nil
 }
 
