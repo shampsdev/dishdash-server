@@ -37,8 +37,6 @@ db-reset: ## Reset database (down + up + default-data)
 	make db-migrate-up
 	make db-default-data
 
-db-init: db-migrate
-
 ##@ Tests
 test-e2e-race: ## Test e2e
 	go test -v -race e2e/e2e_test.go
