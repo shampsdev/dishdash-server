@@ -36,6 +36,7 @@ func LobbySwipe(t *testing.T) *SocketIOSession {
 
 	listenEvent(event.Error)
 	listenEvent(event.UserJoined)
+	listenEvent(event.StartSwipes)
 	listenEvent(event.SettingsUpdate)
 	listenEvent(event.Place)
 	listenEvent(event.Match)

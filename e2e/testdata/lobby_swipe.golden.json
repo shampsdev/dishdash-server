@@ -87,11 +87,14 @@
                     "name": "food"
                   }
                 ],
-                "title": "Пловная",
-                "updatedAt": "2024-08-30T14:17:48.287479Z"
+                "title": "Пловная"
               },
               "id": 1
             }
+          },
+          {
+            "EventName": "startSwipes",
+            "Data": null
           }
         ]
       },
@@ -133,8 +136,7 @@
                     "name": "food"
                   }
                 ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-30T14:17:48.289753Z"
+                "title": "Zoomer Coffee"
               },
               "id": 2
             }
@@ -179,8 +181,7 @@
                     "name": "food"
                   }
                 ],
-                "title": "ЛюдиЛюбят",
-                "updatedAt": "2024-08-30T14:17:48.29097Z"
+                "title": "ЛюдиЛюбят"
               },
               "id": 3
             }
@@ -220,8 +221,7 @@
                     "name": "food"
                   }
                 ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-30T14:17:48.289753Z"
+                "title": "Zoomer Coffee"
               },
               "id": 0
             }
@@ -244,6 +244,18 @@
         "Name": "User2 join lobby",
         "Events": [
           {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
+          {
             "EventName": "userJoined",
             "Data": {
               "avatar": "avatar1",
@@ -257,18 +269,6 @@
               "avatar": "avatar2",
               "id": "id2",
               "name": "user2"
-            }
-          },
-          {
-            "EventName": "settingsUpdate",
-            "Data": {
-              "maxDistance": 4000,
-              "priceMax": 600,
-              "priceMin": 0,
-              "tags": [
-                4
-              ],
-              "userId": ""
             }
           }
         ]
@@ -306,11 +306,14 @@
                     "name": "food"
                   }
                 ],
-                "title": "Пловная",
-                "updatedAt": "2024-08-30T14:17:48.287479Z"
+                "title": "Пловная"
               },
               "id": 1
             }
+          },
+          {
+            "EventName": "startSwipes",
+            "Data": null
           }
         ]
       },
@@ -352,8 +355,7 @@
                     "name": "food"
                   }
                 ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-30T14:17:48.289753Z"
+                "title": "Zoomer Coffee"
               },
               "id": 2
             }
@@ -363,47 +365,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
-                "id": 2,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9606,
-                  "lon": 30.2871
-                },
-                "priceAvg": 120,
-                "reviewCount": 1000,
-                "reviewRating": 4.6,
-                "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "coffee.png",
-                    "id": 3,
-                    "name": "coffee"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-08-30T14:17:48.289753Z"
-              },
-              "id": 0
-            }
-          },
           {
             "EventName": "card",
             "Data": {
@@ -439,10 +400,49 @@
                     "name": "food"
                   }
                 ],
-                "title": "ЛюдиЛюбят",
-                "updatedAt": "2024-08-30T14:17:48.29097Z"
+                "title": "ЛюдиЛюбят"
               },
               "id": 3
+            }
+          },
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee"
+              },
+              "id": 0
             }
           }
         ]

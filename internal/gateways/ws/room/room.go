@@ -2,14 +2,12 @@ package room
 
 import (
 	"context"
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase"
 	"fmt"
 	"log"
 	"sync"
-
-	"dishdash.ru/internal/gateways/ws/event"
-
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase"
 
 	socketio "github.com/googollee/go-socket.io"
 )
@@ -131,6 +129,8 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
+		log.Printf("start swipes in <lobby %s>", c.Room.ID)
+		s.BroadcastToRoom("", c.Room.ID, event.StartSwipes)
 		s.ForEach("", c.Room.ID, func(conn socketio.Conn) {
 			c, ok := getContext(conn)
 			if !ok {
@@ -143,7 +143,6 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				Card: p,
 			})
 		})
-		log.Printf("start swipes in <lobby %s>", c.Room.ID)
 	})
 
 	s.OnEvent("/", event.Swipe, func(conn socketio.Conn, se event.SwipeEvent) {
