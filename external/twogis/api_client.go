@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -57,6 +58,7 @@ func extractNumber(s string) (int, error) {
 func GetPlacesFromApi(params map[string]string) (string, error) {
 	reqUrl, err := url.Parse(ApiUrl)
 	if err != nil {
+		log.Printf("Error parsing API URL: %v", err)
 		return "", err
 	}
 
@@ -66,14 +68,22 @@ func GetPlacesFromApi(params map[string]string) (string, error) {
 	}
 	reqUrl.RawQuery = query.Encode()
 
+	safeUrlString := reqUrl.String()
+    if apiKey := query.Get("key"); apiKey != "" {
+        safeUrlString = strings.Replace(safeUrlString, apiKey, "******", 1)
+    }
+    log.Printf("Sending request to API URL: %s", safeUrlString)
+
 	resp, err := http.Get(reqUrl.String())
 	if err != nil {
+		log.Printf("Error making HTTP request to API: %v", err)
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		log.Printf("Error reading response body: %v", err)
 		return "", err
 	}
 
@@ -84,6 +94,7 @@ func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 	var response ApiResponse
 	err := json.Unmarshal([]byte(responseBody), &response)
 	if err != nil {
+		log.Printf("Error unmarshalling response: %v", err)
 		return nil, err
 	}
 
@@ -105,6 +116,7 @@ func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 				if attribute.Tag == "food_service_avg_price" {
 					number, err := extractNumber(attribute.Name)
 					if err != nil {
+						log.Printf("Error extracting average price: %v", err)
 						return nil, err
 					}
 					averagePrice = number
@@ -112,7 +124,7 @@ func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 			}
 		}
 
-		twoGisPlaces = append(twoGisPlaces, &domain.TwoGisPlace{
+		twoGisPlace := &domain.TwoGisPlace{
 			Name:         item.Name,
 			Address:      item.AddressName,
 			Lat:          item.Point.Lat,
@@ -122,7 +134,9 @@ func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 			ReviewCount:  item.Reviews.GeneralReviewCount,
 			Rubrics:      rubrics,
 			AveragePrice: averagePrice,
-		})
+		}
+		log.Printf("Processed place: %s, Address: %s", twoGisPlace.Name, twoGisPlace.Address)
+		twoGisPlaces = append(twoGisPlaces, twoGisPlace)
 	}
 
 	return twoGisPlaces, nil
@@ -134,30 +148,36 @@ func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.TwoGisPlace, err
 	pageSize := 10
 
 	for {
+		log.Printf("Fetching places from API for lobby: %s, Page: %d", lobby.ID, page)
 		params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat, page, pageSize)
 
 		apiResponse, err := GetPlacesFromApi(params)
 		if err != nil {
+			log.Printf("Error fetching places from API: %v", err)
 			return nil, err
 		}
 
 		apiPlaces, err := ParseApiResponse(apiResponse)
 		if err != nil {
+			log.Printf("Error parsing API response: %v", err)
 			return nil, err
 		}
 
 		if len(apiPlaces) == 0 {
+			log.Printf("No more places found, stopping fetch.")
 			break
 		}
 
 		allApiPlaces = append(allApiPlaces, apiPlaces...)
 
 		if len(apiPlaces) < pageSize {
+			log.Printf("Less places returned than requested, likely end of data.")
 			break
 		}
 
 		page++
 	}
 
+	log.Printf("Total places fetched for lobby: %s, Count: %d", lobby.ID, len(allApiPlaces))
 	return allApiPlaces, nil
 }

@@ -3,6 +3,7 @@ package pg
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/jackc/pgx/v5"
 
@@ -172,29 +173,35 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 }
 
 func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
-	var placeTags []int64
-	for _, rubric := range place.Rubrics {
-		var id int64
-		err := tr.db.QueryRow(ctx, `
-		WITH s AS (
-			SELECT id, name, icon
-			FROM tag
-			WHERE name = $1
-		), i AS (
-			INSERT INTO tag (name, icon)
-			SELECT $1, ''
-			WHERE NOT EXISTS (SELECT 1 FROM s)
-			RETURNING id
-		)
-		SELECT id
-		FROM i
-		UNION ALL
-		SELECT id
-		FROM s;`, rubric).Scan(&id)
-		if err != nil {
-			return nil, err
-		}
-		placeTags = append(placeTags, id)
-	}
-	return placeTags, nil
+    var placeTags []int64
+    log.Printf("Starting to process tags for place Name: %v", place.Name)
+
+    for _, rubric := range place.Rubrics {
+        var id int64
+        log.Printf("Processing tag: %s", rubric)
+        err := tr.db.QueryRow(ctx, `
+        WITH s AS (
+            SELECT id
+            FROM tag
+            WHERE name = $1
+        ), i AS (
+            INSERT INTO tag (name, icon)
+            SELECT $1, ''
+            WHERE NOT EXISTS (SELECT 1 FROM s)
+            RETURNING id
+        )
+        SELECT id FROM i
+        UNION ALL
+        SELECT id FROM s
+        `, rubric).Scan(&id)
+        if err != nil {
+            log.Printf("Error inserting or fetching tag '%s': %v", rubric, err) 
+            continue
+        }
+        log.Printf("Tag processed successfully: %d", id) 
+        placeTags = append(placeTags, id)
+    }
+
+    log.Printf("Finished processing tags for place: %v", place.Name)
+    return placeTags, nil
 }

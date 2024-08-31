@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"dishdash.ru/internal/repo"
-
 	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/internal/domain"
@@ -306,30 +304,33 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 }
 
 func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-	var exists bool
+    var existingID int64
 
-	err := pr.db.QueryRow(ctx, `
-    SELECT EXISTS (
-        SELECT 1
-        FROM "place"
-        WHERE "title" = $1 AND "address" = $2
-    );`, twogisPlace.Name, twogisPlace.Address).Scan(&exists)
-	if err != nil {
-		return 0, fmt.Errorf("error checking existence of place: %w", err)
+    log.Printf("[INFO] Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
+
+    err := pr.db.QueryRow(ctx, `
+    SELECT id FROM "place"
+    WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
+    
+    if err != nil {
+		log.Printf("[DEBUG] Error after executing query: %v", err)
+		
+		if strings.Contains(err.Error(), "no rows in result set") {
+			log.Printf("[INFO] No rows found, adding new place.")
+			place := twogisPlace.ToPlace()
+			id, err := pr.SavePlace(ctx, place)
+			if err != nil {
+				log.Printf("[ERROR] Failed to save new place: %v", err)
+				return 0, err
+			}
+			log.Printf("[INFO] New place saved successfully. ID: %d", id)
+			return id, nil
+		} else {
+			log.Printf("[ERROR] Unexpected error: %v", err)
+			return 0, err
+		}
 	}
 
-	if exists {
-		log.Printf("[INFO] Place with title '%s' and address '%s' already exists", twogisPlace.Name, twogisPlace.Address)
-		return 0, repo.ErrPlaceExists
-	}
-
-	place := twogisPlace.ToPlace()
-
-	id, err := pr.SavePlace(ctx, place)
-	if err != nil {
-		log.Printf("Error saving new place: %v\n", err)
-		return 0, err
-	}
-
-	return id, nil
+    log.Printf("[INFO] Place already exists. ID: %d", existingID)
+    return existingID, nil
 }

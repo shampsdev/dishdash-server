@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
 	"slices"
 	"sync"
 
@@ -168,36 +169,57 @@ func (r *Room) updateLobby(ctx context.Context, priceAvg int, tagIDs, placeIDs [
 }
 
 func (r *Room) StartSwipes(ctx context.Context) error {
-	r.lock.Lock()
-	defer r.lock.Unlock()
+    r.lock.Lock()
+    defer r.lock.Unlock()
 
-	// TODO: Remove nahui
-	if len(r.lobby.Tags) == 0 {
-		err := r.updateLobby(ctx, 500, []int64{3}, nil)
-		if err != nil {
-			return err
-		}
-	}
+    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Request started: Action 'StartSwipes' initiated.", r.lobby.ID, r.ID)
 
-	var err error
-	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
-	if err != nil {
-		return err
-	}
-	err = r.updateLobby(ctx, r.lobby.PriceAvg,
-		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
-			return t.ID
-		}),
-		filter.Map(r.places, func(p *domain.Place) int64 {
-			return p.ID
-		}))
+    if len(r.lobby.Tags) == 0 {
+        log.Printf("WARNING: [LobbyID: %s] [RoomID: %s] - Warning: Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'.", r.lobby.ID, r.ID)
+        err := r.updateLobby(ctx, 500, []int64{3}, nil)
+        if err != nil {
+            log.Printf("ERROR: [LobbyID: %s] [RoomID: %s] - Error: Action 'UpdateLobby' failed. Reason: '%v'.", r.lobby.ID, r.ID, err)
+            return err
+        }
+        log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Request successful: Action 'UpdateLobby' completed with default tags.", r.lobby.ID, r.ID)
+    }
 
-	for id := range r.users {
-		r.usersPlace[id] = r.places[0]
-	}
+    var err error
+    r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
+    if err != nil {
+        log.Printf("ERROR: [LobbyID: %s] [RoomID: %s] - Error: Action 'GetPlacesForLobby' failed. Reason: '%v'.", r.lobby.ID, r.ID, err)
+        return err
+    }
+    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Request successful: Action 'GetPlacesForLobby' completed successfully.", r.lobby.ID, r.ID)
 
-	return err
+    err = r.updateLobby(ctx, r.lobby.PriceAvg,
+        filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+            return t.ID
+        }),
+        filter.Map(r.places, func(p *domain.Place) int64 {
+            return p.ID
+        }))
+    if err != nil {
+        log.Printf("ERROR: [LobbyID: %s] [RoomID: %s] - Error: Action 'UpdateLobby' failed. Reason: '%v'.", r.lobby.ID, r.ID, err)
+        return err
+    }
+    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Request successful: Action 'UpdateLobby' completed successfully.", r.lobby.ID, r.ID)
+
+    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Processing initial place assignments to users.", r.lobby.ID, r.ID)
+    for id, _ := range r.users {
+        if len(r.places) > 0 {
+            r.usersPlace[id] = r.places[0]
+            log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - User ID %s assigned to place ID %d.", r.lobby.ID, r.ID, id, r.places[0].ID)
+        } else {
+            log.Printf("WARNING: [LobbyID: %s] [RoomID: %s] - Warning: No places available to assign to user ID %s.", r.lobby.ID, r.ID, id)
+        }
+    }
+
+    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Swipes successfully started for room.", r.lobby.ID, r.ID)
+    return nil
 }
+
+
 
 func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, error) {
 	r.lock.Lock()
