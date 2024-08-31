@@ -205,15 +205,15 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	}
 	log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Request successful: Action 'UpdateLobby' completed successfully.", r.lobby.ID, r.ID)
 
-    log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Processing initial place assignments to users.", r.lobby.ID, r.ID)
-    for id := range r.users {
+	log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Processing initial place assignments to users.", r.lobby.ID, r.ID)
+	for id := range r.users {
 		if len(r.places) > 0 {
 			r.usersPlace[id] = r.places[0]
 			log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - User ID %s assigned to place ID %d.", r.lobby.ID, r.ID, id, r.places[0].ID)
 		} else {
 			log.Printf("WARNING: [LobbyID: %s] [RoomID: %s] - Warning: No places available to assign to user ID %s.", r.lobby.ID, r.ID, id)
 		}
-	}	
+	}
 
 	log.Printf("INFO: [LobbyID: %s] [RoomID: %s] - Swipes successfully started for room.", r.lobby.ID, r.ID)
 	return nil

@@ -337,10 +337,10 @@ func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.Tw
 			log.Printf("[INFO] New place saved successfully. ID: %d", id)
 			return id, nil
 		}
-		
+
 		log.Printf("[ERROR] Unexpected error: %v", err)
 		return 0, err
-	}	
+	}
 
 	log.Printf("[INFO] Place already exists. ID: %d", existingID)
 	return existingID, nil
