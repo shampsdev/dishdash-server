@@ -23,10 +23,10 @@ db-compose-up: ## Launch database+adminer from docker-compose
 
 DB_URL=postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=disable
 
-db-migrate-up: ## Migrate up
+db-migrate-up: migrate-install ## Migrate up
 	$(MIGRATE) -database $(DB_URL) -path migrations up
 
-db-migrate-down: ## Migrate down
+db-migrate-down: migrate-install ## Migrate down
 	$(MIGRATE) -database $(DB_URL) -path migrations down
 
 db-default-data: ## Add necessary default data to db (postgresql-client-16 (psql) needed)
