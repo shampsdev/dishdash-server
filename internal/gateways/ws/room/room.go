@@ -2,12 +2,13 @@ package room
 
 import (
 	"context"
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
-	"dishdash.ru/internal/usecase"
 	"fmt"
 	"log"
 	"sync"
+
+	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase"
 
 	socketio "github.com/googollee/go-socket.io"
 )
