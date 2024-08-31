@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"log"
 
 	"dishdash.ru/external/twogis"
 
@@ -105,47 +106,67 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 }
 
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
-	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
-	for _, place := range dbPlaces {
-		place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
-		if err != nil {
-			return nil, err
-		}
-	}
+	log.Printf("[INFO] Starting GetPlacesForLobby for lobby ID: %d", lobby.ID)
 
+	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
+		log.Printf("[ERROR] Failed to get places from database for lobby ID: %d, error: %v", lobby.ID, err)
 		return nil, err
 	}
 
-	if len(dbPlaces) <= 5 {
-		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
+	for _, place := range dbPlaces {
+		log.Printf("[INFO] Fetching tags for place ID: %d", place.ID)
+		place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
 		if err != nil {
+			log.Printf("[ERROR] Failed to get tags for place ID: %d, error: %v", place.ID, err)
 			return nil, err
 		}
+	}
+
+	if len(dbPlaces) <= 5 {
+		log.Printf("[INFO] Fewer than 5 places found in DB for lobby ID: %d, fetching from 2GIS API.", lobby.ID)
+		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
+		if err != nil {
+			log.Printf("[ERROR] Failed to fetch places from 2GIS API for lobby ID: %d, error: %v", lobby.ID, err)
+			return nil, err
+		}
+
 		apiPlaces := make([]*domain.Place, 0)
 		for _, twoGisPlace := range twoGisPlaces {
+			log.Printf("[INFO] Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
+			
 			tags, err := p.tRepo.SaveApiTag(ctx, twoGisPlace)
 			if err != nil {
+				log.Printf("[ERROR] Failed to save tags for 2GIS place: %s, error: %v", twoGisPlace.Name, err)
 				return nil, err
 			}
+			
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
 			if errors.Is(err, repo.ErrPlaceExists) {
+				log.Printf("[INFO] Place already exists in DB, skipping 2GIS place: %s", twoGisPlace.Name)
 				continue
 			}
-			parsedPlace.ID = placeId
-			apiPlaces = append(apiPlaces, parsedPlace)
 			if err != nil {
+				log.Printf("[ERROR] Failed to save 2GIS place: %s, error: %v", twoGisPlace.Name, err)
 				return nil, err
 			}
+			
+			parsedPlace.ID = placeId
+			apiPlaces = append(apiPlaces, parsedPlace)
+
 			err = p.tRepo.AttachTagsToPlace(ctx, tags, placeId)
 			if err != nil {
+				log.Printf("[ERROR] Failed to attach tags to place ID: %d, error: %v", placeId, err)
 				return nil, err
 			}
 		}
 
+		log.Printf("[INFO] Returning unique places for lobby ID: %d", lobby.ID)
 		return getUniquePlaces(apiPlaces, dbPlaces), nil
 	}
 
+	log.Printf("[INFO] Returning DB places for lobby ID: %d", lobby.ID)
 	return dbPlaces, nil
 }
+
