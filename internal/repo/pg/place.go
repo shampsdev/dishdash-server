@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	radius = config.C.Defaults.Radius
+	radius             = config.C.Defaults.Radius
 	priceAvgLowerDelta = config.C.Defaults.PriceAvgLowerDelta
 	priceAvgUpperDelta = config.C.Defaults.PriceAvgUpperDelta
 )
@@ -289,9 +289,9 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		lobby.PriceAvg-priceAvgLowerDelta,
 		lobby.PriceAvg+priceAvgUpperDelta,
 	)
-	
+
 	log.Printf("[INFO] Lobby settings: priceavg: %d - %d", lobby.PriceAvg-priceAvgLowerDelta, lobby.PriceAvg+priceAvgUpperDelta)
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
@@ -316,17 +316,16 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 }
 
 func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-    var existingID int64
+	var existingID int64
 
-    log.Printf("[INFO] Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
+	log.Printf("[INFO] Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
 
-    err := pr.db.QueryRow(ctx, `
+	err := pr.db.QueryRow(ctx, `
     SELECT id FROM "place"
     WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
-    
-    if err != nil {
+	if err != nil {
 		log.Printf("[DEBUG] Error after executing query: %v", err)
-		
+
 		if strings.Contains(err.Error(), "no rows in result set") {
 			log.Printf("[INFO] No rows found, adding new place.")
 			place := twogisPlace.ToPlace()
@@ -343,6 +342,6 @@ func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.Tw
 		}
 	}
 
-    log.Printf("[INFO] Place already exists. ID: %d", existingID)
-    return existingID, nil
+	log.Printf("[INFO] Place already exists. ID: %d", existingID)
+	return existingID, nil
 }

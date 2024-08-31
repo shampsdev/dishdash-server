@@ -69,10 +69,10 @@ func GetPlacesFromApi(params map[string]string) (string, error) {
 	reqUrl.RawQuery = query.Encode()
 
 	safeUrlString := reqUrl.String()
-    if apiKey := query.Get("key"); apiKey != "" {
-        safeUrlString = strings.Replace(safeUrlString, apiKey, "******", 1)
-    }
-    log.Printf("Sending request to API URL: %s", safeUrlString)
+	if apiKey := query.Get("key"); apiKey != "" {
+		safeUrlString = strings.Replace(safeUrlString, apiKey, "******", 1)
+	}
+	log.Printf("Sending request to API URL: %s", safeUrlString)
 
 	resp, err := http.Get(reqUrl.String())
 	if err != nil {
