@@ -106,11 +106,11 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 }
 
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
-	log.Printf("[INFO] Starting GetPlacesForLobby for lobby ID: %d", lobby.ID)
+	log.Printf("[INFO] Starting GetPlacesForLobby for lobby ID: %s", lobby.ID)
 
 	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
-		log.Printf("[ERROR] Failed to get places from database for lobby ID: %d, error: %v", lobby.ID, err)
+		log.Printf("[ERROR] Failed to get places from database for lobby ID: %s, error: %v", lobby.ID, err)
 		return nil, err
 	}
 
@@ -124,10 +124,10 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 	}
 
 	if len(dbPlaces) <= 5 {
-		log.Printf("[INFO] Fewer than 5 places found in DB for lobby ID: %d, fetching from 2GIS API.", lobby.ID)
+		log.Printf("[INFO] Fewer than 5 places found in DB for lobby ID: %s, fetching from 2GIS API.", lobby.ID)
 		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
 		if err != nil {
-			log.Printf("[ERROR] Failed to fetch places from 2GIS API for lobby ID: %d, error: %v", lobby.ID, err)
+			log.Printf("[ERROR] Failed to fetch places from 2GIS API for lobby ID: %s, error: %v", lobby.ID, err)
 			return nil, err
 		}
 
@@ -163,11 +163,19 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 			}
 		}
 
-		log.Printf("[INFO] Returning unique places for lobby ID: %d", lobby.ID)
-		return getUniquePlaces(apiPlaces, dbPlaces), nil
+		filteredPlaces := make([]*domain.Place, 0)
+		for _, place := range apiPlaces {
+			if place.PriceAvg > lobby.PriceAvg-300 && place.PriceAvg < lobby.PriceAvg+300 {
+				filteredPlaces = append(filteredPlaces, place)
+			}
+		}
+		log.Printf("[INFO] Found filtered %d places for lobby ID: %s", len(filteredPlaces), lobby.ID)
+
+		log.Printf("[INFO] Returning filtered unique places for lobby ID: %s", lobby.ID)
+		return getUniquePlaces(filteredPlaces, dbPlaces), nil
 	}
 
-	log.Printf("[INFO] Returning DB places for lobby ID: %d", lobby.ID)
+	log.Printf("[INFO] Returning DB places for lobby ID: %s", lobby.ID)
 	return dbPlaces, nil
 }
 
