@@ -311,7 +311,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
-	log.Print(fmt.Sprintf("[DEBUG] Total places from database: %d", len(places)))
+	log.Printf("[DEBUG] Total places from database: %d", len(places))
 	return places, nil
 }
 
@@ -324,7 +324,7 @@ func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.Tw
     SELECT id FROM "place"
     WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
     
-    if err != nil {
+	if err != nil {
 		log.Printf("[DEBUG] Error after executing query: %v", err)
 		
 		if strings.Contains(err.Error(), "no rows in result set") {
@@ -337,11 +337,11 @@ func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.Tw
 			}
 			log.Printf("[INFO] New place saved successfully. ID: %d", id)
 			return id, nil
-		} else {
-			log.Printf("[ERROR] Unexpected error: %v", err)
-			return 0, err
 		}
-	}
+		
+		log.Printf("[ERROR] Unexpected error: %v", err)
+		return 0, err
+	}	
 
     log.Printf("[INFO] Place already exists. ID: %d", existingID)
     return existingID, nil
