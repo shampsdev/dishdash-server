@@ -54,7 +54,7 @@ golangci-lint-install:
 
 SWAG = $(shell pwd)/bin/swag
 swag-install:
-	$(call go-get-tool,$(GOLANGCI_LINT),github.com/swaggo/swag/cmd/swag@v1.16.3)
+	$(call go-get-tool,$(SWAG),github.com/swaggo/swag/cmd/swag@v1.16.3)
 
 MIGRATE = $(shell pwd)/bin/migrate
 migrate-install:
