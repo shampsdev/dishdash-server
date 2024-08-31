@@ -17,7 +17,7 @@ CREATE TABLE "place"
 CREATE TABLE "tag"
 (
     "id"   serial       NOT NULL,
-    "name" varchar(255) NOT NULL,
+    "name" varchar(255) NOT NULL UNIQUE,
     "icon" varchar(255) NOT NULL,
     PRIMARY KEY ("id")
 );
