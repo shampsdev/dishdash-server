@@ -7,8 +7,14 @@ import (
 
 	"dishdash.ru/external/twogis"
 
+	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
+)
+
+var (
+	priceAvgLowerDelta = config.C.Defaults.PriceAvgLowerDelta
+	priceAvgUpperDelta = config.C.Defaults.PriceAvgUpperDelta
 )
 
 type PlaceUseCase struct {
@@ -165,7 +171,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 
 		filteredPlaces := make([]*domain.Place, 0)
 		for _, place := range apiPlaces {
-			if place.PriceAvg > lobby.PriceAvg-300 && place.PriceAvg < lobby.PriceAvg+300 {
+			if place.PriceAvg > lobby.PriceAvg- priceAvgLowerDelta && place.PriceAvg < lobby.PriceAvg+ priceAvgUpperDelta {
 				filteredPlaces = append(filteredPlaces, place)
 			}
 		}

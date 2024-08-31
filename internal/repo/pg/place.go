@@ -9,9 +9,16 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
+	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/internal/domain"
 	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+var (
+	radius = config.C.Defaults.Radius
+	priceAvgLowerDelta = config.C.Defaults.PriceAvgLowerDelta
+	priceAvgUpperDelta = config.C.Defaults.PriceAvgUpperDelta
 )
 
 type PlaceRepo struct {
@@ -259,7 +266,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		WHERE ST_DWithin(
 				p.location,
 				ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
-				4000
+				$3
 			)
 		  AND p.id IN (
 				SELECT pt.place_id 
@@ -268,8 +275,8 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 				GROUP BY pt.place_id
 				%s
 			)
-		  AND p.price_avg > $3
-		  AND p.price_avg < $4
+		  AND p.price_avg > $4
+		  AND p.price_avg < $5
 		  GROUP BY p.id;
 	`
 
@@ -278,11 +285,12 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 	rows, err := pr.db.Query(ctx, query,
 		lobby.Location.Lon,
 		lobby.Location.Lat,
-		lobby.PriceAvg-300,
-		lobby.PriceAvg+300,
+		radius,
+		lobby.PriceAvg-priceAvgLowerDelta,
+		lobby.PriceAvg+priceAvgUpperDelta,
 	)
 	
-	log.Printf("[INFO] Lobby settings: priceavg: %d - %d", lobby.PriceAvg-300, lobby.PriceAvg+300)
+	log.Printf("[INFO] Lobby settings: priceavg: %d - %d", lobby.PriceAvg-priceAvgLowerDelta, lobby.PriceAvg+priceAvgUpperDelta)
 	
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)

@@ -27,6 +27,13 @@ type Config struct {
 		Key string `envconfig:"TWOGIS_API_KEY"`
 		Url string `envconfig:"TWOGIS_API_URL"`
 	}
+	Defaults struct {
+		PriceAvg int     `default:"500" envconfig:"DEFAULT_PRICE_AVG"`
+		PriceAvgUpperDelta int `default:"100" envconfig:"DEFAULT_UPPER_DELTA_AVG"`
+		PriceAvgLowerDelta int `default:"300" envconfig:"DEFAULT_LOWER_DELTA_AVG"`
+		Radius   int `default:"4000" envconfig:"DEFAULT_RADIUS"`
+		MinDBPlaces int    `default:"5" envconfig:"DEFAULT_MIN_DB_PLACES"`
+	}	
 }
 
 var C Config
