@@ -11,6 +11,8 @@ import (
 	"testing"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/jinzhu/copier"
 	"github.com/stretchr/testify/assert"
@@ -44,6 +46,13 @@ type eventData struct {
 	Data map[string]interface{}
 }
 
+func emitFuncWithLog(cli *socketio.Client, user string) func(event string, args ...interface{}) {
+	return func(event string, args ...interface{}) {
+		log.Debugf("<User %s> emit %s", user, event)
+		cli.Emit(event, args...)
+	}
+}
+
 func newSocketIOSession() *SocketIOSession {
 	return &SocketIOSession{
 		UserEvents: make(map[string]*eventCollection),
@@ -60,7 +69,12 @@ func (s *SocketIOSession) Save(filename string) error {
 	defer file.Close()
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
-	return encoder.Encode(s.UserEvents)
+	err = encoder.Encode(s.UserEvents)
+	if err != nil {
+		return err
+	}
+	log.WithField("file", filename).Info("SocketIOSession saved")
+	return nil
 }
 
 func LoadSocketIOSession(filename string) (*SocketIOSession, error) {
@@ -83,6 +97,8 @@ func (s *SocketIOSession) addUser(user string) {
 
 func (s *SocketIOSession) sioAddFunc(user, eventName string) func(socketio.Conn, map[string]interface{}) {
 	return func(_ socketio.Conn, data map[string]interface{}) {
+		log.WithFields(log.Fields{"user": user, "event": eventName}).
+			Info("Received event")
 		s.add(user, eventData{
 			Name: eventName,
 			Data: data,
@@ -102,6 +118,7 @@ func (s *SocketIOSession) newStep(name string) {
 	for k := range s.UserEvents {
 		s.UserEvents[k].newStep(name)
 	}
+	log.Infof("New step: %s", name)
 }
 
 func AssertSocketIOSession(t *testing.T, exp, actual *SocketIOSession) {

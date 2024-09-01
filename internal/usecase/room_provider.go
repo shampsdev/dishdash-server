@@ -2,8 +2,9 @@ package usecase
 
 import (
 	"context"
-	"log"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type RoomRepo interface {
@@ -37,7 +38,7 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 			return nil, err
 		}
 
-		log.Printf("create room: %s", id)
+		log.Infof("Create room: %s", id)
 		room := NewRoom(lobby, r.lobbyUseCase, r.placesUseCase)
 		r.rooms[id] = room
 		return room, nil
@@ -49,6 +50,6 @@ func (r *InMemoryRoomRepo) DeleteRoom(_ context.Context, id string) error {
 	r.roomsMutex.Lock()
 	defer r.roomsMutex.Unlock()
 	delete(r.rooms, id)
-	log.Printf("deleted room: %s", id)
+	log.Infof("Deleted room: %s", id)
 	return nil
 }

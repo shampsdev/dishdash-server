@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/cmd/server/config"
 	server "dishdash.ru/internal/gateways"
@@ -19,19 +20,19 @@ func StartServer(cases usecase.Cases) context.CancelFunc {
 	s := server.NewServer(cases)
 
 	go func() {
-		log.Println("starting server")
+		log.Info("starting server")
 		err := s.Run(ctx)
 		if !errors.Is(err, http.ErrServerClosed) {
 			log.Fatal(err)
 		}
-		log.Println("server closed")
+		log.Info("server closed")
 	}()
 
 	for !healthCheck() {
-		log.Println("waiting for server to start")
+		log.Info("waiting for server to start")
 		time.Sleep(1 * time.Second)
 	}
-	log.Println("server started")
+	log.Info("server started")
 
 	return stop
 }

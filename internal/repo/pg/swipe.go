@@ -2,7 +2,7 @@ package pg
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -30,8 +30,7 @@ func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 		swipe.Type,
 	)
 	if err != nil {
-		log.Printf("Error saving swipe: %v\n", err)
-		return err
+		return fmt.Errorf("can't save swipe: %w", err)
 	}
 	return nil
 }

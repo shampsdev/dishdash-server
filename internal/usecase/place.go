@@ -3,7 +3,8 @@ package usecase
 import (
 	"context"
 	"errors"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/external/twogis"
 
@@ -112,50 +113,50 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 }
 
 func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error) {
-	log.Printf("[INFO] Starting GetPlacesForLobby for lobby ID: %s", lobby.ID)
+	log.Debugf("Starting GetPlacesForLobby for lobby ID: %s", lobby.ID)
 
 	dbPlaces, err := p.pRepo.GetPlacesForLobby(ctx, lobby)
 	if err != nil {
-		log.Printf("[ERROR] Failed to get places from database for lobby ID: %s, error: %v", lobby.ID, err)
+		log.WithError(err).Debugf("Failed to get places from database for lobby ID: %s", lobby.ID)
 		return nil, err
 	}
 
 	for _, place := range dbPlaces {
-		log.Printf("[INFO] Fetching tags for place ID: %d", place.ID)
+		log.Infof("Fetching tags for place ID: %d", place.ID)
 		place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
 		if err != nil {
-			log.Printf("[ERROR] Failed to get tags for place ID: %d, error: %v", place.ID, err)
+			log.WithError(err).Debugf("Failed to get tags for place ID: %d", place.ID)
 			return nil, err
 		}
 	}
 
 	if len(dbPlaces) < config.C.Defaults.MinDBPlaces {
-		log.Printf("[INFO] Fewer than 5 places found in DB for lobby ID: %s, fetching from 2GIS API.", lobby.ID)
+		log.Debugf("Fewer than 5 places found in DB for lobby ID: %s, fetching from 2GIS API.", lobby.ID)
 		twoGisPlaces, err := twogis.FetchPlacesForLobbyFromAPI(lobby)
 		if err != nil {
-			log.Printf("[ERROR] Failed to fetch places from 2GIS API for lobby ID: %s, error: %v", lobby.ID, err)
+			log.WithError(err).Debugf("Failed to fetch places from 2GIS API for lobby ID: %s", lobby.ID)
 			return nil, err
 		}
 
 		apiPlaces := make([]*domain.Place, 0)
 		for _, twoGisPlace := range twoGisPlaces {
 			// TODO: check lobby params before addint to unique
-			log.Printf("[INFO] Processing 2GIS place: %s", twoGisPlace.Name)
+			log.Debugf("Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
 
 			tags, err := p.tRepo.SaveApiTag(ctx, twoGisPlace)
 			if err != nil {
-				log.Printf("[ERROR] Failed to save tags for 2GIS place: %s, error: %v", twoGisPlace.Name, err)
+				log.WithError(err).Errorf("Failed to save tags for 2GIS place: %s", twoGisPlace.Name)
 				return nil, err
 			}
 
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
 			if errors.Is(err, repo.ErrPlaceExists) {
-				log.Printf("[INFO] Place already exists in DB, skipping 2GIS place: %s", twoGisPlace.Name)
+				log.Debugf("Place already exists in DB, skipping 2GIS place: %s", twoGisPlace.Name)
 				continue
 			}
 			if err != nil {
-				log.Printf("[ERROR] Failed to save 2GIS place: %s, error: %v", twoGisPlace.Name, err)
+				log.WithError(err).Errorf("Failed to save 2GIS place: %s", twoGisPlace.Name)
 				return nil, err
 			}
 
@@ -164,7 +165,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 
 			err = p.tRepo.AttachTagsToPlace(ctx, tags, placeId)
 			if err != nil {
-				log.Printf("[ERROR] Failed to attach tags to place ID: %d, error: %v", placeId, err)
+				log.WithError(err).Errorf("Failed to attach tags to place ID: %d", placeId)
 				return nil, err
 			}
 		}
@@ -175,12 +176,12 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 				filteredPlaces = append(filteredPlaces, place)
 			}
 		}
-		log.Printf("[INFO] Found filtered %d places for lobby ID: %s", len(filteredPlaces), lobby.ID)
+		log.Debugf("Found filtered %d places for lobby ID: %s", len(filteredPlaces), lobby.ID)
 
-		log.Printf("[INFO] Returning filtered unique places for lobby ID: %s", lobby.ID)
+		log.Debugf("Returning filtered unique places for lobby ID: %s", lobby.ID)
 		return getUniquePlaces(filteredPlaces, dbPlaces), nil
 	}
 
-	log.Printf("[INFO] Returning DB places for lobby ID: %s", lobby.ID)
+	log.Debugf("Returning DB places for lobby ID: %s", lobby.ID)
 	return dbPlaces, nil
 }

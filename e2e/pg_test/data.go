@@ -2,7 +2,8 @@ package pg_test
 
 import (
 	"context"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo/pg"
@@ -119,6 +120,6 @@ func ResetData(cases usecase.Cases) error {
 		}
 	}
 
-	log.Printf("setup data")
+	log.Info("Successfully reset data")
 	return nil
 }

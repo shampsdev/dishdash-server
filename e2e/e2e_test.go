@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"dishdash.ru/e2e/tests"
 
 	"dishdash.ru/cmd/server/config"
@@ -119,4 +121,13 @@ func goldenPath(name string) string {
 
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
+}
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
+	log.SetLevel(log.DebugLevel)
 }

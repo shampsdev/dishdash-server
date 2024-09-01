@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	http "dishdash.ru/internal/gateways/http"
-	ws "dishdash.ru/internal/gateways/ws"
-	"dishdash.ru/internal/usecase"
+	"dishdash.ru/internal/gateways/http"
+	"dishdash.ru/internal/gateways/ws"
 
+	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
 	"github.com/tj/go-spin"
 
@@ -24,7 +24,8 @@ type Server struct {
 }
 
 func NewServer(useCases usecase.Cases) *Server {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
 
 	s := &Server{
 		HttpServer: http.NewServer(useCases, r),

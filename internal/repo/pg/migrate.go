@@ -3,10 +3,11 @@ package pg
 import (
 	"errors"
 	"fmt"
-	"log"
 	"path/filepath"
 	"runtime"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/golang-migrate/migrate/v4"
 
@@ -24,7 +25,7 @@ const (
 
 func init() {
 	if !config.C.DB.AutoMigrate {
-		log.Println("Database migrator is disabled")
+		log.Info("Database migrator is disabled")
 		return
 	}
 	if err := MigrateUp(); err != nil {
@@ -52,7 +53,7 @@ func MigrateUp() error {
 			break
 		}
 
-		log.Printf("Migrate: pgdb is trying to connect, attempts left: %d, error: %s", attempts, err.Error())
+		log.Infof("Migrate: pgdb is trying to connect, attempts left: %d, error: %s", attempts, err.Error())
 		time.Sleep(defaultTimeout)
 		attempts--
 	}
@@ -68,11 +69,11 @@ func MigrateUp() error {
 	}
 
 	if errors.Is(err, migrate.ErrNoChange) {
-		log.Printf("Migrate up: no changes")
+		log.Info("Migrate up: no changes")
 		return nil
 	}
 
-	log.Printf("Migrate up: success")
+	log.Info("Migrate up: success")
 	return nil
 }
 
@@ -96,7 +97,7 @@ func MigrateDown() error {
 			break
 		}
 
-		log.Printf("Migrate down: pgdb is trying to connect, attempts left: %d, error: %s", attempts, err.Error())
+		log.Infof("Migrate down: pgdb is trying to connect, attempts left: %d, error: %s", attempts, err.Error())
 		time.Sleep(defaultTimeout)
 		attempts--
 	}
@@ -112,10 +113,10 @@ func MigrateDown() error {
 	}
 
 	if errors.Is(err, migrate.ErrNoChange) {
-		log.Printf("Migrate down: no changes")
+		log.Info("Migrate down: no changes")
 		return nil
 	}
 
-	log.Printf("Migrate down: success")
+	log.Info("Migrate down: success")
 	return nil
 }

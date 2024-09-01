@@ -3,7 +3,8 @@ package pg
 import (
 	"context"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v5"
 
@@ -174,11 +175,11 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 
 func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
 	var placeTags []int64
-	log.Printf("Starting to process tags for place Name: %v", place.Name)
+	log.Debugf("Starting to process tags for place Name: %v", place.Name)
 
 	for _, rubric := range place.Rubrics {
 		var id int64
-		log.Printf("Processing tag: %s", rubric)
+		log.Debugf("Processing tag: %s", rubric)
 		err := tr.db.QueryRow(ctx, `
         WITH s AS (
             SELECT id
@@ -195,13 +196,13 @@ func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([
         SELECT id FROM s
         `, rubric).Scan(&id)
 		if err != nil {
-			log.Printf("Error inserting or fetching tag '%s': %v", rubric, err)
+			log.WithError(err).Errorf("Can't insert or fetch tag '%s'", rubric)
 			continue
 		}
-		log.Printf("Tag processed successfully: %d", id)
+		log.Debugf("Tag processed successfully: %d", id)
 		placeTags = append(placeTags, id)
 	}
 
-	log.Printf("Finished processing tags for place: %v", place.Name)
+	log.Debugf("Finished processing tags for place: %v", place.Name)
 	return placeTags, nil
 }

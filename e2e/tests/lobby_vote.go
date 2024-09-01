@@ -19,10 +19,10 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 
 	lobby := findLobby(t)
 
-	sioCli1, err := socketio.NewClient(SIOHost, nil)
+	cli1, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
-	sioCli2, err := socketio.NewClient(SIOHost, nil)
+	cli2, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
 	sioSess := newSocketIOSession()
@@ -30,8 +30,8 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	sioSess.addUser(user2.Name)
 
 	listenEvent := func(eventName string) {
-		sioCli1.OnEvent(eventName, sioSess.sioAddFunc(user1.Name, eventName))
-		sioCli2.OnEvent(eventName, sioSess.sioAddFunc(user2.Name, eventName))
+		cli1.OnEvent(eventName, sioSess.sioAddFunc(user1.Name, eventName))
+		cli2.OnEvent(eventName, sioSess.sioAddFunc(user2.Name, eventName))
 	}
 
 	listenEvent(event.Match)
@@ -39,19 +39,22 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	listenEvent(event.ReleaseMatch)
 	listenEvent(event.Finish)
 
-	assert.NoError(t, sioCli1.Connect())
-	assert.NoError(t, sioCli2.Connect())
+	assert.NoError(t, cli1.Connect())
+	assert.NoError(t, cli2.Connect())
+
+	cli1Emit := emitFuncWithLog(cli1, user1.Name)
+	cli2Emit := emitFuncWithLog(cli2, user2.Name)
 
 	sioSess.newStep("Joining lobby")
-	sioCli1.Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
-	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
-	sioCli1.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
 		PriceMin:    300,
 		PriceMax:    300,
 		MaxDistance: 4000,
@@ -60,31 +63,31 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	time.Sleep(waitTime)
 
 	sioSess.newStep("Start swipes")
-	sioCli1.Emit(event.StartSwipes)
+	cli1Emit(event.StartSwipes)
 	time.Sleep(waitTime)
 
 	sioSess.newStep("Swipe both likes (1)")
-	sioCli1.Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	sioCli2.Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	time.Sleep(waitTime)
 
 	sioSess.newStep("Vote like and dislike")
-	sioCli1.Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteLike})
-	sioCli2.Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteDislike})
+	cli1Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteLike})
+	cli2Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteDislike})
 	time.Sleep(waitTime)
 
 	sioSess.newStep("Swipe both likes (2)")
-	sioCli1.Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	sioCli2.Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	time.Sleep(waitTime)
 
 	sioSess.newStep("Vote both likes")
-	sioCli1.Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
-	sioCli2.Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
+	cli1Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
+	cli2Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
 	time.Sleep(waitTime)
 
-	assert.NoError(t, sioCli1.Close())
-	assert.NoError(t, sioCli2.Close())
+	assert.NoError(t, cli1.Close())
+	assert.NoError(t, cli2.Close())
 
 	return sioSess
 }

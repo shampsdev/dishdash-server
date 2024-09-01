@@ -4,9 +4,10 @@ package pg_test
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/cmd/server/config"
 
@@ -83,7 +84,7 @@ func createContainer(ctx context.Context) (testcontainers.Container, *pgxpool.Po
 	portNum, _ := strconv.ParseInt(p.Port(), 10, 32)
 	config.C.DB.Port = uint16(portNum)
 
-	log.Println("postgres container ready and running at port: ", p.Port())
+	log.Info("postgres container ready and running at port: ", p.Port())
 
 	time.Sleep(time.Second)
 

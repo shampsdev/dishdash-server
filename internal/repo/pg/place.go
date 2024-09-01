@@ -3,9 +3,10 @@ package pg
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v5"
 
@@ -63,8 +64,7 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 	var id int64
 	err := row.Scan(&id)
 	if err != nil {
-		log.Printf("Error saving place: %v\n", err)
-		return 0, err
+		return 0, fmt.Errorf("can't save place: %w", err)
 	}
 	return id, nil
 }
@@ -89,8 +89,7 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 	row := pr.db.QueryRow(ctx, getPlaceQuery, id)
 	place, err := scanPlace(row)
 	if err != nil {
-		log.Printf("Error fetching places: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("can't fetch place: %w", err)
 	}
 	return place, nil
 }
@@ -113,8 +112,7 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 `
 	rows, err := pr.db.Query(ctx, getPlacesQuery)
 	if err != nil {
-		log.Printf("Error fetching places: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("can't fetch places: %w", err)
 	}
 	defer rows.Close()
 
@@ -122,15 +120,13 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 	for rows.Next() {
 		place, err := scanPlace(rows)
 		if err != nil {
-			log.Printf("Error scanning place: %v\n", err)
-			return nil, err
+			return nil, fmt.Errorf("can't scan place: %w", err)
 		}
 		places = append(places, place)
 	}
 
 	if err := rows.Err(); err != nil {
-		log.Printf("Error after scanning places: %v\n", err)
-		return nil, err
+		return nil, fmt.Errorf("error after place scan: %w", err)
 	}
 
 	return places, nil
@@ -290,7 +286,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		lobby.PriceAvg+priceAvgUpperDelta,
 	)
 
-	log.Printf("[INFO] Lobby settings: priceavg: %d - %d", lobby.PriceAvg-priceAvgLowerDelta, lobby.PriceAvg+priceAvgUpperDelta)
+	log.Infof("Lobby settings: priceavg: %d - %d", lobby.PriceAvg-priceAvgLowerDelta, lobby.PriceAvg+priceAvgUpperDelta)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
@@ -311,37 +307,37 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
-	log.Printf("[DEBUG] Total places from database: %d", len(places))
+	log.Debugf("Total places from database: %d", len(places))
 	return places, nil
 }
 
 func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
 	var existingID int64
 
-	log.Printf("[INFO] Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
+	log.Debugf("Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
 
 	err := pr.db.QueryRow(ctx, `
     SELECT id FROM "place"
     WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
 	if err != nil {
-		log.Printf("[DEBUG] Error after executing query: %v", err)
+		log.Debugf("Error after executing query: %v", err)
 
 		if strings.Contains(err.Error(), "no rows in result set") {
-			log.Printf("[INFO] No rows found, adding new place.")
+			log.Debug("No rows found, adding new place.")
 			place := twogisPlace.ToPlace()
 			id, err := pr.SavePlace(ctx, place)
 			if err != nil {
-				log.Printf("[ERROR] Failed to save new place: %v", err)
-				return 0, err
+				log.WithError(err).Error("Failed to save new place")
+				return 0, fmt.Errorf("failed to save place: %w", err)
 			}
-			log.Printf("[INFO] New place saved successfully. ID: %d", id)
+			log.Debugf("New place saved successfully. ID: %d", id)
 			return id, nil
 		}
 
-		log.Printf("[ERROR] Unexpected error: %v", err)
+		log.WithError(err).Error("Unexpected error")
 		return 0, err
 	}
 
-	log.Printf("[INFO] Place already exists. ID: %d", existingID)
+	log.Debugf("Place already exists. ID: %d", existingID)
 	return existingID, nil
 }

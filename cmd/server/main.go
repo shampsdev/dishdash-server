@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,6 +13,7 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	server "dishdash.ru/internal/gateways"
+	log "github.com/sirupsen/logrus"
 )
 
 // @title           DishDash server
@@ -28,12 +28,21 @@ func main() {
 	pgConfig := config.C.PGXConfig()
 	pool, err := pgxpool.NewWithConfig(ctx, pgConfig)
 	if err != nil {
-		log.Fatalf("can't create new database pool")
+		log.Fatal("can't create new database pool")
 	}
 	defer pool.Close()
 
 	s := server.NewServer(usecase.Setup(pool))
 	if err := s.Run(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Printf("error during server shutdown: %v", err)
+		log.WithError(err).Error("error during server shutdown")
 	}
+}
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
+	log.SetLevel(log.DebugLevel)
 }

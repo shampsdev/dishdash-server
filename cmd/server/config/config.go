@@ -3,7 +3,8 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -41,7 +42,7 @@ var C Config
 func init() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Println("[INFO] no .env file, parsed exported variables")
+		log.Info("no .env file, parsed exported variables")
 	}
 	err = envconfig.Process("", &C)
 	if err != nil {
@@ -49,22 +50,22 @@ func init() {
 	}
 	if C.TwoGisApi.Url == "" {
 		C.TwoGisApi.Url = "https://catalog.api.2gis.com/3.0/items"
-		log.Println("[WARNING] No two gis api url, using default one: " + C.TwoGisApi.Url)
+		log.Warn("No two gis api url, using default one: " + C.TwoGisApi.Url)
 	}
 	if C.TwoGisApi.Key == "" {
-		log.Println("[FATAL] TwoGisApi.ApiKey is null or not set")
+		log.Error("TwoGisApi.ApiKey is null or not set")
 	}
 }
 
 func Print() {
 	if C.DevMode {
-		log.Println("[INFO] Launched in DEV mode")
+		log.Info("Launched in DEV mode")
 		data, _ := json.MarshalIndent(C, "", "\t")
 		fmt.Println("=== CONFIG ===")
 		fmt.Println(string(data))
 		fmt.Println("==============")
 	} else {
-		log.Println("[INFO] Launched in production mode")
+		log.Info("Launched in production mode")
 	}
 }
 

@@ -22,36 +22,39 @@ func LobbyJoin(t *testing.T) *SocketIOSession {
 
 	lobby := findLobby(t)
 
-	sioCli1, err := socketio.NewClient(SIOHost, nil)
+	cli1, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
-	sioCli2, err := socketio.NewClient(SIOHost, nil)
+	cli2, err := socketio.NewClient(SIOHost, nil)
 	assert.NoError(t, err)
 
 	sioSess := newSocketIOSession()
 	sioSess.addUser(user1.Name)
 	sioSess.addUser(user2.Name)
 
-	sioCli1.OnEvent(event.UserJoined, sioSess.sioAddFunc(user1.Name, event.UserJoined))
-	sioCli2.OnEvent(event.UserJoined, sioSess.sioAddFunc(user2.Name, event.UserJoined))
+	cli1.OnEvent(event.UserJoined, sioSess.sioAddFunc(user1.Name, event.UserJoined))
+	cli2.OnEvent(event.UserJoined, sioSess.sioAddFunc(user2.Name, event.UserJoined))
 
-	assert.NoError(t, sioCli1.Connect())
-	assert.NoError(t, sioCli2.Connect())
+	assert.NoError(t, cli1.Connect())
+	assert.NoError(t, cli2.Connect())
 
 	sioSess.newStep("Joining lobby")
-	sioCli1.Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli1Emit := emitFuncWithLog(cli1, user1.Name)
+	cli2Emit := emitFuncWithLog(cli2, user2.Name)
+
+	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
 	time.Sleep(waitTime)
-	sioCli2.Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
 	time.Sleep(waitTime)
 
-	assert.NoError(t, sioCli1.Close())
-	assert.NoError(t, sioCli2.Close())
+	assert.NoError(t, cli1.Close())
+	assert.NoError(t, cli2.Close())
 
 	return sioSess
 }

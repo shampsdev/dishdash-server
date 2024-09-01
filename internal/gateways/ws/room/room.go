@@ -3,8 +3,9 @@ package room
 import (
 	"context"
 	"fmt"
-	"log"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/gateways/ws/event"
@@ -17,16 +18,22 @@ type Context struct {
 	lock sync.RWMutex
 	User *domain.User
 	Room *usecase.Room
+	Log  *log.Entry
 }
 
 func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	handleError := func(conn socketio.Conn, err error) {
-		log.Printf("[ERROR] %s", err.Error())
+		if c, ok := conn.Context().(*Context); ok {
+			c.Log.Error(err)
+		} else {
+			log.Error(err)
+		}
+
 		conn.Emit(event.Error, event.ErrorEvent{
 			Error: err.Error(),
 		})
 		if err := conn.Close(); err != nil {
-			log.Printf("Error while closing connection: %v", err)
+			log.WithError(err).Error("Error closing connection")
 		}
 	}
 
@@ -68,11 +75,15 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		c := &Context{
 			User: user,
 			Room: room,
+			Log: log.WithFields(log.Fields{
+				"room": room.ID,
+				"user": user.ID,
+			}),
 		}
 		c.lock.Lock()
 		conn.SetContext(c)
 		c.lock.Unlock()
-		log.Printf("<user %s> joined to <lobby %s>", joinEvent.UserID, joinEvent.LobbyID)
+		c.Log.Info("User joined")
 
 		broadcastToOthersInRoom(s, c.User.ID, c.Room.ID, event.UserJoined,
 			event.UserJoinedEvent{
@@ -130,7 +141,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
-		log.Printf("start swipes in <lobby %s>", c.Room.ID)
+		c.Log.Info("Start swipes")
 		s.BroadcastToRoom("", c.Room.ID, event.StartSwipes)
 		s.ForEach("", c.Room.ID, func(conn socketio.Conn) {
 			c, ok := getContext(conn)
@@ -171,8 +182,8 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		})
 	})
 
-	s.OnError("/", func(_ socketio.Conn, e error) {
-		log.Println("faced error: ", e)
+	s.OnError("/", func(conn socketio.Conn, e error) {
+		handleError(conn, e)
 	})
 
 	voteLock := sync.RWMutex{}
@@ -211,7 +222,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	s.OnDisconnect("/", func(conn socketio.Conn, msg string) {
 		c, ok := getContext(conn)
 		if !ok {
-			log.Println("disconnected: ", msg)
+			log.Infof("disconnected with msg \"%s\" ", msg)
 			return
 		}
 
@@ -229,11 +240,11 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 				Avatar: c.User.Avatar,
 			})
 
-		log.Printf("<user %s> leave <lobby %s>", c.User.ID, c.Room.ID)
+		c.Log.Info("Leave room")
 		if c.Room.Empty() {
 			err = cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
 			if err != nil {
-				log.Println("error while deleting room: ", err)
+				c.Log.WithError(err).Error("error while deleting room")
 			}
 		}
 	})
