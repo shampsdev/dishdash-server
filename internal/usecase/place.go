@@ -150,6 +150,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 				return nil, err
 			}
 
+			// TODO: remove savings to DB, just attach
 			placeId, err := p.SaveTwoGisPlace(ctx, twoGisPlace)
 			if errors.Is(err, repo.ErrPlaceExists) {
 				log.Debugf("Place already exists in DB, skipping 2GIS place: %s", twoGisPlace.Name)

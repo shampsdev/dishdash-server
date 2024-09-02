@@ -173,6 +173,7 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	return tags, nil
 }
 
+// TODO: Change logic
 func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
 	var placeTags []int64
 	log.Debugf("Starting to process tags for place Name: %v", place.Name)
