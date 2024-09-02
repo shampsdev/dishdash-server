@@ -112,21 +112,20 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Plac
 	return uniquePlaces
 }
 
-func fetchTagIDsByNames(place *domain.TwoGisPlace, tags []*domain.Tag) ([]int64, error) {
-	log.Debugf("Fetching tag IDs for api place: %s", place.Name)
+func fetchTagIDsByNames(apiRubrics []string, tags []*domain.Tag) ([]int64, error) {
 	tagIDs := make([]int64, 0)
 	tagMap := make(map[string]int64, len(tags))
 
 	for _, tag := range tags {
 		tagMap[tag.Name] = tag.ID
 	}
-	for _, rubric := range place.Rubrics {
+	for _, rubric := range apiRubrics {
 		tagID, found := tagMap[rubric]
 		if found {
 			tagIDs = append(tagIDs, tagID)
 		}
 	}
-	log.Debugf("Fetched %d tags for api place: %s", len(tagIDs), place.Name)
+
 	return tagIDs, nil
 }
 
@@ -167,7 +166,10 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 			log.Debugf("Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
 
-			placeTags, err := fetchTagIDsByNames(twoGisPlace, existingTags)
+			log.Debugf("Fetching tag IDs for api place: %s", twoGisPlace.Name)
+			placeTags, err := fetchTagIDsByNames(twoGisPlace.Rubrics, existingTags)
+			log.Debugf("Fetched %d tags for api place: %s", len(placeTags), twoGisPlace.Name)
+
 			if err != nil {
 				log.WithError(err).Errorf("Failed to fetch tag IDs for 2GIS place: %s", twoGisPlace.Name)
 				return nil, err
