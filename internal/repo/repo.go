@@ -11,6 +11,9 @@ type Tag interface {
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
 	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 
+	DeleteTag(ctx context.Context, tagId int64) error
+	UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
+
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
 	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
 

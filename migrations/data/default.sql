@@ -1,4 +1,4 @@
 INSERT INTO "tag" ("name", "icon")
-VALUES ('Бар', 'bar.png'),
+VALUES ('Бары', 'bar.png'),
        ('Кафе', 'cafe.png'),
        ('Рестораны', 'restaurant.png');

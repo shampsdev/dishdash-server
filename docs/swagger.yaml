@@ -336,6 +336,50 @@ paths:
       summary: Create a place
       tags:
       - places
+  /places/tag/{id}:
+    delete:
+      description: Delete an existing tag from the database
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tag deleted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Delete a tag
+      tags:
+      - places
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update a tag
+      tags:
+      - places
   /places/tags:
     get:
       consumes:
