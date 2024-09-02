@@ -121,7 +121,7 @@ func fetchTagIDsByNames(place *domain.TwoGisPlace, tags []*domain.Tag) ([]int64,
 		tagMap[tag.Name] = tag.ID
 	}
 	for _, rubric := range place.Rubrics {
-		tagID, found := tagMap[rubric];
+		tagID, found := tagMap[rubric]
 		if found {
 			tagIDs = append(tagIDs, tagID)
 		}
@@ -167,9 +167,8 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 			log.Debugf("Processing 2GIS place: %s", twoGisPlace.Name)
 			parsedPlace := twoGisPlace.ToPlace()
 
-			// TODO: remove savings to DB, just attach
 			placeTags, err := fetchTagIDsByNames(twoGisPlace, existingTags)
-			if err!= nil {
+			if err != nil {
 				log.WithError(err).Errorf("Failed to fetch tag IDs for 2GIS place: %s", twoGisPlace.Name)
 				return nil, err
 			}

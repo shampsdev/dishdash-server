@@ -31,6 +31,24 @@ func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) 
 	return id, err
 }
 
+func (tr *TagRepo) DeleteTag(ctx context.Context, tagId int64) error {
+	query := `DELETE FROM tag WHERE id=$1`
+	_, err := tr.db.Exec(ctx, query, tagId)
+	if err != nil {
+		return fmt.Errorf("could not delete tag: %w", err)
+	}
+	return nil
+}
+
+func (tr *TagRepo) UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error) {
+	query := `UPDATE tag SET name = $1, icon = $2 WHERE id = $3`
+	_, err := tr.db.Exec(ctx, query, tag.Name, tag.Icon, tag.ID)
+	if err != nil {
+		return tag, fmt.Errorf("could not update tag: %w", err)
+	}
+	return tag, nil
+}
+
 func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error {
 	if len(tagIDs) == 0 {
 		return nil
@@ -173,7 +191,6 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	return tags, nil
 }
 
-// TODO: Change logic
 func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
 	var placeTags []int64
 	log.Debugf("Starting to process tags for place Name: %v", place.Name)
