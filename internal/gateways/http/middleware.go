@@ -28,7 +28,7 @@ func allowOriginMiddleware() gin.HandlerFunc {
 func logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.WithFields(log.Fields{
-			"clientIP":     c.ClientIP(),
+			"clientIP": c.ClientIP(),
 		}).Infof("[%s] %s %d", c.Request.Method, c.Request.RequestURI, c.Writer.Status())
 	}
 }
