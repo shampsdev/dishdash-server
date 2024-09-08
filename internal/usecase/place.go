@@ -94,7 +94,7 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	return places, nil
 }
 
-func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place, lobbyLocation domain.Coordinate) []*domain.Place {
+func getUniquePlaces(placesFromApi, placesFromDB []*domain.Place, lobbyLocation domain.Coordinate) []*domain.Place {
 	uniquePlacesMap := make(map[string]*domain.Place)
 	uniquePlaces := make([]*domain.Place, 0)
 
@@ -107,10 +107,10 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place, lobbyLocation 
 		uniquePlacesMap[key] = apiPlace
 	}
 
-	for _, bdPlace := range placesFromBD {
-		key := makeKey(bdPlace)
+	for _, dbPlace := range placesFromDB {
+		key := makeKey(dbPlace)
 		if _, exists := uniquePlacesMap[key]; !exists {
-			uniquePlacesMap[key] = bdPlace
+			uniquePlacesMap[key] = dbPlace
 		}
 	}
 
