@@ -110,6 +110,11 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		if c.Room.Swiping() {
 			conn.Emit(event.StartSwipes)
 		}
+		if c.Room.Finished() {
+			conn.Emit(event.Finish, event.FinishEvent{
+				Result: c.Room.Result(),
+			})
+		}
 	})
 
 	s.OnEvent("/", event.SettingsUpdate, func(conn socketio.Conn, se event.SettingsUpdateEvent) {

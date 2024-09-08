@@ -46,7 +46,7 @@ type eventData struct {
 	Data map[string]interface{}
 }
 
-func emitFuncWithLog(cli *socketio.Client, user string) func(event string, args ...interface{}) {
+func emitWithLogFunc(cli *socketio.Client, user string) func(event string, args ...interface{}) {
 	return func(event string, args ...interface{}) {
 		log.Debugf("<User %s> emit %s", user, event)
 		cli.Emit(event, args...)

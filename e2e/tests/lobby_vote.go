@@ -42,8 +42,8 @@ func LobbyVote(t *testing.T) *SocketIOSession {
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
 
-	cli1Emit := emitFuncWithLog(cli1, user1.Name)
-	cli2Emit := emitFuncWithLog(cli2, user2.Name)
+	cli1Emit := emitWithLogFunc(cli1, user1.Name)
+	cli2Emit := emitWithLogFunc(cli2, user2.Name)
 
 	sioSess.newStep("Joining lobby")
 	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
