@@ -5,8 +5,6 @@ import (
 	"errors"
 	"sort"
 
-	geo "github.com/kellydunn/golang-geo"
-
 	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/external/twogis"
@@ -122,12 +120,8 @@ func getUniquePlaces(placesFromApi, placesFromDB []*domain.Place, lobbyLocation 
 		place1 := uniquePlaces[i]
 		place2 := uniquePlaces[j]
 
-		place1Location := geo.NewPoint(place1.Location.Lat, place1.Location.Lon)
-		place2Location := geo.NewPoint(place2.Location.Lat, place2.Location.Lon)
-		lobbyPoint := geo.NewPoint(lobbyLocation.Lat, lobbyLocation.Lon)
-
-		dist1 := place1Location.GreatCircleDistance(lobbyPoint)
-		dist2 := place2Location.GreatCircleDistance(lobbyPoint)
+		dist1 := place1.Location.GreatCircleDistance(&lobbyLocation)
+		dist2 := place2.Location.GreatCircleDistance(&lobbyLocation)
 
 		return dist1 < dist2
 	})
