@@ -109,6 +109,11 @@ func (r *Room) AddUser(user *domain.User) error {
 		return fmt.Errorf("user %s already exists", user.ID)
 	}
 	r.users[user.ID] = user
+
+	if r.state == Swiping {
+		r.usersPlace[user.ID] = r.places[0]
+	}
+
 	return nil
 }
 
@@ -219,6 +224,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	}
 
 	log.Info("Swipes successfully started")
+	r.state = Swiping
 	return nil
 }
 

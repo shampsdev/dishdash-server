@@ -72,7 +72,7 @@ type sessionTest struct {
 	Run        func(t *testing.T) *tests.SocketIOSession
 }
 
-var sessionTests = []sessionTest{
+var testData = []sessionTest{
 	{
 		Name:       "LobbyJoin",
 		GoldenFile: "lobby_join",
@@ -88,10 +88,15 @@ var sessionTests = []sessionTest{
 		GoldenFile: "lobby_vote",
 		Run:        tests.LobbyVote,
 	},
+	{
+		Name:       "DiffTimeJoin",
+		GoldenFile: "diff_time_join",
+		Run:        tests.DiffTimeJoin,
+	},
 }
 
 func (suite *E2ETestSuite) Test_SessionTests() {
-	for _, td := range sessionTests {
+	for _, td := range testData {
 		suite.T().Run(td.Name, func(t *testing.T) {
 			var s *tests.SocketIOSession
 			defer func() {
