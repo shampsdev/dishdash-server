@@ -273,7 +273,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			)
 		  AND p.price_avg > $4
 		  AND p.price_avg < $5
-		  GROUP BY p.id;
+		  GROUP BY p.id
 	`
 
 	query = fmt.Sprintf(query, parseTagsToQuery(lobby))

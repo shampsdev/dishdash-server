@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"sort"
 
 	log "github.com/sirupsen/logrus"
 
@@ -91,21 +92,44 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	return places, nil
 }
 
-func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place) []*domain.Place {
-	// TODO: better asymptotic
+func getUniquePlaces(placesFromApi, placesFromDB []*domain.Place, lobbyLocation domain.Coordinate) []*domain.Place {
+	uniquePlacesMap := make(map[string]*domain.Place)
 	uniquePlaces := make([]*domain.Place, 0)
-	uniquePlaces = append(uniquePlaces, placesFromApi...)
 
-	for _, bdPlace := range placesFromBD {
-		exists := false
-		for _, apiPlace := range uniquePlaces {
-			if bdPlace.Equals(apiPlace) {
-				exists = true
-				break
-			}
+	makeKey := func(place *domain.Place) string {
+		return place.Title + "_" + place.Address
+	}
+
+	for _, apiPlace := range placesFromApi {
+		key := makeKey(apiPlace)
+		uniquePlacesMap[key] = apiPlace
+	}
+
+	for _, dbPlace := range placesFromDB {
+		key := makeKey(dbPlace)
+		if _, exists := uniquePlacesMap[key]; !exists {
+			uniquePlacesMap[key] = dbPlace
 		}
-		if !exists {
-			uniquePlaces = append(uniquePlaces, bdPlace)
+	}
+
+	for _, place := range uniquePlacesMap {
+		uniquePlaces = append(uniquePlaces, place)
+	}
+
+	sort.Slice(uniquePlaces, func(i, j int) bool {
+		place1 := uniquePlaces[i]
+		place2 := uniquePlaces[j]
+
+		dist1 := place1.Location.GreatCircleDistance(&lobbyLocation)
+		dist2 := place2.Location.GreatCircleDistance(&lobbyLocation)
+
+		return dist1 < dist2
+	})
+
+	if config.C.DEBUG {
+		for _, place := range uniquePlaces {
+			log.WithFields(log.Fields{"id": place.ID, "title": place.Title, "address": place.Address}).
+				Info("Got places for lobby")
 		}
 	}
 
@@ -204,7 +228,7 @@ func (p PlaceUseCase) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby
 		log.Debugf("Found filtered %d places for lobby ID: %s", len(filteredPlaces), lobby.ID)
 
 		log.Debugf("Returning filtered unique places for lobby ID: %s", lobby.ID)
-		return getUniquePlaces(filteredPlaces, dbPlaces), nil
+		return getUniquePlaces(filteredPlaces, dbPlaces, lobby.Location), nil
 	}
 
 	log.Debugf("Returning DB places for lobby ID: %s", lobby.ID)

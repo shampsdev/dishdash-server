@@ -12,8 +12,8 @@ import (
 )
 
 type Config struct {
-	DevMode bool `default:"false" envconfig:"DEV_MODE"`
-	Server  struct {
+	DEBUG  bool `default:"false" envconfig:"DEBUG"`
+	Server struct {
 		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
 	}
 	DB struct {
@@ -58,7 +58,7 @@ func init() {
 }
 
 func Print() {
-	if C.DevMode {
+	if C.DEBUG {
 		log.Info("Launched in DEV mode")
 		data, _ := json.MarshalIndent(C, "", "\t")
 		fmt.Println("=== CONFIG ===")
