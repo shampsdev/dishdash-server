@@ -5,15 +5,11 @@
         "Name": "User 1 joins lobby",
         "Events": [
           {
-            "EventName": "settingsUpdate",
+            "EventName": "userJoined",
             "Data": {
-              "maxDistance": 4000,
-              "priceMax": 300,
-              "priceMin": 300,
-              "tags": [
-                4
-              ],
-              "userId": "id1"
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
             }
           },
           {
@@ -27,11 +23,15 @@
             }
           },
           {
-            "EventName": "userJoined",
+            "EventName": "settingsUpdate",
             "Data": {
-              "avatar": "avatar1",
-              "id": "id1",
-              "name": "user1"
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ],
+              "userId": "id1"
             }
           }
         ]
@@ -96,7 +96,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-08T11:25:22.695803Z"
+                "updatedAt": "2024-09-08T19:15:15.958303Z"
               }
             }
           }
@@ -131,22 +131,6 @@
         "Name": "User 2 joins lobby",
         "Events": [
           {
-            "EventName": "settingsUpdate",
-            "Data": {
-              "maxDistance": 4000,
-              "priceMax": 600,
-              "priceMin": 0,
-              "tags": [
-                4
-              ],
-              "userId": ""
-            }
-          },
-          {
-            "EventName": "startSwipes",
-            "Data": null
-          },
-          {
             "EventName": "userJoined",
             "Data": {
               "avatar": "avatar1",
@@ -161,6 +145,22 @@
               "id": "id2",
               "name": "user2"
             }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
+          {
+            "EventName": "startSwipes",
+            "Data": null
           }
         ]
       },
@@ -202,7 +202,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-08T11:25:22.695803Z"
+                "updatedAt": "2024-09-08T19:15:15.958303Z"
               }
             }
           }
@@ -249,6 +249,42 @@
         "Name": "User 3 joins lobby",
         "Events": [
           {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar3",
+              "id": "id3",
+              "name": "user3"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
+          {
             "EventName": "finish",
             "Data": {
               "result": {
@@ -279,44 +315,8 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-08T11:25:22.695803Z"
+                "updatedAt": "2024-09-08T19:15:15.958303Z"
               }
-            }
-          },
-          {
-            "EventName": "settingsUpdate",
-            "Data": {
-              "maxDistance": 4000,
-              "priceMax": 600,
-              "priceMin": 0,
-              "tags": [
-                4
-              ],
-              "userId": ""
-            }
-          },
-          {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar1",
-              "id": "id1",
-              "name": "user1"
-            }
-          },
-          {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar2",
-              "id": "id2",
-              "name": "user2"
-            }
-          },
-          {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar3",
-              "id": "id3",
-              "name": "user3"
             }
           }
         ]

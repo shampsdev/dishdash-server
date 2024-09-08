@@ -256,7 +256,6 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			p.review_rating,
 			p.review_count,
 			p.updated_at
-			ST_Distance(p.location::geography, ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography) AS distance
 		FROM place p
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id
@@ -275,7 +274,6 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 		  AND p.price_avg > $4
 		  AND p.price_avg < $5
 		  GROUP BY p.id
-		  ORDER BY distance;
 	`
 
 	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
