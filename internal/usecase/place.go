@@ -19,7 +19,6 @@ import (
 var (
 	priceAvgLowerDelta = config.C.Defaults.PriceAvgLowerDelta
 	priceAvgUpperDelta = config.C.Defaults.PriceAvgUpperDelta
-	debug              = config.C.DevMode
 )
 
 type PlaceUseCase struct {
@@ -133,9 +132,10 @@ func getUniquePlaces(placesFromApi, placesFromBD []*domain.Place, lobbyLocation 
 		return dist1 < dist2
 	})
 
-	if debug {
+	if config.C.DEBUG {
 		for _, place := range uniquePlaces {
-			log.Printf("Place: ID=%d, Title=%s, Address=%s", place.ID, place.Title, place.Address)
+			log.WithFields(log.Fields{"id": place.ID, "title": place.Title, "address": place.Address}).
+				Info("Got places for lobby")
 		}
 	}
 
