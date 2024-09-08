@@ -99,6 +99,6 @@ func DiffTimeJoin(t *testing.T) *SocketIOSession {
 		UserID:  user3.ID,
 	})
 	time.Sleep(waitTime)
-	
+
 	return sioSess
 }
