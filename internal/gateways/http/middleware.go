@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 func allowOriginMiddleware() gin.HandlerFunc {
@@ -21,5 +22,13 @@ func allowOriginMiddleware() gin.HandlerFunc {
 		}
 
 		c.Next()
+	}
+}
+
+func logger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.WithFields(log.Fields{
+			"clientIP": c.ClientIP(),
+		}).Infof("[%s] %s %d", c.Request.Method, c.Request.RequestURI, c.Writer.Status())
 	}
 }
