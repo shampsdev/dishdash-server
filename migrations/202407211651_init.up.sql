@@ -27,7 +27,8 @@ CREATE TABLE "place_tag"
     "place_id" int NOT NULL,
     "tag_id"   int NOT NULL,
     FOREIGN KEY ("tag_id") REFERENCES "tag" ("id"),
-    FOREIGN KEY ("place_id") REFERENCES "place" ("id")
+    FOREIGN KEY ("place_id") REFERENCES "place" ("id"),
+    UNIQUE ("place_id", "tag_id")
 );
 
 CREATE TABLE "user"
