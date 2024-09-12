@@ -57,7 +57,7 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 
 	query := `INSERT INTO place_tag (tag_id, place_id) 
         VALUES ($1, $2)
-        ON CONFLICT (tag_id, place_id) DO NOTHING`
+        ON CONFLICT (place_id, tag_id) DO NOTHING`
 	for _, tagID := range tagIDs {
 		batch.Queue(query, tagID, placeID)
 	}
