@@ -119,16 +119,8 @@ definitions:
     properties:
       location:
         $ref: '#/definitions/domain.Coordinate'
-      places:
-        items:
-          type: integer
-        type: array
       priceAvg:
         type: integer
-      tags:
-        items:
-          type: integer
-        type: array
     type: object
   usecase.SavePlaceInput:
     properties:
