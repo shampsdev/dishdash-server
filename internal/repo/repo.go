@@ -41,7 +41,8 @@ type User interface {
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 
-	AttachUserToLobby(ctx context.Context, userID, lobbyID string) error
+	AttachUsersToLobby(ctx context.Context, userID []string, lobbyID string) error
+	DetachUsersFromLobby(ctx context.Context, lobbyID string) error
 	GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error)
 }
 
@@ -49,7 +50,9 @@ type Lobby interface {
 	SaveLobby(ctx context.Context, lobby *domain.Lobby) (string, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
+
 	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
+	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
 
 	NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error)
 }

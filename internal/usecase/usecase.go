@@ -29,8 +29,6 @@ type User interface {
 	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
-
-	AttachUserToLobby(ctx context.Context, userID, lobbyID string) error
 }
 
 type SavePlaceInput struct {
@@ -58,13 +56,14 @@ type Place interface {
 type SaveLobbyInput struct {
 	PriceAvg int               `json:"priceAvg"`
 	Location domain.Coordinate `json:"location"`
-	Tags     []int64           `json:"tags"`
-	Places   []int64           `json:"places"`
 }
 
-type UpdateLobbyInput struct {
-	ID string
-	SaveLobbyInput
+type UpdateLobbySettingsInput struct {
+	ID       string
+	PriceAvg int               `json:"priceAvg"`
+	Location domain.Coordinate `json:"location"`
+	Tags     []int64           `json:"tags"`
+	Places   []int64           `json:"places"`
 }
 
 type FindLobbyInput struct {
@@ -74,12 +73,15 @@ type FindLobbyInput struct {
 
 type Lobby interface {
 	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*domain.Lobby, error)
-	UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInput) (*domain.Lobby, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
 
 	FindLobby(ctx context.Context, input FindLobbyInput) (*domain.Lobby, error)
 	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
+
+	SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error)
+	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
+	SetLobbyUsers(ctx context.Context, lobbyID string, userIDs []string) ([]*domain.User, error)
 }
 
 type Swipe interface {

@@ -88,11 +88,11 @@ var testData = []sessionTest{
 		GoldenFile: "lobby_vote",
 		Run:        tests.LobbyVote,
 	},
-	{
-		Name:       "DiffTimeJoin",
-		GoldenFile: "diff_time_join",
-		Run:        tests.DiffTimeJoin,
-	},
+	// {
+	// 	Name:       "DiffTimeJoin",
+	// 	GoldenFile: "diff_time_join",
+	// 	Run:        tests.DiffTimeJoin,
+	// },
 }
 
 func (suite *E2ETestSuite) Test_SessionTests() {

@@ -7,6 +7,7 @@ import (
 
 	"dishdash.ru/internal/domain"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -102,14 +103,32 @@ func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (*domain.User, e
 	return user, nil
 }
 
-func (ur *UserRepo) AttachUserToLobby(ctx context.Context, userID, lobbyID string) error {
-	const query = `
-		INSERT INTO lobby_user (lobby_id, user_id)
-		VALUES ($1, $2)
-`
-	_, err := ur.db.Exec(ctx, query, lobbyID, userID)
+func (ur *UserRepo) AttachUsersToLobby(ctx context.Context, userIDs []string, lobbyID string) error {
+	if len(userIDs) == 0 {
+		return nil
+	}
+	batch := &pgx.Batch{}
+
+	query := `INSERT INTO lobby_user (user_id, lobby_id) VALUES ($1, $2)`
+	for _, userID := range userIDs {
+		batch.Queue(query, userID, lobbyID)
+	}
+
+	br := ur.db.SendBatch(ctx, batch)
+	defer br.Close()
+
+	_, err := br.Exec()
 	if err != nil {
-		return fmt.Errorf("could not attach user to lobby: %w", err)
+		return fmt.Errorf("could not attach users to lobby: %w", err)
+	}
+	return nil
+}
+
+func (ur *UserRepo) DetachUsersFromLobby(ctx context.Context, lobbyID string) error {
+	query := `DELETE FROM lobby_user WHERE lobby_id = $1`
+	_, err := ur.db.Exec(ctx, query, lobbyID)
+	if err != nil {
+		return fmt.Errorf("could not detach tags from lobby: %w", err)
 	}
 	return nil
 }

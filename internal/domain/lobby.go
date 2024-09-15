@@ -2,6 +2,8 @@ package domain
 
 import (
 	"time"
+
+	"dishdash.ru/pkg/filter"
 )
 
 type Lobby struct {
@@ -18,18 +20,16 @@ type Lobby struct {
 }
 
 func (l *Lobby) TagNames() []string {
-	var names []string
-	for _, tag := range l.Tags {
-		if tag != nil {
-			names = append(names, tag.Name)
-		}
-	}
-	return names
+	return filter.Map(l.Tags, func(t *Tag) string {
+		return t.Name
+	})
 }
 
 type LobbyState string
 
 var (
-	ACTIVE   LobbyState = "active"
-	INACTIVE LobbyState = "inactive"
+	InLobby  LobbyState = "lobby"
+	Swiping  LobbyState = "swiping"
+	Voting   LobbyState = "voting"
+	Finished LobbyState = "finished"
 )
