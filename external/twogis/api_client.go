@@ -144,15 +144,15 @@ func ParseApiResponse(responseBody string) ([]*domain.TwoGisPlace, error) {
 	return twoGisPlaces, nil
 }
 
-func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.TwoGisPlace, error) {
+func FetchPlacesForLobbyFromAPI(data domain.RecommendData) ([]*domain.TwoGisPlace, error) {
 	var allApiPlaces []*domain.TwoGisPlace
 	page := 1
 	pageSize := 10
 
 	for {
-		log.WithFields(log.Fields{"lobby": lobby.ID, "page": page}).
+		log.WithFields(log.Fields{"data": data, "page": page}).
 			Info("Fetching places from API for lobby")
-		params := getParamsMap(lobby.TagNames(), lobby.Location.Lon, lobby.Location.Lat, page, pageSize)
+		params := getParamsMap(data.Tags, data.Location.Lon, data.Location.Lat, page, pageSize)
 
 		apiResponse, err := GetPlacesFromApi(params)
 		if err != nil {
@@ -181,7 +181,7 @@ func FetchPlacesForLobbyFromAPI(lobby *domain.Lobby) ([]*domain.TwoGisPlace, err
 		page++
 	}
 
-	log.WithFields(log.Fields{"lobby": lobby.ID, "total": len(allApiPlaces)}).
+	log.WithFields(log.Fields{"data": data, "total": len(allApiPlaces)}).
 		Info("Successfully fetched places for lobby")
 	return allApiPlaces, nil
 }

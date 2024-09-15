@@ -35,6 +35,10 @@ type Config struct {
 		Radius             int `default:"4000" envconfig:"DEFAULT_RADIUS"`
 		MinDBPlaces        int `default:"5" envconfig:"DEFAULT_MIN_DB_PLACES"`
 	}
+	Recommendation struct {
+		PriceCoeff float64 `default:"1" envconfig:"RECOMENDATION_PRICE_COEFF"`
+		DistCoeff  float64 `default:"1" envconfig:"RECOMENDATION_DIST_COEFF"`
+	}
 }
 
 var C Config
