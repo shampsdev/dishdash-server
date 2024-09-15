@@ -124,7 +124,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		ctx := context.Background()
-		err := c.Room.UpdateLobby(ctx, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
+		err := c.Room.UpdateLobbySettings(ctx, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
 		if err != nil {
 			handleError(conn, fmt.Errorf("error while updating lobby: %w", err))
 			return
@@ -199,7 +199,11 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		if !ok {
 			return
 		}
-		c.Room.Vote(c.User.ID, ve.Option)
+		err := c.Room.Vote(c.User.ID, ve.Option)
+		if err != nil {
+			handleError(conn, fmt.Errorf("error while voting: %w", err))
+			return
+		}
 		s.BroadcastToRoom("/", c.Room.ID, event.Voted, event.VotedEvent{
 			ID:     ve.ID,
 			Option: ve.Option,

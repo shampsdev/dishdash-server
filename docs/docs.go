@@ -742,20 +742,8 @@ const docTemplate = `{
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
                 },
-                "places": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
                 "priceAvg": {
                     "type": "integer"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
                 }
             }
         },

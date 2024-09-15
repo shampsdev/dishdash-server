@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -39,10 +40,18 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 		}
 
 		log.Infof("Create room: %s", id)
-		room := NewRoom(lobby, r.lobbyUseCase, r.placesUseCase)
+		room, err := NewRoom(lobby, r.lobbyUseCase, r.placesUseCase)
+		if err != nil {
+			return nil, err
+		}
 		r.rooms[id] = room
 		return room, nil
 	}
+
+	if !room.InLobby() {
+		return nil, errors.New("can't connect to started lobby")
+	}
+
 	return room, nil
 }
 

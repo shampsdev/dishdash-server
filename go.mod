@@ -18,7 +18,6 @@ require (
 	github.com/swaggo/swag v1.16.3
 	github.com/testcontainers/testcontainers-go v0.32.0
 	github.com/tj/go-spin v1.1.0
-	github.com/toorop/gin-logrus v0.0.0-20210225092905-2c785434f26f
 	golang.org/x/sync v0.7.0
 	gotest.tools/v3 v3.5.1
 )

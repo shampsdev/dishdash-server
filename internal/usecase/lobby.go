@@ -34,7 +34,7 @@ func NewLobbyUseCase(
 
 func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*domain.Lobby, error) {
 	lobby := &domain.Lobby{
-		State:    domain.ACTIVE,
+		State:    domain.InLobby,
 		PriceAvg: lobbyInput.PriceAvg,
 		Location: lobbyInput.Location,
 	}
@@ -44,18 +44,12 @@ func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) 
 	}
 	lobby.ID = id
 
-	err = l.tRepo.AttachTagsToLobby(ctx, lobbyInput.Tags, id)
-	if err != nil {
-		return nil, err
-	}
-
 	return l.GetLobbyByID(ctx, id)
 }
 
-func (l LobbyUseCase) UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInput) (*domain.Lobby, error) {
+func (l LobbyUseCase) SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error) {
 	lobby := &domain.Lobby{
 		ID:       lobbyInput.ID,
-		State:    domain.ACTIVE,
 		PriceAvg: lobbyInput.PriceAvg,
 		Location: lobbyInput.Location,
 	}
@@ -85,6 +79,28 @@ func (l LobbyUseCase) UpdateLobby(ctx context.Context, lobbyInput UpdateLobbyInp
 	}
 
 	return l.GetLobbyByID(ctx, lobby.ID)
+}
+
+func (l LobbyUseCase) SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error {
+	return l.lRepo.SetLobbyState(ctx, lobbyID, state)
+}
+
+func (l LobbyUseCase) SetLobbyUsers(ctx context.Context, lobbyID string, userIDs []string) ([]*domain.User, error) {
+	err := l.uRepo.DetachUsersFromLobby(ctx, lobbyID)
+	if err != nil {
+		return nil, err
+	}
+	err = l.uRepo.AttachUsersToLobby(ctx, userIDs, lobbyID)
+	if err != nil {
+		return nil, err
+	}
+
+	lobby, err := l.lRepo.GetLobbyByID(ctx, lobbyID)
+	if err != nil {
+		return nil, err
+	}
+
+	return lobby.Users, nil
 }
 
 func (l LobbyUseCase) DeleteLobbyByID(ctx context.Context, id string) error {

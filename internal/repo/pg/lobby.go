@@ -90,7 +90,7 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
     WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
     	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1))) 
     	FROM lobby
-  	) AND lobby.state = 'active';
+  	) AND lobby.state = 'lobby';
 `
 	row := lr.db.QueryRow(ctx, getQuery,
 		postgis.PointS{SRID: 4326, X: loc.Lat, Y: loc.Lon},
@@ -110,17 +110,28 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
 
 func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error {
 	const query = `
-		UPDATE lobby SET state = $1, price_avg = $2, location = ST_GeogFromWkb($3) 
-		WHERE id = $4
+		UPDATE lobby SET price_avg = $1, location = ST_GeogFromWkb($2) 
+		WHERE id = $3
 `
 	_, err := lr.db.Exec(ctx, query,
-		lobby.State,
 		lobby.PriceAvg,
 		postgis.PointS{SRID: 4326, X: lobby.Location.Lat, Y: lobby.Location.Lon},
 		lobby.ID,
 	)
 	if err != nil {
 		return fmt.Errorf("can't update lobby: %w", err)
+	}
+	return nil
+}
+
+func (lr *LobbyRepo) SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error {
+	const query = `
+		UPDATE lobby SET state = $1 
+		WHERE id = $2
+`
+	_, err := lr.db.Exec(ctx, query, state, lobbyID)
+	if err != nil {
+		return fmt.Errorf("can't update lobby state: %w", err)
 	}
 	return nil
 }
