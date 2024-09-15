@@ -79,9 +79,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-15T17:55:56.361288Z"
+                "updatedAt": "2024-09-15T18:16:17.974476Z"
               },
               "id": 1
             }
@@ -109,9 +120,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:55:56.365551Z"
+                "updatedAt": "2024-09-15T18:16:17.979971Z"
               },
               "id": 5
             }
@@ -121,31 +143,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Кронверкский проспект, 27",
-                "description": "Вкусная сырная шаверма и не только",
-                "id": 5,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9615,
-                  "lon": 30.3124
-                },
-                "priceAvg": 320,
-                "reviewCount": 1000,
-                "reviewRating": 4.5,
-                "shortDescription": "Вкусная шаверма",
-                "tags": null,
-                "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:55:56.365551Z"
-              },
-              "id": 0
-            }
-          },
           {
             "EventName": "card",
             "Data": {
@@ -164,11 +161,63 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-09-15T17:55:56.362705Z"
+                "updatedAt": "2024-09-15T18:16:17.976556Z"
               },
               "id": 2
+            }
+          },
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Кронверкский проспект, 27",
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Шавафель",
+                "updatedAt": "2024-09-15T18:16:17.979971Z"
+              },
+              "id": 0
             }
           }
         ]
@@ -243,9 +292,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-15T17:55:56.361288Z"
+                "updatedAt": "2024-09-15T18:16:17.974476Z"
               },
               "id": 1
             }
@@ -273,9 +333,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:55:56.365551Z"
+                "updatedAt": "2024-09-15T18:16:17.979971Z"
               },
               "id": 5
             }
@@ -285,31 +356,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "card",
-            "Data": {
-              "card": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
-                "id": 2,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9606,
-                  "lon": 30.2871
-                },
-                "priceAvg": 120,
-                "reviewCount": 1000,
-                "reviewRating": 4.6,
-                "shortDescription": "Лучший кофе у ИТМО",
-                "tags": null,
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-09-15T17:55:56.362705Z"
-              },
-              "id": 2
-            }
-          },
           {
             "EventName": "match",
             "Data": {
@@ -328,11 +374,63 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:55:56.365551Z"
+                "updatedAt": "2024-09-15T18:16:17.979971Z"
               },
               "id": 0
+            }
+          },
+          {
+            "EventName": "card",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-09-15T18:16:17.976556Z"
+              },
+              "id": 2
             }
           }
         ]

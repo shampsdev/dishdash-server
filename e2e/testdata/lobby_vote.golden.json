@@ -30,9 +30,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-15T17:56:56.445683Z"
+                "updatedAt": "2024-09-15T18:17:18.050839Z"
               },
               "id": 0
             }
@@ -46,24 +57,24 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 0,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
               },
               "id": 0,
               "option": 0
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 0,
+              "option": 1
             }
           },
           {
@@ -93,9 +104,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:56:56.452189Z"
+                "updatedAt": "2024-09-15T18:17:18.05504Z"
               },
               "id": 1
             }
@@ -109,9 +131,9 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
               },
               "id": 1,
               "option": 1
@@ -121,9 +143,9 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
               },
               "id": 1,
               "option": 1
@@ -151,9 +173,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:56:56.452189Z"
+                "updatedAt": "2024-09-15T18:17:18.05504Z"
               }
             }
           }
@@ -192,9 +225,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Пловная",
-                "updatedAt": "2024-09-15T17:56:56.445683Z"
+                "updatedAt": "2024-09-15T18:17:18.050839Z"
               },
               "id": 0
             }
@@ -208,24 +252,24 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 0,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
               },
               "id": 0,
               "option": 0
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
+              },
+              "id": 0,
+              "option": 1
             }
           },
           {
@@ -255,9 +299,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:56:56.452189Z"
+                "updatedAt": "2024-09-15T18:17:18.05504Z"
               },
               "id": 1
             }
@@ -271,9 +326,9 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
               },
               "id": 1,
               "option": 1
@@ -283,9 +338,9 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
               },
               "id": 1,
               "option": 1
@@ -313,9 +368,20 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
-                "tags": null,
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2024-09-15T17:56:56.452189Z"
+                "updatedAt": "2024-09-15T18:17:18.05504Z"
               }
             }
           }

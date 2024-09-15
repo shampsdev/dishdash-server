@@ -71,5 +71,45 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
+	for _, p := range places {
+		p.Tags, err = pr.GetTagsByPlaceID(ctx, p.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return places, nil
+}
+
+// TODO: Do in one query
+// TODO: duplicate with TagRepo.GetTagsByPlaceID
+func (pr *PlaceRecommender) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error) {
+	query := `
+	SELECT tag.id, tag.name, tag.icon
+	FROM tag
+	JOIN place_tag ON tag.id = place_tag.tag_id
+	WHERE place_tag.place_id = $1
+	`
+
+	rows, err := pr.db.Query(ctx, query, placeID)
+	if err != nil {
+		return nil, fmt.Errorf("could not get tags by place ID: %w", err)
+	}
+	defer rows.Close()
+
+	tags := make([]*domain.Tag, 0)
+	for rows.Next() {
+		var tag domain.Tag
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		if err != nil {
+			return nil, fmt.Errorf("could not scan tag: %w", err)
+		}
+		tags = append(tags, &tag)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating rows: %w", err)
+	}
+
+	return tags, nil
 }
