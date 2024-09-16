@@ -112,6 +112,27 @@ func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (*domain.User, e
 	return user, nil
 }
 
+func (ur *UserRepo) GetUserByTelegram(ctx context.Context, telegram *int64) (*domain.User, error) {
+	const query = `
+		SELECT id, name, avatar, telegram, created_at, updated_at
+		FROM "user"
+		WHERE telegram = $1
+	`
+	user := new(domain.User)
+	err := ur.db.QueryRow(ctx, query, telegram).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Avatar,
+		&user.Telegram,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("could not get user by id: %w", err)
+	}
+	return user, nil
+}
+
 func (ur *UserRepo) AttachUsersToLobby(ctx context.Context, userIDs []string, lobbyID string) error {
 	if len(userIDs) == 0 {
 		return nil

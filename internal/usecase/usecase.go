@@ -28,6 +28,7 @@ type User interface {
 	SaveUserWithID(ctx context.Context, user *domain.User, id string) error
 	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
+	GetUserByTelegram(ctx context.Context, telegram *int64) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
 }
 

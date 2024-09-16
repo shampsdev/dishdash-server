@@ -12,4 +12,5 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	userGroup.PUT("", UpdateUser(cases.User))
 	userGroup.GET("", GetAllUsers(cases.User))
 	userGroup.GET(":id", GetUserByID(cases.User))
+	userGroup.GET("/telegram/:telegram", GetUserByTelegram(cases.User))
 }
