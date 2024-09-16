@@ -518,6 +518,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/telegram/{telegram}": {
+            "get": {
+                "description": "Get a user from the database by Telegram number",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by Telegram",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Telegram number",
+                        "name": "telegram",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User data",
+                        "schema": {
+                            "$ref": "#/definitions/domain.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "description": "Get a user from the database by ID",
@@ -711,6 +749,9 @@ const docTemplate = `{
                 },
                 "telegram": {
                     "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },
