@@ -48,15 +48,17 @@ func (ur *UserRepo) SaveUser(ctx context.Context, user *domain.User) (string, er
 
 func (ur *UserRepo) SaveUserWithID(ctx context.Context, user *domain.User, id string) error {
 	const query = `
-		INSERT INTO "user" (id, name, avatar, telegram, created_at)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO "user" (id, name, avatar, telegram, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6)
 	`
+	now := time.Now().UTC()
 	_, err := ur.db.Exec(ctx, query,
 		id,
 		user.Name,
 		user.Avatar,
 		user.Telegram,
 		user.CreatedAt,
+		now,
 	)
 	if err != nil {
 		return fmt.Errorf("could not insert user: %w", err)
@@ -67,15 +69,16 @@ func (ur *UserRepo) SaveUserWithID(ctx context.Context, user *domain.User, id st
 func (ur *UserRepo) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
 	const query = `
         UPDATE "user"
-        SET name = $2, avatar = $3, telegram = $4
+        SET name = $2, avatar = $3, telegram = $4, updated_at = $5
         WHERE id = $1
 	`
-
+	now := time.Now().UTC()
 	commandTag, err := ur.db.Exec(ctx, query,
 		user.ID,
 		user.Name,
 		user.Avatar,
 		user.Telegram,
+		now,
 	)
 	if err != nil {
 		return user, fmt.Errorf("could not update user: %w", err)
@@ -90,7 +93,7 @@ func (ur *UserRepo) UpdateUser(ctx context.Context, user *domain.User) (*domain.
 
 func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
 	const query = `
-		SELECT id, name, avatar, telegram, created_at
+		SELECT id, name, avatar, telegram, created_at, updated_at
 		FROM "user"
 		WHERE id = $1
 	`
@@ -101,6 +104,7 @@ func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (*domain.User, e
 		&user.Avatar,
 		&user.Telegram,
 		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("could not get user by id: %w", err)
@@ -140,7 +144,7 @@ func (ur *UserRepo) DetachUsersFromLobby(ctx context.Context, lobbyID string) er
 
 func (ur *UserRepo) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 	const query = `
-		SELECT id, name, avatar, telegram, created_at
+		SELECT id, name, avatar, telegram, created_at, updated_at
 		FROM "user"
 	`
 
@@ -159,6 +163,7 @@ func (ur *UserRepo) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 			&user.Avatar,
 			&user.Telegram,
 			&user.CreatedAt,
+			&user.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -171,11 +176,11 @@ func (ur *UserRepo) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 
 func (ur *UserRepo) GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error) {
 	const query = `
-		SELECT id, name, avatar, telegram, created_at
+		SELECT id, name, avatar, telegram, created_at, updated_at
 		FROM "user"
 		JOIN lobby_user ON "user".id = lobby_user.user_id
 		WHERE lobby_user.lobby_id = $1
-`
+	`
 	users := make([]*domain.User, 0)
 	rows, err := ur.db.Query(ctx, query, lobbyID)
 	if err != nil {
@@ -191,6 +196,7 @@ func (ur *UserRepo) GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*d
 			&user.Avatar,
 			&user.Telegram,
 			&user.CreatedAt,
+			&user.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("could not get users by lobby id: %w", err)
