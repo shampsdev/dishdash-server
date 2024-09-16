@@ -23,20 +23,25 @@ func NewUserRepo(db *pgxpool.Pool) *UserRepo {
 
 func (ur *UserRepo) SaveUser(ctx context.Context, user *domain.User) (string, error) {
 	const query = `
-		INSERT INTO "user" (name, avatar, telegram, created_at)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO "user" (name, avatar, telegram, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (telegram) DO UPDATE 
+		SET name = EXCLUDED.name, avatar = EXCLUDED.avatar, updated_at = EXCLUDED.updated_at
 		RETURNING id
 	`
 	var id string
-	user.CreatedAt = time.Now().UTC()
+	now := time.Now().UTC()
+	user.CreatedAt = now
+	user.UpdatedAt = now
 	err := ur.db.QueryRow(ctx, query,
 		user.Name,
 		user.Avatar,
 		user.Telegram,
 		user.CreatedAt,
+		user.UpdatedAt,
 	).Scan(&id)
 	if err != nil {
-		return "", fmt.Errorf("could not insert user: %w", err)
+		return "", fmt.Errorf("could not insert or update user: %w", err)
 	}
 	return id, nil
 }

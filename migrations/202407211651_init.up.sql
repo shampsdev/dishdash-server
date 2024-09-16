@@ -36,8 +36,9 @@ CREATE TABLE "user"
     id         varchar(255) NOT NULL DEFAULT gen_random_uuid(),
     name       varchar(255) NOT NULL,
     avatar     varchar(255) NOT NULL,
-    telegram   bigint       NULL,
+    telegram   bigint       NULL UNIQUE,
     created_at timestamp    NOT NULL,
+    updated_at timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );
 
