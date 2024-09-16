@@ -41,27 +41,30 @@ type Room struct {
 	matches    []*Match
 	matchVotes map[string]VoteOption
 
-	lobbyUseCase Lobby
-	placeUseCase Place
-	log          *log.Entry
+	lobbyUseCase     Lobby
+	placeUseCase     Place
+	placeRecommender *PlaceRecommender
+	log              *log.Entry
 }
 
 func NewRoom(
 	lobby *domain.Lobby,
 	lobbyUseCase Lobby,
 	placeUseCase Place,
+	placeRecommender *PlaceRecommender,
 ) (*Room, error) {
 	r := &Room{
-		ID:           lobby.ID,
-		lobby:        lobby,
-		usersMap:     make(map[string]*domain.User),
-		places:       make([]*domain.Place, 0),
-		usersPlace:   make(map[string]*domain.Place),
-		swipes:       make([]*domain.Swipe, 0),
-		matchVotes:   make(map[string]VoteOption),
-		lobbyUseCase: lobbyUseCase,
-		placeUseCase: placeUseCase,
-		log:          log.WithFields(log.Fields{"room": lobby.ID}),
+		ID:               lobby.ID,
+		lobby:            lobby,
+		usersMap:         make(map[string]*domain.User),
+		places:           make([]*domain.Place, 0),
+		usersPlace:       make(map[string]*domain.Place),
+		swipes:           make([]*domain.Swipe, 0),
+		matchVotes:       make(map[string]VoteOption),
+		lobbyUseCase:     lobbyUseCase,
+		placeUseCase:     placeUseCase,
+		placeRecommender: placeRecommender,
+		log:              log.WithFields(log.Fields{"room": lobby.ID}),
 	}
 	r.state = lobby.State
 
@@ -237,7 +240,13 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	}
 
 	var err error
-	r.places, err = r.placeUseCase.GetPlacesForLobby(ctx, r.lobby)
+	r.places, err = r.placeRecommender.RecommendPlaces(ctx,
+		domain.RecommendData{
+			Location: r.lobby.Location,
+			PriceAvg: r.lobby.PriceAvg,
+			Tags:     r.lobby.TagNames(),
+		},
+	)
 	if err != nil {
 		r.log.WithError(err).Error("Action 'GetPlacesForLobby' failed")
 		return err

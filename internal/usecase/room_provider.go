@@ -14,18 +14,20 @@ type RoomRepo interface {
 }
 
 type InMemoryRoomRepo struct {
-	lobbyUseCase  Lobby
-	placesUseCase Place
+	lobbyUseCase     Lobby
+	placesUseCase    Place
+	placeRecommender *PlaceRecommender
 
 	roomsMutex sync.RWMutex
 	rooms      map[string]*Room
 }
 
-func NewInMemoryRoomRepo(lobbyUseCase Lobby, placeUseCase Place) *InMemoryRoomRepo {
+func NewInMemoryRoomRepo(lobbyUseCase Lobby, placeUseCase Place, placeRecomender *PlaceRecommender) *InMemoryRoomRepo {
 	return &InMemoryRoomRepo{
-		lobbyUseCase:  lobbyUseCase,
-		placesUseCase: placeUseCase,
-		rooms:         make(map[string]*Room),
+		lobbyUseCase:     lobbyUseCase,
+		placesUseCase:    placeUseCase,
+		placeRecommender: placeRecomender,
+		rooms:            make(map[string]*Room),
 	}
 }
 
@@ -40,7 +42,12 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 		}
 
 		log.Infof("Create room: %s", id)
-		room, err := NewRoom(lobby, r.lobbyUseCase, r.placesUseCase)
+		room, err := NewRoom(
+			lobby,
+			r.lobbyUseCase,
+			r.placesUseCase,
+			r.placeRecommender,
+		)
 		if err != nil {
 			return nil, err
 		}

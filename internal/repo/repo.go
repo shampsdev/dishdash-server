@@ -34,6 +34,10 @@ type Place interface {
 	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
 }
 
+type PlaceRecommender interface {
+	RecommendPlaces(ctx context.Context, opts domain.RecommendOpts, data domain.RecommendData) ([]*domain.Place, error)
+}
+
 type User interface {
 	SaveUser(ctx context.Context, user *domain.User) (string, error)
 	SaveUserWithID(ctx context.Context, user *domain.User, id string) error
