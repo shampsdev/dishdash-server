@@ -26,69 +26,68 @@ CREATE TABLE "place_tag"
 (
     "place_id" int NOT NULL,
     "tag_id"   int NOT NULL,
-    FOREIGN KEY ("tag_id") REFERENCES "tag" ("id"),
-    FOREIGN KEY ("place_id") REFERENCES "place" ("id"),
+    FOREIGN KEY ("tag_id") REFERENCES "tag" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("place_id") REFERENCES "place" ("id") ON DELETE CASCADE,
     UNIQUE ("place_id", "tag_id")
 );
 
 CREATE TABLE "user"
 (
-    id         varchar(255) NOT NULL DEFAULT gen_random_uuid(),
-    name       varchar(255) NOT NULL,
-    avatar     varchar(255) NOT NULL,
-    telegram   bigint       NULL UNIQUE,
-    created_at timestamp    NOT NULL,
-    updated_at timestamp    NOT NULL,
+    "id"         varchar(255) NOT NULL DEFAULT gen_random_uuid(),
+    "name"       varchar(255) NOT NULL,
+    "avatar"     varchar(255) NOT NULL,
+    "telegram"   bigint       NULL UNIQUE,
+    "created_at" timestamp    NOT NULL,
+    "updated_at" timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );
 
 CREATE TABLE "lobby"
 (
-    id         varchar(255) NOT NULL,
-    state      varchar(255) NOT NULL,
-    price_avg  bigint       NOT NULL,
-    location   geography    NOT NULL,
-    created_at timestamp    NOT NULL,
+    "id"         varchar(255) NOT NULL,
+    "state"      varchar(255) NOT NULL,
+    "price_avg"  bigint       NOT NULL,
+    "location"   geography    NOT NULL,
+    "created_at" timestamp    NOT NULL,
     PRIMARY KEY ("id")
 );
 
 CREATE TABLE "lobby_tag"
 (
-    lobby_id varchar(255) NOT NULL,
-    tag_id   serial       NOT NULL,
+    "lobby_id" varchar(255) NOT NULL,
+    "tag_id"   serial       NOT NULL,
     PRIMARY KEY ("lobby_id", "tag_id"),
-    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id"),
-    FOREIGN KEY ("tag_id") REFERENCES "tag" ("id")
+    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("tag_id") REFERENCES "tag" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "place_lobby"
 (
-    lobby_id varchar(255) NOT NULL,
-    place_id serial       NOT NULL,
+    "lobby_id" varchar(255) NOT NULL,
+    "place_id" serial       NOT NULL,
     PRIMARY KEY ("lobby_id", "place_id"),
-    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id"),
-    FOREIGN KEY ("place_id") REFERENCES "place" ("id")
+    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("place_id") REFERENCES "place" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "lobby_user"
 (
-    lobby_id varchar(255) NOT NULL,
-    user_id  varchar(255) NOT NULL,
+    "lobby_id" varchar(255) NOT NULL,
+    "user_id"  varchar(255) NOT NULL,
     PRIMARY KEY ("lobby_id", "user_id"),
-    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id"),
-    FOREIGN KEY ("user_id") REFERENCES "user" ("id")
+    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "swipe"
 (
-    id       serial       NOT NULL,
-    lobby_id varchar(255) NOT NULL,
-    place_id serial       NOT NULL,
-    user_id  varchar(255) NOT NULL,
-    type     varchar(255) NOT NULL,
+    "id"       serial       NOT NULL,
+    "lobby_id" varchar(255) NOT NULL,
+    "place_id" serial       NOT NULL,
+    "user_id"  varchar(255) NOT NULL,
+    "type"     varchar(255) NOT NULL,
     PRIMARY KEY ("id"),
-    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id"),
-    FOREIGN KEY ("user_id") REFERENCES "user" ("id"),
-    FOREIGN KEY ("place_id") REFERENCES "place" ("id")
+    FOREIGN KEY ("lobby_id") REFERENCES "lobby" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("place_id") REFERENCES "place" ("id") ON DELETE CASCADE
 );
-
