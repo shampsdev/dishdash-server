@@ -8,4 +8,5 @@ type User struct {
 	Avatar    string    `json:"avatar"`
 	Telegram  *int64    `json:"telegram"`
 	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
