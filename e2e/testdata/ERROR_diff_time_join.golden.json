@@ -1,0 +1,325 @@
+{
+  "user1": {
+    "Steps": [
+      {
+        "Name": "User 1 joins lobby",
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ],
+              "userId": "id1"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 800,
+              "priceMin": 200,
+              "tags": [],
+              "userId": ""
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Start swipes",
+        "Events": [
+          {
+            "EventName": "startSwipes",
+            "Data": null
+          }
+        ]
+      },
+      {
+        "Name": "User 2 joins lobby",
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Swipe both like",
+        "Events": []
+      },
+      {
+        "Name": "Both accepted match",
+        "Events": [
+          {
+            "EventName": "finish",
+            "Data": {
+              "result": {
+                "address": "Кронверкский проспект, 27",
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Шавафель"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "Name": "User 3 joins lobby",
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar3",
+              "id": "id3",
+              "name": "user3"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "user2": {
+    "Steps": [
+      {
+        "Name": "User 1 joins lobby",
+        "Events": []
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "User 2 joins lobby",
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
+          {
+            "EventName": "startSwipes",
+            "Data": null
+          }
+        ]
+      },
+      {
+        "Name": "Swipe both like",
+        "Events": []
+      },
+      {
+        "Name": "Both accepted match",
+        "Events": [
+          {
+            "EventName": "finish",
+            "Data": {
+              "result": {
+                "address": "Кронверкский проспект, 27",
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Шавафель",
+                "updatedAt": "2024-09-14T20:00:08.896408Z"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "Name": "User 3 joins lobby",
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar3",
+              "id": "id3",
+              "name": "user3"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "user3": {
+    "Steps": [
+      {
+        "Name": "User 1 joins lobby",
+        "Events": []
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "User 2 joins lobby",
+        "Events": []
+      },
+      {
+        "Name": "Swipe both like",
+        "Events": []
+      },
+      {
+        "Name": "Both accepted match",
+        "Events": []
+      },
+      {
+        "Name": "User 3 joins lobby",
+        "Events": [
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar3",
+              "id": "id3",
+              "name": "user3"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
+          {
+            "EventName": "finish",
+            "Data": {
+              "result": {
+                "address": "Кронверкский проспект, 27",
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Шавафель",
+                "updatedAt": "2024-09-14T20:00:08.896408Z"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
