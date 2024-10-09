@@ -39,13 +39,15 @@ func main() {
 
 	if config.C.DB.AutoMigrate {
 		log.Info("Applying migrations")
-		pg.MigrateUp(config.C.DBUrl())
+		err := pg.MigrateUp(config.C.DBUrl())
+		if err != nil {
+			log.Fatalf("Can't migrate up: %s", err.Error())
+		}
 	} else {
 		log.Info("Auto migrations is disabled")
 	}
 	pgConfig := config.C.PGXConfig()
 	pool, err := pgxpool.NewWithConfig(ctx, pgConfig)
-
 	if err != nil {
 		log.Fatal("can't create new database pool")
 	}
