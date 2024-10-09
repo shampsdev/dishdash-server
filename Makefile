@@ -37,15 +37,6 @@ db-reset: ## Reset database (down + up + default-data)
 	make db-migrate-up
 	make db-default-data
 
-##@ Tests
-test-e2e-race: ## Test e2e
-	go test -v -race e2e/e2e_test.go
-
-test-e2e: ## Test e2e
-	go test -v e2e/e2e_test.go
-
-update-golden-e2e: ## Update golden files
-	go test -v e2e/e2e_test.go -update-golden
 
 ##@ Tools
 GOLANGCI_LINT = $(shell pwd)/bin/golangci-lint
