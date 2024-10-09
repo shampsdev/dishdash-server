@@ -11,8 +11,6 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 
-	"dishdash.ru/cmd/server/config"
-
 	// driver for migration
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -23,18 +21,7 @@ const (
 	defaultTimeout  = time.Second
 )
 
-func init() {
-	if !config.C.DB.AutoMigrate {
-		log.Info("Database migrator is disabled")
-		return
-	}
-	if err := MigrateUp(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func MigrateUp() error {
-	dbUrl := config.C.DBUrl()
+func MigrateUp(dbUrl string) error {
 	var (
 		attempts = defaultAttempts
 		err      error
@@ -77,8 +64,7 @@ func MigrateUp() error {
 	return nil
 }
 
-func MigrateDown() error {
-	dbUrl := config.C.DBUrl()
+func MigrateDown(dbUrl string) error {
 	var (
 		attempts = defaultAttempts
 		err      error
