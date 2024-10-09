@@ -43,8 +43,8 @@ type Config struct {
 
 var C Config
 
-func init() {
-	err := godotenv.Load(".env")
+func Load(envFile string) {
+	err := godotenv.Load(envFile)
 	if err != nil {
 		log.Info("no .env file, parsed exported variables")
 	}

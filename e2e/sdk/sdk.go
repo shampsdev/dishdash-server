@@ -1,29 +1,19 @@
-package tests
+package sdk
 
 import (
 	"bytes"
 	"encoding/json"
-	"net/http"
 	"os"
 	"reflect"
 	"slices"
 	"sync"
 	"testing"
-	"time"
-
-	log "github.com/sirupsen/logrus"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/jinzhu/copier"
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	goassert "gotest.tools/v3/assert"
-)
-
-var (
-	ApiHost    string
-	SIOHost    string
-	httpClient = &http.Client{Timeout: 10 * time.Second}
-	waitTime   = 10 * time.Second
 )
 
 type SocketIOSession struct {
@@ -46,14 +36,14 @@ type eventData struct {
 	Data map[string]interface{}
 }
 
-func emitWithLogFunc(cli *socketio.Client, user string) func(event string, args ...interface{}) {
+func EmitWithLogFunc(cli *socketio.Client, user string) func(event string, args ...interface{}) {
 	return func(event string, args ...interface{}) {
 		log.Debugf("<User %s> emit %s", user, event)
 		cli.Emit(event, args...)
 	}
 }
 
-func newSocketIOSession() *SocketIOSession {
+func NewSocketIOSession() *SocketIOSession {
 	return &SocketIOSession{
 		UserEvents: make(map[string]*eventCollection),
 	}
@@ -89,30 +79,30 @@ func LoadSocketIOSession(filename string) (*SocketIOSession, error) {
 	return ec, nil
 }
 
-func (s *SocketIOSession) addUser(user string) {
+func (s *SocketIOSession) AddUser(user string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	s.UserEvents[user] = &eventCollection{}
 }
 
-func (s *SocketIOSession) sioAddFunc(user, eventName string) func(socketio.Conn, map[string]interface{}) {
+func (s *SocketIOSession) SioAddFunc(user, eventName string) func(socketio.Conn, map[string]interface{}) {
 	return func(_ socketio.Conn, data map[string]interface{}) {
 		log.WithFields(log.Fields{"user": user, "event": eventName}).
 			Info("Received event")
-		s.add(user, eventData{
+		s.Add(user, eventData{
 			Name: eventName,
 			Data: data,
 		})
 	}
 }
 
-func (s *SocketIOSession) add(user string, event eventData) {
+func (s *SocketIOSession) Add(user string, event eventData) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	s.UserEvents[user].add(event)
 }
 
-func (s *SocketIOSession) newStep(name string) {
+func (s *SocketIOSession) NewStep(name string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	for k := range s.UserEvents {

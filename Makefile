@@ -21,7 +21,7 @@ compose-down: ## Compose down
 db-compose-up: ## Launch database+adminer from docker-compose
 	docker compose up database adminer --build -d && docker compose logs -f
 
-DB_URL=postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=disable
+DB_URL ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=disable
 
 db-migrate-up: migrate-install ## Migrate up
 	$(MIGRATE) -database $(DB_URL) -path migrations up

@@ -1,0 +1,30 @@
+services:
+  e2e-database:
+    image: postgis/postgis:16-3.4
+    container_name: e2e-database
+    env_file:
+      - e2e.env
+    ports:
+      - "5433:5432"
+
+  e2e-adminer:
+    image: adminer
+    container_name: e2e-adminer
+    restart: always
+    env_file:
+      - e2e.env
+    ports:
+      - "1001:8080"
+
+  e2e-backend:
+    container_name: e2e-backend
+    build:
+      context: ..
+    env_file:
+      - e2e.env
+    environment:
+      HTTP_PORT: 8001
+      POSTGRES_HOST: e2e-database
+      POSTGRES_PORT: 5432
+    ports:
+      - "8001:8001"
