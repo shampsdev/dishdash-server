@@ -40,7 +40,7 @@ func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string
 		lobby.ID,
 		lobby.State,
 		lobby.PriceAvg,
-		postgis.PointS{SRID: 4326, X: lobby.Location.Lat, Y: lobby.Location.Lon},
+		postgis.PointS{SRID: 4326, X: lobby.Location.Lon, Y: lobby.Location.Lat},
 		lobby.CreatedAt,
 	)
 	if err != nil {
