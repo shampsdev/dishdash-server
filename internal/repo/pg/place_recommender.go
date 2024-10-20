@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"dishdash.ru/internal/domain"
-	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -49,7 +48,7 @@ func (pr *PlaceRecommender) RecommendPlaces(
 `
 	rows, err := pr.db.Query(ctx, query,
 		data.Tags,
-		opts.DistCoeff, postgis.PointS{SRID: 4326, X: data.Location.Lat, Y: data.Location.Lon},
+		opts.DistCoeff, data.Location.ToPostgis(),
 		opts.PriceCoeff, data.PriceAvg,
 	)
 	if err != nil {

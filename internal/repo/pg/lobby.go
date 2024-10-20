@@ -40,7 +40,7 @@ func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string
 		lobby.ID,
 		lobby.State,
 		lobby.PriceAvg,
-		postgis.PointS{SRID: 4326, X: lobby.Location.Lon, Y: lobby.Location.Lat},
+		lobby.Location.ToPostgis(),
 		lobby.CreatedAt,
 	)
 	if err != nil {
@@ -79,7 +79,7 @@ func (lr *LobbyRepo) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby
 	if err != nil {
 		return nil, fmt.Errorf("can't get lobby: %w", err)
 	}
-	lobby.Location = domain.Coordinate{Lat: loc.X, Lon: loc.Y}
+	lobby.Location = domain.FromPostgis(loc)
 	return lobby, nil
 }
 
@@ -93,7 +93,7 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
   	) AND lobby.state = 'lobby';
 `
 	row := lr.db.QueryRow(ctx, getQuery,
-		postgis.PointS{SRID: 4326, X: loc.Lat, Y: loc.Lon},
+		loc.ToPostgis(),
 	)
 
 	id := ""
@@ -115,7 +115,7 @@ func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
 `
 	_, err := lr.db.Exec(ctx, query,
 		lobby.PriceAvg,
-		postgis.PointS{SRID: 4326, X: lobby.Location.Lat, Y: lobby.Location.Lon},
+		lobby.Location.ToPostgis(),
 		lobby.ID,
 	)
 	if err != nil {
