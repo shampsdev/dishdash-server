@@ -53,7 +53,7 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		place.ShortDescription,
 		place.Description,
 		strings.Join(place.Images, ","),
-		postgis.PointS{SRID: 4326, X: place.Location.Lon, Y: place.Location.Lat},
+		place.Location.ToPostgis(),
 		place.Address,
 		place.PriceAvg,
 		place.ReviewRating,
@@ -67,6 +67,42 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		return 0, fmt.Errorf("can't save place: %w", err)
 	}
 	return id, nil
+}
+
+func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error {
+	const updateQuery = `
+	UPDATE "place" SET
+	  "title" = $1,
+	  "short_description" = $2,
+	  "description" = $3,
+	  "images" = $4,
+	  "location" = GeomFromEWKB($5),
+	  "address" = $6,
+	  "price_avg" = $7,
+	  "review_rating" = $8,
+	  "review_count" = $9,
+	  "updated_at" = $10
+	WHERE "id" = $11
+  `
+	place.UpdatedAt = time.Now().UTC()
+	_, err := pr.db.Exec(ctx, updateQuery,
+		place.Title,
+		place.ShortDescription,
+		place.Description,
+		strings.Join(place.Images, ","),
+		place.Location.ToPostgis(),
+		place.Address,
+		place.PriceAvg,
+		place.ReviewRating,
+		place.ReviewCount,
+		place.UpdatedAt,
+		place.ID,
+	)
+	if err != nil {
+		return fmt.Errorf("can't update place: %w", err)
+	}
+
+	return nil
 }
 
 func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
@@ -223,10 +259,7 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 		&p.ReviewCount,
 		&p.UpdatedAt,
 	)
-	p.Location = domain.Coordinate{
-		Lon: loc.X,
-		Lat: loc.Y,
-	}
+	p.Location = domain.FromPostgis(loc)
 	p.Images = strings.Split(imagesStr, ",")
 	return p, err
 }

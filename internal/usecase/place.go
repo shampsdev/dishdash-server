@@ -46,6 +46,40 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 	return place, nil
 }
 
+func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInput) (*domain.Place, error) {
+	place := &domain.Place{
+		ID:               placeInput.ID,
+		Title:            placeInput.Title,
+		ShortDescription: placeInput.ShortDescription,
+		Description:      placeInput.Description,
+		Images:           placeInput.Images,
+		Location:         placeInput.Location,
+		Address:          placeInput.Address,
+		PriceAvg:         placeInput.PriceAvg,
+		ReviewRating:     placeInput.ReviewRating,
+		ReviewCount:      placeInput.ReviewCount,
+	}
+	err := p.pRepo.UpdatePlace(ctx, place)
+	if err != nil {
+		return nil, err
+	}
+	err = p.tRepo.DetachTagsFromPlace(ctx, place.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = p.tRepo.AttachTagsToPlace(ctx, placeInput.Tags, place.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, placeInput.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return place, nil
+}
+
 func (p PlaceUseCase) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
 	placeId, err := p.pRepo.SaveTwoGisPlace(ctx, twogisPlace)
 	if err != nil {

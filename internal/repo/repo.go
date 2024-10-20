@@ -15,6 +15,7 @@ type Tag interface {
 	UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
 
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
+	DetachTagsFromPlace(ctx context.Context, placeID int64) error
 	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
 
 	AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error
@@ -24,6 +25,7 @@ type Tag interface {
 
 type Place interface {
 	SavePlace(ctx context.Context, place *domain.Place) (int64, error)
+	UpdatePlace(ctx context.Context, place *domain.Place) error
 	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)

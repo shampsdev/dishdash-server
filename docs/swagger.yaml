@@ -151,6 +151,35 @@ definitions:
       title:
         type: string
     type: object
+  usecase.UpdatePlaceInput:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceMin:
+        type: integer
+      reviewCount:
+        type: integer
+      reviewRating:
+        type: number
+      shortDescription:
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+    type: object
 info:
   contact: {}
   description: Manage cards, lobbies, swipes
@@ -330,25 +359,32 @@ paths:
       summary: Create a place
       tags:
       - places
-  /places/tag/{id}:
-    delete:
-      description: Delete an existing tag from the database
+    put:
+      consumes:
+      - application/json
+      description: Update a place with same id in the database
       parameters:
-      - description: Tag ID
-        in: path
-        name: id
+      - description: Place data
+        in: body
+        name: place
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/usecase.UpdatePlaceInput'
+      produces:
+      - application/json
       responses:
         "200":
-          description: Tag deleted
+          description: Updated place
+          schema:
+            $ref: '#/definitions/domain.Place'
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Delete a tag
+      summary: Update a place
       tags:
       - places
+  /places/tag:
     put:
       consumes:
       - application/json
@@ -372,6 +408,25 @@ paths:
         "500":
           description: Internal Server Error
       summary: Update a tag
+      tags:
+      - places
+  /places/tag/{id}:
+    delete:
+      description: Delete an existing tag from the database
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tag deleted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Delete a tag
       tags:
       - places
   /places/tags:

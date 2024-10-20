@@ -19,7 +19,7 @@ import (
 // @Success 200 {object} domain.Tag "Updated tag"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
-// @Router /places/tag/{id} [put]
+// @Router /places/tag [put]
 func UpdateTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tag := new(domain.Tag)
