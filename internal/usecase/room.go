@@ -194,23 +194,25 @@ func (r *Room) Finished() bool {
 
 func (r *Room) UpdateLobbySettings(
 	ctx context.Context,
+	location domain.Coordinate,
 	priceAvg int,
 	tagIDs, placeIDs []int64,
 ) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	return r.updateLobbySettings(ctx, priceAvg, tagIDs, placeIDs)
+	return r.updateLobbySettings(ctx, location, priceAvg, tagIDs, placeIDs)
 }
 
 func (r *Room) updateLobbySettings(
 	ctx context.Context,
+	location domain.Coordinate,
 	priceAvg int,
 	tagIDs, placeIDs []int64,
 ) error {
 	lobby, err := r.lobbyUseCase.SetLobbySettings(ctx, UpdateLobbySettingsInput{
 		ID:       r.lobby.ID,
 		PriceAvg: priceAvg,
-		Location: r.lobby.Location,
+		Location: location,
 		Tags:     tagIDs,
 		Places:   placeIDs,
 	})
@@ -231,7 +233,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 
 	if len(r.lobby.Tags) == 0 {
 		r.log.Warn("Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'")
-		err := r.updateLobbySettings(ctx, 500, []int64{3}, nil)
+		err := r.updateLobbySettings(ctx, r.lobby.Location, 500, []int64{3}, nil)
 		if err != nil {
 			r.log.WithError(err).Error("Action 'UpdateLobby' failed")
 			return err
@@ -253,7 +255,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	}
 	r.log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
 
-	err = r.updateLobbySettings(ctx, r.lobby.PriceAvg,
+	err = r.updateLobbySettings(ctx, r.lobby.Location, r.lobby.PriceAvg,
 		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
 			return t.ID
 		}),

@@ -62,6 +62,7 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 
 	sioSess.NewStep("Settings update")
 	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+		Location:    lobby.Location,
 		PriceMin:    300,
 		PriceMax:    300,
 		MaxDistance: 4000,

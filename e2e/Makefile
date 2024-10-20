@@ -56,3 +56,8 @@ e2e-test: ## Launch all test
 	@for testdir in $(E2E_TESTS); do \
 		$(MAKE) -C "$$testdir" test; \
 	done
+
+e2e-update-golden: ## Update all golden
+	@for testdir in $(E2E_TESTS); do \
+		$(MAKE) -C "$$testdir" update-golden; \
+	done

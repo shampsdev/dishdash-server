@@ -101,6 +101,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 		settings := c.Room.Settings()
 		conn.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+			Location:    settings.Location,
 			PriceMin:    settings.PriceAvg - 300,
 			PriceMax:    settings.PriceAvg + 300,
 			MaxDistance: 4000,
@@ -124,7 +125,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 
 		ctx := context.Background()
-		err := c.Room.UpdateLobbySettings(ctx, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
+		err := c.Room.UpdateLobbySettings(ctx, se.Location, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
 		if err != nil {
 			handleError(conn, fmt.Errorf("error while updating lobby: %w", err))
 			return

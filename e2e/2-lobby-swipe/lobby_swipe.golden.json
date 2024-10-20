@@ -15,6 +15,10 @@
           {
             "EventName": "settingsUpdate",
             "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
               "maxDistance": 4000,
               "priceMax": 800,
               "priceMin": 200,
@@ -30,6 +34,10 @@
           {
             "EventName": "settingsUpdate",
             "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
               "maxDistance": 4000,
               "priceMax": 300,
               "priceMin": 300,
@@ -92,7 +100,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 5
             }
@@ -133,7 +141,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 1
             }
@@ -179,7 +187,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 2
             }
@@ -215,7 +223,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 0
             }
@@ -256,6 +264,10 @@
           {
             "EventName": "settingsUpdate",
             "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
               "maxDistance": 4000,
               "priceMax": 600,
               "priceMin": 0,
@@ -305,7 +317,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 5
             }
@@ -346,7 +358,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 1
             }
@@ -387,7 +399,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 0
             }
@@ -428,7 +440,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-10-18T12:12:10.288351Z"
+                "updatedAt": "2024-10-20T16:49:33.612961Z"
               },
               "id": 2
             }

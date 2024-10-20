@@ -43,7 +43,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               },
               "id": 0
             }
@@ -57,24 +57,24 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 0,
-              "option": 0
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"
               },
               "id": 0,
               "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 0,
+              "option": 0
             }
           },
           {
@@ -117,7 +117,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               },
               "id": 1
             }
@@ -186,7 +186,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               }
             }
           }
@@ -238,7 +238,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               },
               "id": 0
             }
@@ -252,24 +252,24 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 0,
-              "option": 0
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"
               },
               "id": 0,
               "option": 1
+            }
+          },
+          {
+            "EventName": "voted",
+            "Data": {
+              "User": {
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
+              },
+              "id": 0,
+              "option": 0
             }
           },
           {
@@ -312,7 +312,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               },
               "id": 1
             }
@@ -381,7 +381,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-18T12:13:34.781798Z"
+                "updatedAt": "2024-10-20T16:50:34.122979Z"
               }
             }
           }

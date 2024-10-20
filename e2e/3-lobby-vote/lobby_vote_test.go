@@ -62,6 +62,7 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 		UserID:  user2.ID,
 	})
 	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+		Location:    lobby.Location,
 		PriceMin:    300,
 		PriceMax:    300,
 		MaxDistance: 4000,

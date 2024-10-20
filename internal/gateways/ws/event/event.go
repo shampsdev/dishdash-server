@@ -40,11 +40,12 @@ type UserLeftEvent struct {
 }
 
 type SettingsUpdateEvent struct {
-	UserID      string  `json:"userId"`
-	PriceMin    int     `json:"priceMin"`
-	PriceMax    int     `json:"priceMax"`
-	MaxDistance int     `json:"maxDistance"`
-	Tags        []int64 `json:"tags"`
+	Location    domain.Coordinate `json:"location"`
+	UserID      string            `json:"userId"`
+	PriceMin    int               `json:"priceMin"`
+	PriceMax    int               `json:"priceMax"`
+	MaxDistance int               `json:"maxDistance"`
+	Tags        []int64           `json:"tags"`
 }
 
 type PlaceEvent struct {
