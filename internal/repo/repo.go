@@ -15,6 +15,7 @@ type Tag interface {
 	UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
 
 	AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeID int64) error
+	DetachTagsFromPlace(ctx context.Context, placeID int64) error
 	GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error)
 
 	AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyID string) error

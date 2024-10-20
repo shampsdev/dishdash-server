@@ -48,6 +48,7 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 
 func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInput) (*domain.Place, error) {
 	place := &domain.Place{
+		ID:               placeInput.ID,
 		Title:            placeInput.Title,
 		ShortDescription: placeInput.ShortDescription,
 		Description:      placeInput.Description,
@@ -58,12 +59,15 @@ func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInp
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
 	}
-	id, err := p.pRepo.SavePlace(ctx, place)
+	err := p.pRepo.UpdatePlace(ctx, place)
 	if err != nil {
 		return nil, err
 	}
-	place.ID = id
-	err = p.tRepo.AttachTagsToPlace(ctx, placeInput.Tags, id)
+	err = p.tRepo.DetachTagsFromPlace(ctx, place.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = p.tRepo.AttachTagsToPlace(ctx, placeInput.Tags, place.ID)
 	if err != nil {
 		return nil, err
 	}

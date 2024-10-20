@@ -240,6 +240,44 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update a place with same id in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Update a place",
+                "parameters": [
+                    {
+                        "description": "Place data",
+                        "name": "place",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usecase.UpdatePlaceInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated place",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Place"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new place in the database",
                 "consumes": [
@@ -279,7 +317,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/places/tag/{id}": {
+        "/places/tag": {
             "put": {
                 "description": "Update an existing tag in the database",
                 "consumes": [
@@ -317,7 +355,9 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            },
+            }
+        },
+        "/places/tag/{id}": {
             "delete": {
                 "description": "Delete an existing tag from the database",
                 "tags": [
@@ -796,6 +836,50 @@ const docTemplate = `{
                 },
                 "description": {
                     "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceMin": {
+                    "type": "integer"
+                },
+                "reviewCount": {
+                    "type": "integer"
+                },
+                "reviewRating": {
+                    "type": "number"
+                },
+                "shortDescription": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "usecase.UpdatePlaceInput": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "images": {
                     "type": "array",
