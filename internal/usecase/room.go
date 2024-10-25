@@ -23,8 +23,8 @@ var (
 )
 
 type Match struct {
-	ID    int
-	Place *domain.Place
+	ID    int           `json:"id"`
+	Place *domain.Place `json:"card"`
 }
 
 type Room struct {

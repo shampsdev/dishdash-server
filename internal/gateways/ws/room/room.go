@@ -112,10 +112,10 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 			conn.Emit(event.StartSwipes)
 		}
 
-		if room.Finished() {
+		if c.Room.Finished() {
 			conn.Emit(event.Finish, event.FinishEvent{
-				Result:  room.Result(),
-				Matches: room.Matches(),
+				Result:  c.Room.Result(),
+				Matches: c.Room.Matches(),
 			})
 			return
 		}
