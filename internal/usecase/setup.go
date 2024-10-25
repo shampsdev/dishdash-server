@@ -19,6 +19,8 @@ func Setup(pool *pgxpool.Pool) Cases {
 
 	pu := NewPlaceUseCase(tr, pr)
 	lu := NewLobbyUseCase(lr, ur, tr, pr, sr)
+	su := NewSwipeUseCase(sr)
+	uu := NewUserUseCase(ur)
 
 	placeRecommender := NewPlaceRecommender(
 		domain.RecommendOpts{
@@ -35,8 +37,8 @@ func Setup(pool *pgxpool.Pool) Cases {
 		Place:    pu,
 		Tag:      NewTagUseCase(tr),
 		Lobby:    lu,
-		User:     NewUserUseCase(ur),
-		Swipe:    NewSwipeUseCase(sr),
-		RoomRepo: NewInMemoryRoomRepo(lu, pu, placeRecommender),
+		User:     uu,
+		Swipe:    su,
+		RoomRepo: NewInMemoryRoomRepo(lu, pu, su, uu, placeRecommender),
 	}
 }

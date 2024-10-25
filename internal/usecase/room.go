@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"slices"
 	"sync"
@@ -11,6 +10,7 @@ import (
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/pkg/filter"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 type State string
@@ -43,6 +43,8 @@ type Room struct {
 
 	lobbyUseCase     Lobby
 	placeUseCase     Place
+	swipeUseCase     Swipe
+	userUseCase      User
 	placeRecommender *PlaceRecommender
 	log              *log.Entry
 }
@@ -51,6 +53,8 @@ func NewRoom(
 	lobby *domain.Lobby,
 	lobbyUseCase Lobby,
 	placeUseCase Place,
+	swipeUseCase Swipe,
+	userUseCase User,
 	placeRecommender *PlaceRecommender,
 ) (*Room, error) {
 	r := &Room{
@@ -63,16 +67,84 @@ func NewRoom(
 		matchVotes:       make(map[string]VoteOption),
 		lobbyUseCase:     lobbyUseCase,
 		placeUseCase:     placeUseCase,
+		swipeUseCase:     swipeUseCase,
+		userUseCase:      userUseCase,
 		placeRecommender: placeRecommender,
 		log:              log.WithFields(log.Fields{"room": lobby.ID}),
 	}
 	r.state = lobby.State
+	r.log.Debugf("state: %s", r.state)
 
-	if lobby.State != domain.InLobby {
-		return nil, errors.New("can't connect to started lobby")
+	if r.state != domain.InLobby {
+		// can't load swiping lobby
+		err := r.setState(domain.Finished)
+		if err != nil {
+			return nil, fmt.Errorf("failed to set state: %w", err)
+		}
+	}
+
+	if r.state == domain.Finished || r.state == domain.InLobby {
+		err := r.loadFromDB()
+		if err != nil {
+			return nil, fmt.Errorf("failed to load from db: %w", err)
+		}
 	}
 
 	return r, nil
+}
+
+func (r *Room) loadFromDB() error {
+	var err error
+	r.swipes, err = r.swipeUseCase.GetSwipesByLobbyID(context.Background(), r.ID)
+	if err != nil {
+		return fmt.Errorf("failed to get swipes: %w", err)
+	}
+
+	users, err := r.userUseCase.GetUsersByLobbyID(context.Background(), r.ID)
+	if err != nil {
+		return fmt.Errorf("failed to get users: %w", err)
+	}
+	for _, user := range users {
+		r.usersMap[user.ID] = user
+	}
+
+	r.matches, err = r.mathesFromSwipes()
+	if err != nil {
+		return fmt.Errorf("failed to get matches: %w", err)
+	}
+
+	return nil
+}
+
+func (r *Room) mathesFromSwipes() ([]*Match, error) {
+	r.log.WithFields(log.Fields{"swipeCount": len(r.swipes)}).Debug("restore matches from db")
+	swipeCount := orderedmap.New[int64, int]()
+
+	for _, swipe := range r.swipes {
+		c, ok := swipeCount.Get(swipe.PlaceID)
+		if !ok {
+			swipeCount.Set(swipe.PlaceID, 0)
+		}
+		swipeCount.Set(swipe.PlaceID, c+1)
+	}
+
+	matches := make([]*Match, 0)
+
+	for e := swipeCount.Oldest(); e != nil; e = e.Next() {
+		r.log.WithFields(log.Fields{"place": e.Key, "count": e.Value}).Debug("swipe count")
+		if e.Value > len(r.usersMap)/2 {
+			place, err := r.placeUseCase.GetPlaceByID(context.Background(), e.Key)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get place: %w", err)
+			}
+			matches = append(matches, &Match{
+				ID:    len(matches),
+				Place: place,
+			})
+		}
+	}
+
+	return matches, nil
 }
 
 func (r *Room) GetNextPlaceForUser(id string) *domain.Place {
@@ -115,6 +187,10 @@ func (r *Room) settings() UpdateLobbySettingsInput {
 func (r *Room) AddUser(user *domain.User) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
+
+	if r.state != domain.InLobby {
+		return nil
+	}
 
 	if _, has := r.usersMap[user.ID]; has {
 		return fmt.Errorf("user %s already exists", user.ID)
@@ -264,8 +340,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 		}),
 	)
 	if err != nil {
-		r.log.WithError(err).Error("Action 'UpdateLobby' failed")
-		return err
+		return fmt.Errorf("error while updating lobby settings: %w", err)
 	}
 	r.log.Debug("Request successful: Action 'UpdateLobby' completed")
 
@@ -294,6 +369,15 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 		UserID:  userID,
 		Type:    t,
 	})
+	err := r.swipeUseCase.SaveSwipe(context.Background(), &domain.Swipe{
+		LobbyID: r.lobby.ID,
+		PlaceID: placeID,
+		UserID:  userID,
+		Type:    t,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error while saving swipe: %w", err)
+	}
 
 	pIdx := slices.IndexFunc(r.places, func(place *domain.Place) bool {
 		return place.ID == placeID
@@ -328,6 +412,12 @@ func (r *Room) Result() *domain.Place {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
 	return r.matches[len(r.matches)-1].Place
+}
+
+func (r *Room) Matches() []*Match {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.matches
 }
 
 func (r *Room) Vote(userID string, option VoteOption) error {

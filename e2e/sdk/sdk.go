@@ -196,6 +196,15 @@ func removeDeepKeys(m map[string]interface{}, keys []string) map[string]interfac
 				m[key] = removeDeepKeys(converted, keys)
 			}
 		}
+		if reflect.ValueOf(value).Kind() == reflect.Slice {
+			if converted, ok := value.([]interface{}); ok {
+				for i, v := range converted {
+					if convertedMap, ok := v.(map[string]interface{}); ok {
+						converted[i] = removeDeepKeys(convertedMap, keys)
+					}
+				}
+			}
+		}
 	}
 
 	return m

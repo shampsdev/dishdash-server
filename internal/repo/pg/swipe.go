@@ -38,7 +38,7 @@ func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
 	const query = `
 	SELECT lobby_id, place_id, user_id, type
-	FROM "swipe" WHERE lobby_id = $1
+	FROM "swipe" WHERE lobby_id = $1 ORDER BY id
 `
 	rows, err := sr.db.Query(ctx, query, lobbyID)
 	if err != nil {
@@ -57,6 +57,7 @@ func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]
 		if err != nil {
 			return nil, err
 		}
+		swipes = append(swipes, &swipe)
 	}
 	return swipes, nil
 }

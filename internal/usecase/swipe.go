@@ -18,3 +18,7 @@ func NewSwipeUseCase(sRepo repo.Swipe) *SwipeUseCase {
 func (s *SwipeUseCase) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 	return s.sRepo.SaveSwipe(ctx, swipe)
 }
+
+func (s *SwipeUseCase) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
+	return s.sRepo.GetSwipesByLobbyID(ctx, lobbyID)
+}

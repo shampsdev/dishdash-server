@@ -30,6 +30,7 @@ type User interface {
 	GetUserByID(ctx context.Context, id string) (*domain.User, error)
 	GetUserByTelegram(ctx context.Context, telegram *int64) (*domain.User, error)
 	GetAllUsers(ctx context.Context) ([]*domain.User, error)
+	GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error)
 }
 
 type SavePlaceInput struct {
@@ -92,4 +93,5 @@ type Lobby interface {
 
 type Swipe interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
+	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
 }

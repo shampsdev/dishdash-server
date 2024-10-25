@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -16,17 +15,27 @@ type RoomRepo interface {
 type InMemoryRoomRepo struct {
 	lobbyUseCase     Lobby
 	placesUseCase    Place
+	swipeUseCase     Swipe
+	userUseCase      User
 	placeRecommender *PlaceRecommender
 
 	roomsMutex sync.RWMutex
 	rooms      map[string]*Room
 }
 
-func NewInMemoryRoomRepo(lobbyUseCase Lobby, placeUseCase Place, placeRecomender *PlaceRecommender) *InMemoryRoomRepo {
+func NewInMemoryRoomRepo(
+	lobbyUseCase Lobby,
+	placeUseCase Place,
+	swipeUseCase Swipe,
+	userUseCase User,
+	placeRecomender *PlaceRecommender,
+) *InMemoryRoomRepo {
 	return &InMemoryRoomRepo{
 		lobbyUseCase:     lobbyUseCase,
 		placesUseCase:    placeUseCase,
+		userUseCase:      userUseCase,
 		placeRecommender: placeRecomender,
+		swipeUseCase:     swipeUseCase,
 		rooms:            make(map[string]*Room),
 	}
 }
@@ -46,6 +55,8 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 			lobby,
 			r.lobbyUseCase,
 			r.placesUseCase,
+			r.swipeUseCase,
+			r.userUseCase,
 			r.placeRecommender,
 		)
 		if err != nil {
@@ -53,10 +64,6 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 		}
 		r.rooms[id] = room
 		return room, nil
-	}
-
-	if !room.InLobby() {
-		return nil, errors.New("can't connect to started lobby")
 	}
 
 	return room, nil

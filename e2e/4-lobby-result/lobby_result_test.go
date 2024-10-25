@@ -12,18 +12,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_LobbyVote(t *testing.T) {
+func Test_LobbyResult(t *testing.T) {
 	sdk.RunSessionTest(t, sdk.SessionTest{
-		GoldenFile: "lobby_vote",
-		Run:        LobbyVote,
+		GoldenFile: "lobby_result",
+		Run:        LobbyResult,
 	})
 }
 
-func LobbyVote(t *testing.T) *sdk.SocketIOSession {
+func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	user1 := sdk.PostUserWithID(t, &domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	user2 := sdk.PostUserWithID(t, &domain.User{ID: "id2", Name: "user2", Avatar: "avatar2"})
 
 	lobby := sdk.FindLobby(t)
+	sdk.Sleep()
 
 	cli1, err := socketio.NewClient(sdk.SIOHost, nil)
 	assert.NoError(t, err)
@@ -39,11 +40,7 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 		cli1.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
-
 	listenEvent(event.Match)
-	listenEvent(event.Voted)
-	listenEvent(event.ReleaseMatch)
-	listenEvent(event.Finish)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -88,13 +85,34 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	sdk.Sleep()
 
-	sioSess.NewStep("Vote both likes")
-	cli1Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
-	cli2Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
+	cli1Emit(event.LeaveLobby)
+	cli2Emit(event.LeaveLobby)
 	sdk.Sleep()
 
+	// leave to check if lobby will be finished
 	assert.NoError(t, cli1.Close())
 	assert.NoError(t, cli2.Close())
+
+	cli3, err := socketio.NewClient(sdk.SIOHost, nil)
+	assert.NoError(t, err)
+
+	listenEvent = func(eventName string) {
+		cli3.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
+	}
+	listenEvent(event.JoinLobby)
+	listenEvent(event.Finish)
+	listenEvent(event.Error)
+
+	sioSess.NewStep("Rejoin")
+	assert.NoError(t, cli3.Connect())
+	cli3Emit := sdk.EmitWithLogFunc(cli3, user1.Name)
+	cli3Emit(event.JoinLobby, event.JoinLobbyEvent{
+		LobbyID: lobby.ID,
+		UserID:  user1.ID,
+	})
+
+	sdk.Sleep()
+	assert.NoError(t, cli3.Close())
 
 	return sioSess
 }
