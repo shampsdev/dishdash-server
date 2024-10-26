@@ -174,6 +174,7 @@ func assertEventStep(t *testing.T, exp, actual eventStep) {
 var ignoredFields = []string{
 	"updatedAt",
 	"createdAt",
+	"source",
 }
 
 func assertMaps(t *testing.T, exp, actual map[string]interface{}) {

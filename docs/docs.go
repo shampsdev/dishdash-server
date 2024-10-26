@@ -724,6 +724,9 @@ const docTemplate = `{
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
