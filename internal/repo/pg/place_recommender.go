@@ -34,7 +34,8 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		p.price_avg,
 		p.review_rating,
 		p.review_count,
-		p.updated_at
+		p.updated_at,
+		p.source
 	FROM place p
 	JOIN place_tag pt ON p.id = pt.place_id
 	JOIN tag t ON pt.tag_id = t.id

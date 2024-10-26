@@ -17,6 +17,7 @@ type Place struct {
 	ReviewCount      int        `json:"reviewCount"`
 	Tags             []*Tag     `json:"tags"`
 	UpdatedAt        time.Time  `json:"updatedAt"`
+	Source           string     `json:"source"`
 }
 
 func (place Place) Equals(other *Place) bool {
