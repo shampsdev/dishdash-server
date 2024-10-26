@@ -55,5 +55,6 @@ func (twoGisPlace *TwoGisPlace) ToPlace() *Place {
 		ReviewCount:      twoGisPlace.ReviewCount,
 		Tags:             twoGisPlace.parseTagToPlace(),
 		UpdatedAt:        time.Now(),
+		Source:           "2gis",
 	}
 }
