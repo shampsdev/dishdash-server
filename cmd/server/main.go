@@ -25,6 +25,7 @@ import (
 var envFile = flag.String("env-file", ".env", "Environment file")
 
 func main() {
+	flag.Parse()
 	log.SetFormatter(&log.TextFormatter{
 		ForceColors:     true,
 		FullTimestamp:   true,

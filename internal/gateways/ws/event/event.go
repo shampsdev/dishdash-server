@@ -7,6 +7,7 @@ import (
 
 const (
 	JoinLobby      = "joinLobby"
+	LeaveLobby     = "leaveLobby"
 	UserJoined     = "userJoined"
 	UserLeft       = "userLeft"
 	SettingsUpdate = "settingsUpdate"
@@ -78,7 +79,8 @@ type VotedEvent struct {
 }
 
 type FinishEvent struct {
-	Result *domain.Place `json:"result"`
+	Result  *domain.Place    `json:"result"`
+	Matches []*usecase.Match `json:"matches"`
 }
 
 type ErrorEvent struct {

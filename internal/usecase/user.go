@@ -43,3 +43,7 @@ func (u UserUseCase) GetUserByTelegram(ctx context.Context, telegram *int64) (*d
 func (u UserUseCase) GetAllUsers(ctx context.Context) ([]*domain.User, error) {
 	return u.uRepo.GetAllUsers(ctx)
 }
+
+func (u UserUseCase) GetUsersByLobbyID(ctx context.Context, lobbyID string) ([]*domain.User, error) {
+	return u.uRepo.GetUsersByLobbyID(ctx, lobbyID)
+}

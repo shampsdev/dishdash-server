@@ -50,7 +50,7 @@ e2e-delete-backend:
 	@-docker compose -f docker-compose.yaml down e2e-backend
 
 ##@ E2E Tests
-E2E_TESTS ?= 1-lobby-join 2-lobby-swipe 3-lobby-vote
+E2E_TESTS ?= 1-lobby-join 2-lobby-swipe 3-lobby-vote 4-lobby-result
 
 e2e-test: ## Launch all test
 	@for testdir in $(E2E_TESTS); do \

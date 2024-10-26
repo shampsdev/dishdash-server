@@ -2,7 +2,6 @@ package tests
 
 import (
 	"testing"
-	"time"
 
 	"dishdash.ru/e2e/sdk"
 	"dishdash.ru/internal/domain"
@@ -58,7 +57,7 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	sioSess.NewStep("Settings update")
 	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
@@ -68,28 +67,28 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 		MaxDistance: 4000,
 		Tags:        []int64{4},
 	})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	sioSess.NewStep("User2 join lobby")
 	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	sioSess.NewStep("Start swipes")
 	cli1Emit(event.StartSwipes)
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	sioSess.NewStep("Swipe like and dislike")
 	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.DISLIKE})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	sioSess.NewStep("Swipe both likes")
 	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	assert.NoError(t, cli1.Close())
 	assert.NoError(t, cli2.Close())

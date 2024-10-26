@@ -20,6 +20,10 @@ var (
 	WaitTime   = 10 * time.Second
 )
 
+func Sleep() {
+	time.Sleep(WaitTime)
+}
+
 func PostUserWithID(t *testing.T, user *domain.User) *domain.User {
 	b, err := json.Marshal(user)
 	assert.NoError(t, err)

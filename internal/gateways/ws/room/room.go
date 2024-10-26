@@ -40,7 +40,7 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 	getContext := func(conn socketio.Conn) (*Context, bool) {
 		c, ok := conn.Context().(*Context)
 		if !ok {
-			handleError(conn, fmt.Errorf("invalid connection type"))
+			handleError(conn, fmt.Errorf("context not found"))
 			return nil, false
 		}
 		return c, ok
@@ -111,10 +111,13 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		if c.Room.Swiping() {
 			conn.Emit(event.StartSwipes)
 		}
+
 		if c.Room.Finished() {
 			conn.Emit(event.Finish, event.FinishEvent{
-				Result: c.Room.Result(),
+				Result:  c.Room.Result(),
+				Matches: c.Room.Matches(),
 			})
+			return
 		}
 	})
 
@@ -224,8 +227,15 @@ func SetupHandlers(s *socketio.Server, cases usecase.Cases) {
 		}
 		if c.Room.Finished() {
 			s.BroadcastToRoom("/", c.Room.ID, event.Finish, event.FinishEvent{
-				Result: c.Room.Result(),
+				Result:  c.Room.Result(),
+				Matches: c.Room.Matches(),
 			})
+		}
+	})
+
+	s.OnEvent("/", event.LeaveLobby, func(conn socketio.Conn) {
+		if err := conn.Close(); err != nil {
+			log.WithError(err).Error("error while closing connection")
 		}
 	})
 

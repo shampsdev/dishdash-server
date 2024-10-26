@@ -2,7 +2,6 @@ package tests
 
 import (
 	"testing"
-	"time"
 
 	"dishdash.ru/e2e/sdk"
 	"dishdash.ru/internal/domain"
@@ -49,12 +48,12 @@ func LobbyJoin(t *testing.T) *sdk.SocketIOSession {
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
-	time.Sleep(sdk.WaitTime)
+	sdk.Sleep()
 
 	assert.NoError(t, cli1.Close())
 	assert.NoError(t, cli2.Close())

@@ -43,7 +43,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
+                "updatedAt": "2024-10-25T22:55:37.434843Z"
               },
               "id": 0
             }
@@ -52,36 +52,7 @@
       },
       {
         "Name": "Vote like and dislike",
-        "Events": [
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 0,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 0,
-              "option": 0
-            }
-          },
-          {
-            "EventName": "releaseMatch",
-            "Data": null
-          }
-        ]
+        "Events": []
       },
       {
         "Name": "Swipe both likes (2)",
@@ -117,7 +88,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
+                "updatedAt": "2024-10-25T22:55:37.434843Z"
               },
               "id": 1
             }
@@ -125,36 +96,8 @@
         ]
       },
       {
-        "Name": "Vote both likes",
+        "Name": "Rejoin",
         "Events": [
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 1,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 1,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "releaseMatch",
-            "Data": null
-          },
           {
             "EventName": "finish",
             "Data": {
@@ -189,7 +132,7 @@
                       }
                     ],
                     "title": "Шавафель",
-                    "updatedAt": "2024-10-25T23:04:25.477686Z"
+                    "updatedAt": "2024-10-25T22:55:37.434843Z"
                   }
                 },
                 {
@@ -222,7 +165,7 @@
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-10-25T23:04:25.477686Z"
+                    "updatedAt": "2024-10-25T22:55:37.434843Z"
                   }
                 }
               ],
@@ -254,7 +197,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
+                "updatedAt": "2024-10-25T22:55:37.434843Z"
               }
             }
           }
@@ -306,7 +249,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
+                "updatedAt": "2024-10-25T22:55:37.434843Z"
               },
               "id": 0
             }
@@ -315,36 +258,7 @@
       },
       {
         "Name": "Vote like and dislike",
-        "Events": [
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 0,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 0,
-              "option": 0
-            }
-          },
-          {
-            "EventName": "releaseMatch",
-            "Data": null
-          }
-        ]
+        "Events": []
       },
       {
         "Name": "Swipe both likes (2)",
@@ -380,7 +294,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
+                "updatedAt": "2024-10-25T22:55:37.434843Z"
               },
               "id": 1
             }
@@ -388,140 +302,8 @@
         ]
       },
       {
-        "Name": "Vote both likes",
-        "Events": [
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
-              },
-              "id": 1,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "voted",
-            "Data": {
-              "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
-              },
-              "id": 1,
-              "option": 1
-            }
-          },
-          {
-            "EventName": "releaseMatch",
-            "Data": null
-          },
-          {
-            "EventName": "finish",
-            "Data": {
-              "matches": [
-                {
-                  "id": 0,
-                  "card": {
-                    "address": "Кронверкский проспект, 27",
-                    "description": "Вкусная сырная шаверма и не только",
-                    "id": 5,
-                    "image": [
-                      "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
-                    ],
-                    "location": {
-                      "lat": 59.9615,
-                      "lon": 30.3124
-                    },
-                    "priceAvg": 320,
-                    "reviewCount": 1000,
-                    "reviewRating": 4.5,
-                    "shortDescription": "Вкусная шаверма",
-                    "tags": [
-                      {
-                        "icon": "cafe.png",
-                        "id": 2,
-                        "name": "cafe"
-                      },
-                      {
-                        "icon": "food.png",
-                        "id": 4,
-                        "name": "food"
-                      }
-                    ],
-                    "title": "Шавафель",
-                    "updatedAt": "2024-10-25T23:04:25.477686Z"
-                  }
-                },
-                {
-                  "id": 1,
-                  "card": {
-                    "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                    "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-                    "id": 1,
-                    "image": [
-                      "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-                    ],
-                    "location": {
-                      "lat": 59.9505,
-                      "lon": 30.2956
-                    },
-                    "priceAvg": 450,
-                    "reviewCount": 1000,
-                    "reviewRating": 4.5,
-                    "shortDescription": "Ресторан узбекской кухни",
-                    "tags": [
-                      {
-                        "icon": "cafe.png",
-                        "id": 2,
-                        "name": "cafe"
-                      },
-                      {
-                        "icon": "food.png",
-                        "id": 4,
-                        "name": "food"
-                      }
-                    ],
-                    "title": "Пловная",
-                    "updatedAt": "2024-10-25T23:04:25.477686Z"
-                  }
-                }
-              ],
-              "result": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-                "id": 1,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9505,
-                  "lon": 30.2956
-                },
-                "priceAvg": 450,
-                "reviewCount": 1000,
-                "reviewRating": 4.5,
-                "shortDescription": "Ресторан узбекской кухни",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Пловная",
-                "updatedAt": "2024-10-25T23:04:25.477686Z"
-              }
-            }
-          }
-        ]
+        "Name": "Rejoin",
+        "Events": []
       }
     ]
   }
