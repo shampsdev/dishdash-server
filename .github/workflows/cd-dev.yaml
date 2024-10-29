@@ -9,7 +9,7 @@ on:
 jobs:
   deploy_to_dev:
     name: Deploy to Dev
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'dev' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.head_branch == 'dev' || github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
