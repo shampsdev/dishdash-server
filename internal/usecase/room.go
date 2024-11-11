@@ -244,6 +244,12 @@ func (r *Room) Empty() bool {
 	return len(r.usersMap) == 0
 }
 
+func (r *Room) State() domain.LobbyState {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return r.state
+}
+
 func (r *Room) InLobby() bool {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
