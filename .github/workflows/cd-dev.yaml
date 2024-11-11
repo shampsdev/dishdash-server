@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+        with: 
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Set short git commit SHA
         id: vars
