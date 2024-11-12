@@ -172,7 +172,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		})
 
 	s.On(event.Swipe, EventOpts{
-		Allowed: []domain.LobbyState{domain.Swiping},
+		Allowed: []domain.LobbyState{domain.Swiping, domain.Voting},
 	},
 		func(c *Context, se event.SwipeEvent) {
 			m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
@@ -197,7 +197,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 
 	voteLock := sync.RWMutex{}
 	s.On(event.Vote, EventOpts{
-		Allowed: []domain.LobbyState{domain.Voting},
+		Allowed: []domain.LobbyState{domain.Voting, domain.Swiping},
 	},
 		func(c *Context, ve event.VoteEvent) {
 			voteLock.Lock()
