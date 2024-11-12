@@ -167,7 +167,7 @@ const docTemplate = `{
                     "200": {
                         "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/lobby.lobbyOutput"
                         }
                     },
                     "400": {
@@ -798,6 +798,38 @@ const docTemplate = `{
                 }
             }
         },
+        "lobby.lobbyOutput": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceAvg": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Tag"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.User"
+                    }
+                }
+            }
+        },
         "lobby.nearestLobbyOutput": {
             "type": "object",
             "properties": {
@@ -805,7 +837,7 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "lobby": {
-                    "$ref": "#/definitions/domain.Lobby"
+                    "$ref": "#/definitions/lobby.lobbyOutput"
                 }
             }
         },

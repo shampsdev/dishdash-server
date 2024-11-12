@@ -105,12 +105,33 @@ definitions:
       updatedAt:
         type: string
     type: object
+  lobby.lobbyOutput:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceAvg:
+        type: integer
+      state:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/domain.User'
+        type: array
+    type: object
   lobby.nearestLobbyOutput:
     properties:
       distance:
         type: number
       lobby:
-        $ref: '#/definitions/domain.Lobby'
+        $ref: '#/definitions/lobby.lobbyOutput'
     type: object
   usecase.FindLobbyInput:
     properties:
@@ -253,7 +274,7 @@ paths:
         "200":
           description: lobby data
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/lobby.lobbyOutput'
         "400":
           description: Bad Request
         "500":
