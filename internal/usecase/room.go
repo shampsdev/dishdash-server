@@ -121,6 +121,9 @@ func (r *Room) mathesFromSwipes() ([]*Match, error) {
 	swipeCount := orderedmap.New[int64, int]()
 
 	for _, swipe := range r.swipes {
+		if swipe.Type != domain.LIKE {
+			continue
+		}
 		c, ok := swipeCount.Get(swipe.PlaceID)
 		if !ok {
 			swipeCount.Set(swipe.PlaceID, 0)
@@ -189,7 +192,7 @@ func (r *Room) AddUser(user *domain.User) error {
 	defer r.lock.Unlock()
 
 	if r.state != domain.InLobby {
-		return nil
+		return fmt.Errorf("can't add user to lobby in state %s", r.state)
 	}
 
 	if _, has := r.usersMap[user.ID]; has {
@@ -229,12 +232,11 @@ func (r *Room) RemoveUser(id string) error {
 	}
 	delete(r.usersMap, id)
 
-	if r.state == domain.Swiping {
-		err := r.syncUsersWithBd()
-		if err != nil {
-			return err
-		}
+	err := r.syncUsersWithBd()
+	if err != nil {
+		return fmt.Errorf("error while syncing users with bd: %w", err)
 	}
+
 	return nil
 }
 

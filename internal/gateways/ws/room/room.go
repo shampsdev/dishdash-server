@@ -69,6 +69,14 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				return
 			}
 
+			if room.Finished() {
+				c.Emit(event.Finish, event.FinishEvent{
+					Result:  c.Room.Result(),
+					Matches: c.Room.Matches(),
+				})
+				return
+			}
+
 			err = room.AddUser(user)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while adding user to room: %w", err))
