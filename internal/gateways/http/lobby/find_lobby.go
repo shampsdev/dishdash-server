@@ -15,8 +15,8 @@ import (
 // @Produce  json
 // @Schemes http https
 // @Param location body usecase.FindLobbyInput true "Location + Distance (in metres)"
-// @Success 200 {object} domain.Lobby
-// @Success 201 {object} domain.Lobby
+// @Success 200 {object} lobbyOutput
+// @Success 201 {object} lobbyOutput
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies/find [post]
@@ -35,6 +35,8 @@ func FindLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, lobby)
+		lobbyOutput := ToLobbyOutput(lobby)
+
+		c.JSON(http.StatusOK, lobbyOutput)
 	}
 }
