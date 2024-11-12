@@ -196,7 +196,7 @@ func (r *Room) AddUser(user *domain.User) error {
 	}
 
 	if _, has := r.usersMap[user.ID]; has {
-		return fmt.Errorf("user %s already exists", user.ID)
+		return nil
 	}
 	r.usersMap[user.ID] = user
 

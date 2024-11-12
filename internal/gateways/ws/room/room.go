@@ -24,6 +24,11 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
+		if c.Room == nil {
+			log.Warn("room not found in context while disconnect")
+			return
+		}
+
 		err := c.Room.RemoveUser(c.User.ID)
 		if err != nil {
 			c.HandleError(fmt.Errorf("error while removing user from room: %w", err))
