@@ -75,6 +75,15 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 			c.Room = room
 
+			settings := c.Room.Settings()
+			c.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+				Location:    settings.Location,
+				PriceMin:    settings.PriceAvg - 300,
+				PriceMax:    settings.PriceAvg + 300,
+				MaxDistance: 4000,
+				Tags:        settings.Tags,
+			})
+
 			if room.Finished() {
 				c.Emit(event.Finish, event.FinishEvent{
 					Result:  c.Room.Result(),
@@ -109,14 +118,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 					Avatar: u.Avatar,
 				})
 			}
-			settings := c.Room.Settings()
-			c.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
-				Location:    settings.Location,
-				PriceMin:    settings.PriceAvg - 300,
-				PriceMax:    settings.PriceAvg + 300,
-				MaxDistance: 4000,
-				Tags:        settings.Tags,
-			})
 
 			if c.Room.Swiping() {
 				c.Emit(event.StartSwipes)

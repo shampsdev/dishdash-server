@@ -40,6 +40,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
 	listenEvent(event.Match)
+	listenEvent(event.SettingsUpdate)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -95,6 +96,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	}
 	listenEvent(event.JoinLobby)
 	listenEvent(event.Finish)
+	listenEvent(event.SettingsUpdate)
 	listenEvent(event.Error)
 
 	sioSess.NewStep("Rejoin")

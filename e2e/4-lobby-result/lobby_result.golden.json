@@ -3,7 +3,38 @@
     "Steps": [
       {
         "Name": "Joining lobby",
-        "Events": []
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 800,
+              "priceMin": 200,
+              "tags": [],
+              "userId": ""
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ],
+              "userId": "id1"
+            }
+          }
+        ]
       },
       {
         "Name": "Start swipes",
@@ -48,7 +79,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-12T22:16:27.089866Z"
+                "updatedAt": "2024-11-12T23:21:34.129867Z"
               },
               "id": 0
             }
@@ -58,6 +89,22 @@
       {
         "Name": "Rejoin",
         "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          },
           {
             "EventName": "finish",
             "Data": {
@@ -92,7 +139,7 @@
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-11-12T22:16:27.089866Z"
+                    "updatedAt": "2024-11-12T23:21:34.129867Z"
                   },
                   "id": 0
                 }
@@ -126,7 +173,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-12T22:16:27.089866Z"
+                "updatedAt": "2024-11-12T23:21:34.129867Z"
               }
             }
           }
@@ -138,7 +185,24 @@
     "Steps": [
       {
         "Name": "Joining lobby",
-        "Events": []
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          }
+        ]
       },
       {
         "Name": "Start swipes",
@@ -183,7 +247,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-12T22:16:27.089866Z"
+                "updatedAt": "2024-11-12T23:21:34.129867Z"
               },
               "id": 0
             }
