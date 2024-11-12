@@ -228,13 +228,15 @@ func (r *Room) RemoveUser(id string) error {
 
 	_, has := r.usersMap[id]
 	if !has {
-		return fmt.Errorf("user %s not found", id)
+		return nil
 	}
 	delete(r.usersMap, id)
 
-	err := r.syncUsersWithBd()
-	if err != nil {
-		return fmt.Errorf("error while syncing users with bd: %w", err)
+	if r.state == domain.InLobby {
+		err := r.syncUsersWithBd()
+		if err != nil {
+			return fmt.Errorf("error while syncing users with bd: %w", err)
+		}
 	}
 
 	return nil

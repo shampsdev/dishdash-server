@@ -27,7 +27,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		err := c.Room.RemoveUser(c.User.ID)
 		if err != nil {
 			c.HandleError(fmt.Errorf("error while removing user from room: %w", err))
-			return
 		}
 
 		s.SIO.LeaveRoom("", c.Room.ID, conn)
@@ -62,12 +61,14 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				c.HandleError(fmt.Errorf("error while getting user: %w", err))
 				return
 			}
+			c.User = user
 
 			room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while getting room: %w", err))
 				return
 			}
+			c.Room = room
 
 			if room.Finished() {
 				c.Emit(event.Finish, event.FinishEvent{
@@ -84,16 +85,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			c.Conn.Join(room.ID)
-			c = &Context{
-				User: user,
-				Conn: c.Conn,
-				Room: room,
-				Log: log.WithFields(log.Fields{
-					"room":  room.ID,
-					"user":  user.ID,
-					"event": event.JoinLobby,
-				}),
-			}
 			c.lock.Lock()
 			c.Conn.SetContext(c)
 			c.lock.Unlock()

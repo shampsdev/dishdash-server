@@ -10,52 +10,11 @@
         "Events": []
       },
       {
-        "Name": "Swipe both likes (1)",
-        "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Кронверкский проспект, 27",
-                "description": "Вкусная сырная шаверма и не только",
-                "id": 5,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9615,
-                  "lon": 30.3124
-                },
-                "priceAvg": 320,
-                "reviewCount": 1000,
-                "reviewRating": 4.5,
-                "shortDescription": "Вкусная шаверма",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Шавафель",
-                "updatedAt": "2024-10-25T22:55:37.434843Z"
-              },
-              "id": 0
-            }
-          }
-        ]
-      },
-      {
-        "Name": "Vote like and dislike",
+        "Name": "Swipe like and dislike",
         "Events": []
       },
       {
-        "Name": "Swipe both likes (2)",
+        "Name": "Swipe both likes",
         "Events": [
           {
             "EventName": "match",
@@ -75,6 +34,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -88,9 +48,9 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T22:55:37.434843Z"
+                "updatedAt": "2024-11-12T22:16:27.089866Z"
               },
-              "id": 1
+              "id": 0
             }
           }
         ]
@@ -103,40 +63,6 @@
             "Data": {
               "matches": [
                 {
-                  "id": 0,
-                  "card": {
-                    "address": "Кронверкский проспект, 27",
-                    "description": "Вкусная сырная шаверма и не только",
-                    "id": 5,
-                    "image": [
-                      "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
-                    ],
-                    "location": {
-                      "lat": 59.9615,
-                      "lon": 30.3124
-                    },
-                    "priceAvg": 320,
-                    "reviewCount": 1000,
-                    "reviewRating": 4.5,
-                    "shortDescription": "Вкусная шаверма",
-                    "tags": [
-                      {
-                        "icon": "cafe.png",
-                        "id": 2,
-                        "name": "cafe"
-                      },
-                      {
-                        "icon": "food.png",
-                        "id": 4,
-                        "name": "food"
-                      }
-                    ],
-                    "title": "Шавафель",
-                    "updatedAt": "2024-10-25T22:55:37.434843Z"
-                  }
-                },
-                {
-                  "id": 1,
                   "card": {
                     "address": "Сытнинская ул., 4П, Санкт-Петербург",
                     "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
@@ -152,6 +78,7 @@
                     "reviewCount": 1000,
                     "reviewRating": 4.5,
                     "shortDescription": "Ресторан узбекской кухни",
+                    "source": "manual",
                     "tags": [
                       {
                         "icon": "cafe.png",
@@ -165,8 +92,9 @@
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-10-25T22:55:37.434843Z"
-                  }
+                    "updatedAt": "2024-11-12T22:16:27.089866Z"
+                  },
+                  "id": 0
                 }
               ],
               "result": {
@@ -184,6 +112,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -197,7 +126,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T22:55:37.434843Z"
+                "updatedAt": "2024-11-12T22:16:27.089866Z"
               }
             }
           }
@@ -216,52 +145,11 @@
         "Events": []
       },
       {
-        "Name": "Swipe both likes (1)",
-        "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Кронверкский проспект, 27",
-                "description": "Вкусная сырная шаверма и не только",
-                "id": 5,
-                "image": [
-                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9615,
-                  "lon": 30.3124
-                },
-                "priceAvg": 320,
-                "reviewCount": 1000,
-                "reviewRating": 4.5,
-                "shortDescription": "Вкусная шаверма",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Шавафель",
-                "updatedAt": "2024-10-25T22:55:37.434843Z"
-              },
-              "id": 0
-            }
-          }
-        ]
-      },
-      {
-        "Name": "Vote like and dislike",
+        "Name": "Swipe like and dislike",
         "Events": []
       },
       {
-        "Name": "Swipe both likes (2)",
+        "Name": "Swipe both likes",
         "Events": [
           {
             "EventName": "match",
@@ -281,6 +169,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -294,9 +183,9 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-25T22:55:37.434843Z"
+                "updatedAt": "2024-11-12T22:16:27.089866Z"
               },
-              "id": 1
+              "id": 0
             }
           }
         ]
