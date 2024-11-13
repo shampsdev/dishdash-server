@@ -6,35 +6,6 @@ definitions:
       lon:
         type: number
     type: object
-  domain.Lobby:
-    properties:
-      createdAt:
-        type: string
-      id:
-        type: string
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-      places:
-        items:
-          $ref: '#/definitions/domain.Place'
-        type: array
-      priceAvg:
-        type: integer
-      state:
-        type: string
-      swipes:
-        items:
-          $ref: '#/definitions/domain.Swipe'
-        type: array
-      tags:
-        items:
-          $ref: '#/definitions/domain.Tag'
-        type: array
-      users:
-        items:
-          $ref: '#/definitions/domain.User'
-        type: array
-    type: object
   domain.Place:
     properties:
       address:
@@ -68,19 +39,6 @@ definitions:
       updatedAt:
         type: string
     type: object
-  domain.Swipe:
-    properties:
-      cardID:
-        type: integer
-      id:
-        type: integer
-      lobbyID:
-        type: string
-      type:
-        type: string
-      userID:
-        type: string
-    type: object
   domain.Tag:
     properties:
       icon:
@@ -110,7 +68,7 @@ definitions:
       distance:
         type: number
       lobby:
-        $ref: '#/definitions/domain.Lobby'
+        $ref: '#/definitions/usecase.LobbyOutput'
     type: object
   usecase.FindLobbyInput:
     properties:
@@ -118,6 +76,27 @@ definitions:
         type: number
       location:
         $ref: '#/definitions/domain.Coordinate'
+    type: object
+  usecase.LobbyOutput:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceAvg:
+        type: integer
+      state:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/domain.User'
+        type: array
     type: object
   usecase.SaveLobbyInput:
     properties:
@@ -206,7 +185,7 @@ paths:
         "200":
           description: Saved lobby
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":
@@ -253,7 +232,7 @@ paths:
         "200":
           description: lobby data
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":
@@ -279,11 +258,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":

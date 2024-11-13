@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"dishdash.ru/internal/domain"
 )
@@ -78,13 +79,25 @@ type FindLobbyInput struct {
 	Location domain.Coordinate `json:"location"`
 }
 
+type LobbyOutput struct {
+	ID        string            `json:"id"`
+	State     domain.LobbyState `json:"state"`
+	PriceAvg  int               `json:"priceAvg"`
+	Location  domain.Coordinate `json:"location"`
+	CreatedAt time.Time         `json:"createdAt"`
+
+	Tags  []*domain.Tag  `json:"tags"`
+	Users []*domain.User `json:"users"`
+}
+
 type Lobby interface {
-	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*domain.Lobby, error)
+	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*LobbyOutput, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
+	GetOutputLobbyByID(ctx context.Context, id string) (*LobbyOutput, error)
 
-	FindLobby(ctx context.Context, input FindLobbyInput) (*domain.Lobby, error)
-	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error)
+	FindLobby(ctx context.Context, input FindLobbyInput) (*LobbyOutput, error)
+	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*LobbyOutput, float64, error)
 
 	SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error)
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error

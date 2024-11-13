@@ -7,16 +7,16 @@ import (
 )
 
 type Lobby struct {
-	ID        string     `json:"id"`
-	State     LobbyState `json:"state"`
-	PriceAvg  int        `json:"priceAvg"`
-	Location  Coordinate `json:"location"`
-	CreatedAt time.Time  `json:"createdAt"`
+	ID        string
+	State     LobbyState
+	PriceAvg  int
+	Location  Coordinate
+	CreatedAt time.Time
 
-	Tags   []*Tag   `json:"tags"`
-	Swipes []*Swipe `json:"swipes"`
-	Users  []*User  `json:"users"`
-	Places []*Place `json:"places"`
+	Tags   []*Tag
+	Swipes []*Swipe
+	Users  []*User
+	Places []*Place
 }
 
 func (l *Lobby) TagNames() []string {
