@@ -42,6 +42,8 @@ type SavePlaceInput struct {
 	PriceAvg         int               `json:"priceMin"`
 	ReviewRating     float64           `json:"reviewRating"`
 	ReviewCount      int               `json:"reviewCount"`
+	Source           string            `json:"source"`
+	Url              string            `json:"url"`
 	Images           []string          `json:"images"`
 	Tags             []int64           `json:"tags"`
 }

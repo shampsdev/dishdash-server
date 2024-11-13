@@ -1,0 +1,271 @@
+{
+  "user1": {
+    "Steps": [
+      {
+        "Name": "Joining lobby",
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ],
+              "userId": "id1"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 800,
+              "priceMin": 200,
+              "tags": [],
+              "userId": ""
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "Swipe like and dislike",
+        "Events": []
+      },
+      {
+        "Name": "Swipe both likes",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная"
+              },
+              "id": 0
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Rejoin",
+        "Events": [
+          {
+            "EventName": "finish",
+            "Data": {
+              "matches": [
+                {
+                  "card": {
+                    "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                    "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                    "id": 1,
+                    "image": [
+                      "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                    ],
+                    "location": {
+                      "lat": 59.9505,
+                      "lon": 30.2956
+                    },
+                    "priceAvg": 450,
+                    "reviewCount": 1000,
+                    "reviewRating": 4.5,
+                    "shortDescription": "Ресторан узбекской кухни",
+                    "tags": [
+                      {
+                        "icon": "cafe.png",
+                        "id": 2,
+                        "name": "cafe"
+                      },
+                      {
+                        "icon": "food.png",
+                        "id": 4,
+                        "name": "food"
+                      }
+                    ],
+                    "title": "Пловная"
+                  },
+                  "id": 0
+                }
+              ],
+              "result": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная"
+              }
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 600,
+              "priceMin": 0,
+              "tags": [
+                4
+              ],
+              "userId": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "user2": {
+    "Steps": [
+      {
+        "Name": "Joining lobby",
+        "Events": [
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 300,
+              "priceMin": 300,
+              "tags": [
+                4
+              ],
+              "userId": "id1"
+            }
+          },
+          {
+            "EventName": "settingsUpdate",
+            "Data": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "maxDistance": 4000,
+              "priceMax": 800,
+              "priceMin": 200,
+              "tags": [],
+              "userId": ""
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Start swipes",
+        "Events": []
+      },
+      {
+        "Name": "Swipe like and dislike",
+        "Events": []
+      },
+      {
+        "Name": "Swipe both likes",
+        "Events": [
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "image": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная",
+                "updatedAt": "2024-11-12T23:32:41.58892Z"
+              },
+              "id": 0
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Rejoin",
+        "Events": []
+      }
+    ]
+  }
+}

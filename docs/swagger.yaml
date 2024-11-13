@@ -67,6 +67,8 @@ definitions:
         type: string
       updatedAt:
         type: string
+      url:
+        type: string
     type: object
   domain.Swipe:
     properties:
@@ -146,11 +148,15 @@ definitions:
         type: number
       shortDescription:
         type: string
+      source:
+        type: string
       tags:
         items:
           type: integer
         type: array
       title:
+        type: string
+      url:
         type: string
     type: object
   usecase.UpdatePlaceInput:
@@ -175,11 +181,15 @@ definitions:
         type: number
       shortDescription:
         type: string
+      source:
+        type: string
       tags:
         items:
           type: integer
         type: array
       title:
+        type: string
+      url:
         type: string
     type: object
 info:
