@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -83,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -167,7 +167,7 @@ const docTemplate = `{
                     "200": {
                         "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/lobby.lobbyOutput"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -647,50 +647,6 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Lobby": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "places": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Place"
-                    }
-                },
-                "priceAvg": {
-                    "type": "integer"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "swipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Swipe"
-                    }
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Tag"
-                    }
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.User"
-                    }
-                }
-            }
-        },
         "domain.Place": {
             "type": "object",
             "properties": {
@@ -741,26 +697,6 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Swipe": {
-            "type": "object",
-            "properties": {
-                "cardID": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "lobbyID": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
         "domain.Tag": {
             "type": "object",
             "properties": {
@@ -798,7 +734,29 @@ const docTemplate = `{
                 }
             }
         },
-        "lobby.lobbyOutput": {
+        "lobby.nearestLobbyOutput": {
+            "type": "object",
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "lobby": {
+                    "$ref": "#/definitions/usecase.LobbyOutput"
+                }
+            }
+        },
+        "usecase.FindLobbyInput": {
+            "type": "object",
+            "properties": {
+                "dist": {
+                    "type": "number"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "usecase.LobbyOutput": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -827,28 +785,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/domain.User"
                     }
-                }
-            }
-        },
-        "lobby.nearestLobbyOutput": {
-            "type": "object",
-            "properties": {
-                "distance": {
-                    "type": "number"
-                },
-                "lobby": {
-                    "$ref": "#/definitions/lobby.lobbyOutput"
-                }
-            }
-        },
-        "usecase.FindLobbyInput": {
-            "type": "object",
-            "properties": {
-                "dist": {
-                    "type": "number"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
                 }
             }
         },
