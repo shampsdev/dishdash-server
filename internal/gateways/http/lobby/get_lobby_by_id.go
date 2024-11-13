@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Schemes http https
 // @Param id path string true "lobby ID"
-// @Success 200 {object} lobbyOutput "lobby data"
+// @Success 200 {object} usecase.LobbyOutput "lobby data"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies/{id} [get]
@@ -23,14 +23,12 @@ func GetLobbyByID(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 
-		lobby, err := lobbyUseCase.GetLobbyByID(c, id)
+		lobby, err := lobbyUseCase.GetOutputLobbyByID(c, id)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		lobbyOutput := ToLobbyOutput(lobby);
-
-		c.JSON(http.StatusOK, lobbyOutput)
+		c.JSON(http.StatusOK, lobby)
 	}
 }

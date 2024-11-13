@@ -32,7 +32,7 @@ func NewLobbyUseCase(
 	}
 }
 
-func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*domain.Lobby, error) {
+func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*LobbyOutput, error) {
 	lobby := &domain.Lobby{
 		State:    domain.InLobby,
 		PriceAvg: lobbyInput.PriceAvg,
@@ -44,7 +44,7 @@ func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) 
 	}
 	lobby.ID = id
 
-	return l.GetLobbyByID(ctx, id)
+	return l.GetOutputLobbyByID(ctx, id)
 }
 
 func (l LobbyUseCase) SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error) {
@@ -142,19 +142,49 @@ func (l LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobb
 	return lobby, nil
 }
 
-func (l LobbyUseCase) NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*domain.Lobby, float64, error) {
+func (l LobbyUseCase) GetOutputLobbyByID(ctx context.Context, id string) (*LobbyOutput, error) {
+	lobby, err := l.lRepo.GetLobbyByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	lobby.ID = id
+
+	lobby.Tags, err = l.tRepo.GetTagsByLobbyID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	lobby.Users, err = l.uRepo.GetUsersByLobbyID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	lobbyOutput := &LobbyOutput{
+		ID:        lobby.ID,
+		State:     lobby.State,
+		PriceAvg:  lobby.PriceAvg,
+		Location:  lobby.Location,
+		CreatedAt: lobby.CreatedAt,
+		Tags:      lobby.Tags,
+		Users:     lobby.Users,
+	}
+
+	return lobbyOutput, nil
+}
+
+func (l LobbyUseCase) NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*LobbyOutput, float64, error) {
 	id, dist, err := l.lRepo.NearestActiveLobbyID(ctx, loc)
 	if err != nil {
 		return nil, 0, err
 	}
-	lobby, err := l.GetLobbyByID(ctx, id)
+	lobby, err := l.GetOutputLobbyByID(ctx, id)
 	if err != nil {
 		return nil, 0, err
 	}
 	return lobby, dist, nil
 }
 
-func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*domain.Lobby, error) {
+func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*LobbyOutput, error) {
 	lobby, dist, err := l.NearestActiveLobby(ctx, input.Location)
 	if err != nil && !errors.Is(err, repo.ErrLobbyNotFound) {
 		return nil, err
@@ -164,9 +194,10 @@ func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*dom
 			Location: input.Location,
 			PriceAvg: 500,
 		})
+
 		if err != nil {
 			return nil, err
 		}
 	}
-	return l.GetLobbyByID(ctx, lobby.ID)
+	return l.GetOutputLobbyByID(ctx, lobby.ID)
 }
