@@ -694,6 +694,9 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },
@@ -829,6 +832,9 @@ const docTemplate = `{
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -836,6 +842,9 @@ const docTemplate = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -873,6 +882,9 @@ const docTemplate = `{
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -880,6 +892,9 @@ const docTemplate = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

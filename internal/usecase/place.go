@@ -28,6 +28,7 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
 		Source:           "api",
+		Url:              placeInput.Url,
 	}
 	id, err := p.pRepo.SavePlace(ctx, place)
 	if err != nil {
@@ -59,6 +60,8 @@ func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInp
 		PriceAvg:         placeInput.PriceAvg,
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
+		Source:           placeInput.Source,
+		Url:              placeInput.Url,
 	}
 	err := p.pRepo.UpdatePlace(ctx, place)
 	if err != nil {

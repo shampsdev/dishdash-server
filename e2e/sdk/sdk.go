@@ -175,6 +175,7 @@ var ignoredFields = []string{
 	"updatedAt",
 	"createdAt",
 	"source",
+	"url",
 }
 
 func assertMaps(t *testing.T, exp, actual map[string]interface{}) {

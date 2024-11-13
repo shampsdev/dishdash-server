@@ -686,6 +686,9 @@
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },
@@ -821,6 +824,9 @@
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -828,6 +834,9 @@
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -865,6 +874,9 @@
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -872,6 +884,9 @@
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
