@@ -306,6 +306,30 @@ paths:
       summary: find nearest lobby
       tags:
       - lobbies
+  /place/by_url:
+    get:
+      consumes:
+      - application/json
+      description: Get a place from the database by url
+      parameters:
+      - description: place url
+        in: query
+        name: url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: place data
+          schema: {}
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get place by url
+      tags:
+      - places
   /places:
     get:
       consumes:

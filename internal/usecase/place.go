@@ -104,6 +104,18 @@ func (p PlaceUseCase) GetPlaceByID(ctx context.Context, id int64) (*domain.Place
 	return place, nil
 }
 
+func (p PlaceUseCase) GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error) {
+	place, err := p.pRepo.GetPlaceByUrl(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
+	if err != nil {
+		return nil, err
+	}
+	return place, nil
+}
+
 func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) {
 	places, err := p.pRepo.GetAllPlaces(ctx)
 	if err != nil {
