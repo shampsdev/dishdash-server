@@ -28,6 +28,7 @@ type Place interface {
 	UpdatePlace(ctx context.Context, place *domain.Place) error
 	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
+	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 
 	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error

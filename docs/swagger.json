@@ -204,6 +204,42 @@
                 }
             }
         },
+        "/place/by_url": {
+            "get": {
+                "description": "Get a place from the database by url",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Get place by url",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "place url",
+                        "name": "url",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "place data",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/places": {
             "get": {
                 "description": "Get a list of places from the database",

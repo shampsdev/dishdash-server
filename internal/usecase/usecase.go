@@ -59,6 +59,7 @@ type Place interface {
 	UpdatePlace(ctx context.Context, place UpdatePlaceInput) (*domain.Place, error)
 	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
+	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)
 	// GetAllPlaces is very long operation now
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 }

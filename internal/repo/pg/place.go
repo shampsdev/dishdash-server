@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -12,6 +13,7 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/repo"
 	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -134,6 +136,37 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 `
 	row := pr.db.QueryRow(ctx, getPlaceQuery, id)
 	place, err := scanPlace(row)
+	if err != nil {
+		return nil, fmt.Errorf("can't fetch place: %w", err)
+	}
+	return place, nil
+}
+
+func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error) {
+	const getPlaceQuery = `
+	SELECT
+		"id",
+		"title",
+		"short_description",
+		"description",
+		"images",
+		"location",
+		"address",
+		"price_avg",
+		"review_rating",
+		"review_count",
+		"updated_at",
+		"source",
+		"url"
+	FROM "place"
+	WHERE url=$1
+`
+	row := pr.db.QueryRow(ctx, getPlaceQuery, url)
+	place, err := scanPlace(row)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, repo.ErrPlaceNotFound
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("can't fetch place: %w", err)
 	}
