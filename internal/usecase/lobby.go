@@ -194,7 +194,6 @@ func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*Lob
 			Location: input.Location,
 			PriceAvg: 500,
 		})
-
 		if err != nil {
 			return nil, err
 		}
