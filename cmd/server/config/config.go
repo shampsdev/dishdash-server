@@ -39,6 +39,9 @@ type Config struct {
 		PriceCoeff float64 `default:"1" envconfig:"RECOMENDATION_PRICE_COEFF"`
 		DistCoeff  float64 `default:"1" envconfig:"RECOMENDATION_DIST_COEFF"`
 	}
+	Auth struct {
+		ApiToken string `envconfig:"API_TOKEN"`
+	}
 }
 
 var C Config

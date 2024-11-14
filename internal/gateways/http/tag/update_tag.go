@@ -20,6 +20,7 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /places/tag [put]
+// @Security ApiKeyAuth
 func UpdateTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tag := new(domain.Tag)
