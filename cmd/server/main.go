@@ -21,6 +21,9 @@ import (
 // @title           DishDash server
 // @version         2.0
 // @description     Manage cards, lobbies, swipes
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name X-API-Token
 
 var envFile = flag.String("env-file", ".env", "Environment file")
 

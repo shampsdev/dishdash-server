@@ -16,7 +16,7 @@ import (
 // @Schemes http https
 // @Success 200 {array} domain.Tag "List of tags"
 // @Failure 500
-// @Router /places/tags [get]
+// @Router /places/tag [get]
 func GetAllTags(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tags, err := tagUseCase.GetAllTags(c)
