@@ -3,9 +3,9 @@ package middlewares
 import (
 	"net/http"
 
+	"dishdash.ru/cmd/server/config"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"dishdash.ru/cmd/server/config"
 )
 
 func AllowOriginMiddleware() gin.HandlerFunc {

@@ -11,7 +11,7 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 
 	placeGroup.GET("", GetAllTags(cases.Tag))
 
-	protectedGroup := placeGroup.Group("");
+	protectedGroup := placeGroup.Group("")
 	protectedGroup.Use(middlewares.ApiTokenAuth())
 
 	protectedGroup.POST("", CreateTag(cases.Tag))
