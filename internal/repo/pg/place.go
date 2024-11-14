@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -12,6 +13,7 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/repo"
 	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -43,8 +45,9 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 	    "review_rating",
 		"review_count",
 		"updated_at",
-	    "source"
-	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9, $10, $11)
+	    "source",
+		"url"
+	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9, $10, $11, $12)
 	RETURNING "id"
 `
 
@@ -61,6 +64,7 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		place.ReviewCount,
 		place.UpdatedAt,
 		place.Source,
+		place.Url,
 	)
 
 	var id int64
@@ -83,8 +87,10 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 	  "price_avg" = $7,
 	  "review_rating" = $8,
 	  "review_count" = $9,
-	  "updated_at" = $10
-	WHERE "id" = $11
+	  "updated_at" = $10,
+	  "source" = $11,
+	  "url" = $12
+	WHERE "id" = $13
   `
 	place.UpdatedAt = time.Now().UTC()
 	_, err := pr.db.Exec(ctx, updateQuery,
@@ -98,6 +104,8 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 		place.ReviewRating,
 		place.ReviewCount,
 		place.UpdatedAt,
+		place.Source,
+		place.Url,
 		place.ID,
 	)
 	if err != nil {
@@ -121,12 +129,44 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 		"review_rating",
 		"review_count",
 		"updated_at",
-		"source"
+		"source",
+		"url"
 	FROM "place"
 	WHERE id=$1
 `
 	row := pr.db.QueryRow(ctx, getPlaceQuery, id)
 	place, err := scanPlace(row)
+	if err != nil {
+		return nil, fmt.Errorf("can't fetch place: %w", err)
+	}
+	return place, nil
+}
+
+func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error) {
+	const getPlaceQuery = `
+	SELECT
+		"id",
+		"title",
+		"short_description",
+		"description",
+		"images",
+		"location",
+		"address",
+		"price_avg",
+		"review_rating",
+		"review_count",
+		"updated_at",
+		"source",
+		"url"
+	FROM "place"
+	WHERE url=$1
+`
+	row := pr.db.QueryRow(ctx, getPlaceQuery, url)
+	place, err := scanPlace(row)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, repo.ErrPlaceNotFound
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("can't fetch place: %w", err)
 	}
@@ -147,7 +187,8 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 		"review_rating",
 		"review_count",
 		"updated_at", 
-		"source"
+		"source",
+		"url"
 	FROM "place"
 `
 	rows, err := pr.db.Query(ctx, getPlacesQuery)
@@ -215,7 +256,8 @@ func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]
 		place.review_rating,
 		place.review_count,
 		place.updated_at,
-		place.source
+		place.source,
+		place.url
 	FROM place
 	JOIN place_lobby ON place.id = place_lobby.place_id
 	WHERE place_lobby.lobby_id = $1
@@ -264,6 +306,7 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 		&p.ReviewCount,
 		&p.UpdatedAt,
 		&p.Source,
+		&p.Url,
 	)
 	p.Location = domain.FromPostgis(loc)
 	p.Images = strings.Split(imagesStr, ",")
@@ -295,7 +338,8 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			p.review_rating,
 			p.review_count,
 			p.updated_at,
-			p.source
+			p.source,
+			p.url
 		FROM place p
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id

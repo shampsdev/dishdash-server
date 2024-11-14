@@ -8,6 +8,7 @@ import (
 
 func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	placeGroup := r.Group("places")
+
 	placeGroup.GET("", GetAllPlaces(cases.Place))
 
 	protectedGroup := placeGroup.Group("")
