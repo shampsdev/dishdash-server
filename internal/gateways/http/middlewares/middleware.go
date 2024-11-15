@@ -10,7 +10,7 @@ import (
 
 func AllowOriginMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		allowHeaders := "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+		allowHeaders := "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, X-Api-Token"
 
 		// TODO allowOrigin
 		c.Header("Access-Control-Allow-Origin", c.GetHeader("Origin"))
