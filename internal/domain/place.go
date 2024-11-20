@@ -9,7 +9,7 @@ type Place struct {
 	Title            string     `json:"title"`
 	ShortDescription string     `json:"shortDescription"`
 	Description      string     `json:"description"`
-	Images           []string   `json:"image"`
+	Images           []string   `json:"images"`
 	Location         Coordinate `json:"location"`
 	Address          string     `json:"address"`
 	PriceAvg         int        `json:"priceAvg"`
