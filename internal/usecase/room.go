@@ -135,7 +135,7 @@ func (r *Room) mathesFromSwipes() ([]*Match, error) {
 
 	for e := swipeCount.Oldest(); e != nil; e = e.Next() {
 		r.log.WithFields(log.Fields{"place": e.Key, "count": e.Value}).Debug("swipe count")
-		if e.Value > len(r.usersMap)/2 {
+		if e.Value == len(r.usersMap) {
 			place, err := r.placeUseCase.GetPlaceByID(context.Background(), e.Key)
 			if err != nil {
 				return nil, fmt.Errorf("failed to get place: %w", err)
@@ -397,7 +397,7 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 	likes := filter.Count(r.swipes, func(swipe *domain.Swipe) bool {
 		return swipe.PlaceID == placeID && swipe.Type == domain.LIKE
 	})
-	if likes > len(r.usersMap)/2 {
+	if likes == len(r.usersMap) {
 		match := &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
 			return place.ID == placeID
 		})]}
