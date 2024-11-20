@@ -14,7 +14,7 @@ definitions:
         type: string
       id:
         type: integer
-      image:
+      images:
         items:
           type: string
         type: array

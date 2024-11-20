@@ -718,7 +718,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "image": {
+                "images": {
                     "type": "array",
                     "items": {
                         "type": "string"
