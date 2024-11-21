@@ -26,5 +26,5 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	metrics = append(metrics, NewActiveRoomMetric(cases.RoomRepo))
 	metrics = append(metrics, NewSwipeMetric(cases.Swipe))
 	h := promhttp.Handler()
-	r.GET("/metric", AllMetrics(h, metrics))
+	r.GET("/metrics", AllMetrics(h, metrics))
 }

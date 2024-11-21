@@ -31,7 +31,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	s.MetricRouter.HandleMethodNotAllowed = true
-	metricV1 := s.MetricRouter.Group("/api/v1")
+	metricV1 := s.MetricRouter.Group("")
 	metricV1.Use(middlewares.Logger())
 	metric.SetupHandlers(metricV1, useCases)
 }

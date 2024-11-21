@@ -20,8 +20,7 @@ func (s *SwipeUseCase) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
 }
 
 func (s *SwipeUseCase) GetCount(ctx context.Context) (int, error) {
-	swipes, err := s.sRepo.GetAllSwipes(ctx)
-	return len(swipes), err
+	return s.sRepo.GetSwipesCount(ctx)
 }
 
 func (s *SwipeUseCase) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
