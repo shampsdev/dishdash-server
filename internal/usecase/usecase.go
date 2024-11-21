@@ -109,5 +109,6 @@ type Lobby interface {
 
 type Swipe interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
+	GetCount(ctx context.Context) (int, error)
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
 }

@@ -42,11 +42,15 @@ func (s *Server) Run(ctx context.Context) error {
 		return s.HttpServer.HttpServer.ListenAndServe()
 	})
 	eg.Go(func() error {
+		return s.HttpServer.MetricHttpServer.ListenAndServe()
+	})
+	eg.Go(func() error {
 		return s.WsServer.WsServer.Serve()
 	})
 
 	<-ctx.Done()
 	err := s.HttpServer.HttpServer.Shutdown(ctx)
+	err = errors.Join(err, s.HttpServer.MetricHttpServer.Shutdown(ctx))
 	err = errors.Join(err, s.WsServer.WsServer.Close())
 	err = errors.Join(eg.Wait(), err)
 	shutdownWait()

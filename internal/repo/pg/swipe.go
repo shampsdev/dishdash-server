@@ -35,6 +35,33 @@ func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 	return nil
 }
 
+func (sr *SwipeRepo) GetAllSwipes(ctx context.Context) ([]*domain.Swipe, error) {
+	const query = `
+	SELECT *
+	FROM "swipe"
+`
+	rows, err := sr.db.Query(ctx, query)
+	if err != nil {
+		return make([]*domain.Swipe, 0), err
+	}
+	defer rows.Close()
+	swipes := make([]*domain.Swipe, 0)
+	for rows.Next() {
+		var swipe domain.Swipe
+		err := rows.Scan(
+			&swipe.LobbyID,
+			&swipe.PlaceID,
+			&swipe.UserID,
+			&swipe.Type,
+		)
+		if err != nil {
+			return make([]*domain.Swipe, 0), err
+		}
+		swipes = append(swipes, &swipe)
+	}
+	return swipes, nil
+}
+
 func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
 	const query = `
 	SELECT lobby_id, place_id, user_id, type
