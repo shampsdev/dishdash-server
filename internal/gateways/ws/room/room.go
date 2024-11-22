@@ -60,12 +60,13 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				"room":  joinEvent.LobbyID,
 				"event": event.JoinLobby,
 			})
-
+      
 			user, err := cases.User.GetUserByID(context.Background(), joinEvent.UserID)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while getting user: %w", err))
 				return
 			}
+      
 			c.User = user
 
 			room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
@@ -73,6 +74,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				c.HandleError(fmt.Errorf("error while getting room: %w", err))
 				return
 			}
+
 			c.Room = room
 
 			settings := c.Room.Settings()
@@ -130,6 +132,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				})
 			}
 		})
+
 
 	s.On(event.SettingsUpdate, EventOpts{
 		Allowed: []domain.LobbyState{domain.InLobby},
