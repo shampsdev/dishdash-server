@@ -121,6 +121,9 @@ func (r *Room) mathesFromSwipes() ([]*Match, error) {
 	swipeCount := orderedmap.New[int64, int]()
 
 	for _, swipe := range r.swipes {
+		if swipe.Type != domain.LIKE {
+			continue
+		}
 		c, ok := swipeCount.Get(swipe.PlaceID)
 		if !ok {
 			swipeCount.Set(swipe.PlaceID, 0)
@@ -132,7 +135,7 @@ func (r *Room) mathesFromSwipes() ([]*Match, error) {
 
 	for e := swipeCount.Oldest(); e != nil; e = e.Next() {
 		r.log.WithFields(log.Fields{"place": e.Key, "count": e.Value}).Debug("swipe count")
-		if e.Value > len(r.usersMap)/2 {
+		if e.Value == len(r.usersMap) {
 			place, err := r.placeUseCase.GetPlaceByID(context.Background(), e.Key)
 			if err != nil {
 				return nil, fmt.Errorf("failed to get place: %w", err)
@@ -189,11 +192,11 @@ func (r *Room) AddUser(user *domain.User) error {
 	defer r.lock.Unlock()
 
 	if r.state != domain.InLobby {
-		return nil
+		return fmt.Errorf("can't add user to lobby in state %s", r.state)
 	}
 
 	if _, has := r.usersMap[user.ID]; has {
-		return fmt.Errorf("user %s already exists", user.ID)
+		return nil
 	}
 	r.usersMap[user.ID] = user
 
@@ -225,16 +228,17 @@ func (r *Room) RemoveUser(id string) error {
 
 	_, has := r.usersMap[id]
 	if !has {
-		return fmt.Errorf("user %s not found", id)
+		return nil
 	}
 	delete(r.usersMap, id)
 
-	if r.state == domain.Swiping {
+	if r.state == domain.InLobby {
 		err := r.syncUsersWithBd()
 		if err != nil {
-			return err
+			return fmt.Errorf("error while syncing users with bd: %w", err)
 		}
 	}
+
 	return nil
 }
 
@@ -393,7 +397,7 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 	likes := filter.Count(r.swipes, func(swipe *domain.Swipe) bool {
 		return swipe.PlaceID == placeID && swipe.Type == domain.LIKE
 	})
-	if likes > len(r.usersMap)/2 {
+	if likes == len(r.usersMap) {
 		match := &Match{Place: r.places[slices.IndexFunc(r.places, func(place *domain.Place) bool {
 			return place.ID == placeID
 		})]}

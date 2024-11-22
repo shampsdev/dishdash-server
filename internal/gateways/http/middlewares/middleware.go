@@ -1,13 +1,16 @@
-package http
+package middlewares
 
 import (
+	"net/http"
+
+	"dishdash.ru/cmd/server/config"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-func allowOriginMiddleware() gin.HandlerFunc {
+func AllowOriginMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		allowHeaders := "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+		allowHeaders := "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, X-Api-Token"
 
 		// TODO allowOrigin
 		c.Header("Access-Control-Allow-Origin", c.GetHeader("Origin"))
@@ -25,10 +28,25 @@ func allowOriginMiddleware() gin.HandlerFunc {
 	}
 }
 
-func logger() gin.HandlerFunc {
+func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.WithFields(log.Fields{
 			"clientIP": c.ClientIP(),
 		}).Infof("[%s] %s %d", c.Request.Method, c.Request.RequestURI, c.Writer.Status())
+	}
+}
+
+const ApiTokenHeader = "X-API-Token"
+
+func ApiTokenAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		apiToken := c.GetHeader(ApiTokenHeader)
+
+		if apiToken != config.C.Auth.ApiToken {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			return
+		}
+
+		c.Next()
 	}
 }

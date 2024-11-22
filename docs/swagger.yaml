@@ -6,35 +6,6 @@ definitions:
       lon:
         type: number
     type: object
-  domain.Lobby:
-    properties:
-      createdAt:
-        type: string
-      id:
-        type: string
-      location:
-        $ref: '#/definitions/domain.Coordinate'
-      places:
-        items:
-          $ref: '#/definitions/domain.Place'
-        type: array
-      priceAvg:
-        type: integer
-      state:
-        type: string
-      swipes:
-        items:
-          $ref: '#/definitions/domain.Swipe'
-        type: array
-      tags:
-        items:
-          $ref: '#/definitions/domain.Tag'
-        type: array
-      users:
-        items:
-          $ref: '#/definitions/domain.User'
-        type: array
-    type: object
   domain.Place:
     properties:
       address:
@@ -43,7 +14,7 @@ definitions:
         type: string
       id:
         type: integer
-      image:
+      images:
         items:
           type: string
         type: array
@@ -67,18 +38,7 @@ definitions:
         type: string
       updatedAt:
         type: string
-    type: object
-  domain.Swipe:
-    properties:
-      cardID:
-        type: integer
-      id:
-        type: integer
-      lobbyID:
-        type: string
-      type:
-        type: string
-      userID:
+      url:
         type: string
     type: object
   domain.Tag:
@@ -110,7 +70,7 @@ definitions:
       distance:
         type: number
       lobby:
-        $ref: '#/definitions/domain.Lobby'
+        $ref: '#/definitions/usecase.LobbyOutput'
     type: object
   usecase.FindLobbyInput:
     properties:
@@ -118,6 +78,27 @@ definitions:
         type: number
       location:
         $ref: '#/definitions/domain.Coordinate'
+    type: object
+  usecase.LobbyOutput:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/domain.Coordinate'
+      priceAvg:
+        type: integer
+      state:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/domain.User'
+        type: array
     type: object
   usecase.SaveLobbyInput:
     properties:
@@ -146,11 +127,15 @@ definitions:
         type: number
       shortDescription:
         type: string
+      source:
+        type: string
       tags:
         items:
           type: integer
         type: array
       title:
+        type: string
+      url:
         type: string
     type: object
   usecase.UpdatePlaceInput:
@@ -175,11 +160,15 @@ definitions:
         type: number
       shortDescription:
         type: string
+      source:
+        type: string
       tags:
         items:
           type: integer
         type: array
       title:
+        type: string
+      url:
         type: string
     type: object
 info:
@@ -206,7 +195,7 @@ paths:
         "200":
           description: Saved lobby
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":
@@ -253,7 +242,7 @@ paths:
         "200":
           description: lobby data
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":
@@ -279,11 +268,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/domain.Lobby'
+            $ref: '#/definitions/usecase.LobbyOutput'
         "400":
           description: Bad Request
         "500":
@@ -317,6 +306,30 @@ paths:
       summary: find nearest lobby
       tags:
       - lobbies
+  /place/by_url:
+    get:
+      consumes:
+      - application/json
+      description: Get a place from the database by url
+      parameters:
+      - description: place url
+        in: query
+        name: url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: place data
+          schema: {}
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get place by url
+      tags:
+      - places
   /places:
     get:
       consumes:
@@ -358,6 +371,8 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Create a place
       tags:
       - places
@@ -383,55 +398,12 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Update a place
       tags:
       - places
   /places/tag:
-    put:
-      consumes:
-      - application/json
-      description: Update an existing tag in the database
-      parameters:
-      - description: Tag data
-        in: body
-        name: tag
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Tag'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Updated tag
-          schema:
-            $ref: '#/definitions/domain.Tag'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Update a tag
-      tags:
-      - places
-  /places/tag/{id}:
-    delete:
-      description: Delete an existing tag from the database
-      parameters:
-      - description: Tag ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: Tag deleted
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Delete a tag
-      tags:
-      - places
-  /places/tags:
     get:
       consumes:
       - application/json
@@ -472,7 +444,57 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Create a tag
+      tags:
+      - places
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Update a tag
+      tags:
+      - places
+  /places/tag/{id}:
+    delete:
+      description: Delete an existing tag from the database
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tag deleted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a tag
       tags:
       - places
   /users:
@@ -594,4 +616,9 @@ paths:
       summary: Get user by Telegram
       tags:
       - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: X-API-Token
+    type: apiKey
 swagger: "2.0"

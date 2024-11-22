@@ -1,13 +1,19 @@
 package place
 
 import (
+	"dishdash.ru/internal/gateways/http/middlewares"
 	"dishdash.ru/internal/usecase"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	placeGroup := r.Group("places")
-	placeGroup.POST("", SavePlace(cases.Place))
+
 	placeGroup.GET("", GetAllPlaces(cases.Place))
-	placeGroup.PUT("", UpdatePlace(cases.Place))
+
+	protectedGroup := placeGroup.Group("")
+	protectedGroup.Use(middlewares.ApiTokenAuth())
+
+	protectedGroup.POST("", SavePlace(cases.Place))
+	protectedGroup.PUT("", UpdatePlace(cases.Place))
 }

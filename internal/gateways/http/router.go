@@ -3,6 +3,7 @@ package http
 import (
 	"dishdash.ru/docs"
 	"dishdash.ru/internal/gateways/http/lobby"
+	"dishdash.ru/internal/gateways/http/middlewares"
 	"dishdash.ru/internal/gateways/http/place"
 	"dishdash.ru/internal/gateways/http/tag"
 	"dishdash.ru/internal/gateways/http/user"
@@ -14,10 +15,10 @@ import (
 
 func setupRouter(s *Server, useCases usecase.Cases) {
 	s.Router.HandleMethodNotAllowed = true
-	s.Router.Use(allowOriginMiddleware())
+	s.Router.Use(middlewares.AllowOriginMiddleware())
 
 	v1 := s.Router.Group("/api/v1")
-	v1.Use(logger())
+	v1.Use(middlewares.Logger())
 	{
 		place.SetupHandlers(v1, useCases)
 		lobby.SetupHandlers(v1, useCases)

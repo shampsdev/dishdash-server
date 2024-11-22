@@ -24,10 +24,14 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
+		if c.Room == nil {
+			log.Warn("room not found in context while disconnect")
+			return
+		}
+
 		err := c.Room.RemoveUser(c.User.ID)
 		if err != nil {
 			c.HandleError(fmt.Errorf("error while removing user from room: %w", err))
-			return
 		}
 
 		s.SIO.LeaveRoom("", c.Room.ID, conn)
@@ -63,9 +67,30 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				return
 			}
 
+			c.User = user
+
 			room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while getting room: %w", err))
+				return
+			}
+
+			c.Room = room
+
+			settings := c.Room.Settings()
+			c.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+				Location:    settings.Location,
+				PriceMin:    settings.PriceAvg - 300,
+				PriceMax:    settings.PriceAvg + 300,
+				MaxDistance: 4000,
+				Tags:        settings.Tags,
+			})
+
+			if room.Finished() {
+				c.Emit(event.Finish, event.FinishEvent{
+					Result:  c.Room.Result(),
+					Matches: c.Room.Matches(),
+				})
 				return
 			}
 
@@ -76,16 +101,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			c.Conn.Join(room.ID)
-			c = &Context{
-				User: user,
-				Conn: c.Conn,
-				Room: room,
-				Log: log.WithFields(log.Fields{
-					"room":  room.ID,
-					"user":  user.ID,
-					"event": event.JoinLobby,
-				}),
-			}
 			c.lock.Lock()
 			c.Conn.SetContext(c)
 			c.lock.Unlock()
@@ -105,14 +120,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 					Avatar: u.Avatar,
 				})
 			}
-			settings := c.Room.Settings()
-			c.Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
-				Location:    settings.Location,
-				PriceMin:    settings.PriceAvg - 300,
-				PriceMax:    settings.PriceAvg + 300,
-				MaxDistance: 4000,
-				Tags:        settings.Tags,
-			})
 
 			if c.Room.Swiping() {
 				c.Emit(event.StartSwipes)
@@ -168,7 +175,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		})
 
 	s.On(event.Swipe, EventOpts{
-		Allowed: []domain.LobbyState{domain.Swiping},
+		Allowed: []domain.LobbyState{domain.Swiping, domain.Voting},
 	},
 		func(c *Context, se event.SwipeEvent) {
 			m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
@@ -193,7 +200,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 
 	voteLock := sync.RWMutex{}
 	s.On(event.Vote, EventOpts{
-		Allowed: []domain.LobbyState{domain.Voting},
+		Allowed: []domain.LobbyState{domain.Voting, domain.Swiping},
 	},
 		func(c *Context, ve event.VoteEvent) {
 			voteLock.Lock()

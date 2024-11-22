@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -83,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -167,7 +167,7 @@ const docTemplate = `{
                     "200": {
                         "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/domain.Lobby"
+                            "$ref": "#/definitions/usecase.LobbyOutput"
                         }
                     },
                     "400": {
@@ -212,6 +212,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/place/by_url": {
+            "get": {
+                "description": "Get a place from the database by url",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Get place by url",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "place url",
+                        "name": "url",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "place data",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/places": {
             "get": {
                 "description": "Get a list of places from the database",
@@ -241,6 +277,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update a place with same id in the database",
                 "consumes": [
                     "application/json"
@@ -279,6 +320,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create a new place in the database",
                 "consumes": [
                     "application/json"
@@ -318,7 +364,39 @@ const docTemplate = `{
             }
         },
         "/places/tag": {
+            "get": {
+                "description": "Get a list of tags from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Get tags",
+                "responses": {
+                    "200": {
+                        "description": "List of tags",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Tag"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update an existing tag in the database",
                 "consumes": [
                     "application/json"
@@ -355,66 +433,13 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/places/tag/{id}": {
-            "delete": {
-                "description": "Delete an existing tag from the database",
-                "tags": [
-                    "places"
-                ],
-                "summary": "Delete a tag",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Tag ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Tag deleted"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/places/tags": {
-            "get": {
-                "description": "Get a list of tags from the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "places"
-                ],
-                "summary": "Get tags",
-                "responses": {
-                    "200": {
-                        "description": "List of tags",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.Tag"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create a new tag in the database",
                 "consumes": [
                     "application/json"
@@ -443,6 +468,40 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.Tag"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/places/tag/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete an existing tag from the database",
+                "tags": [
+                    "places"
+                ],
+                "summary": "Delete a tag",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Tag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tag deleted"
                     },
                     "400": {
                         "description": "Bad Request"
@@ -647,50 +706,6 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Lobby": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "places": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Place"
-                    }
-                },
-                "priceAvg": {
-                    "type": "integer"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "swipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Swipe"
-                    }
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Tag"
-                    }
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.User"
-                    }
-                }
-            }
-        },
         "domain.Place": {
             "type": "object",
             "properties": {
@@ -703,7 +718,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "image": {
+                "images": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -738,25 +753,8 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
-                }
-            }
-        },
-        "domain.Swipe": {
-            "type": "object",
-            "properties": {
-                "cardID": {
-                    "type": "integer"
                 },
-                "id": {
-                    "type": "integer"
-                },
-                "lobbyID": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "userID": {
+                "url": {
                     "type": "string"
                 }
             }
@@ -805,7 +803,7 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "lobby": {
-                    "$ref": "#/definitions/domain.Lobby"
+                    "$ref": "#/definitions/usecase.LobbyOutput"
                 }
             }
         },
@@ -817,6 +815,38 @@ const docTemplate = `{
                 },
                 "location": {
                     "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
+        "usecase.LobbyOutput": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceAvg": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Tag"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.User"
+                    }
                 }
             }
         },
@@ -861,6 +891,9 @@ const docTemplate = `{
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -868,6 +901,9 @@ const docTemplate = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -905,6 +941,9 @@ const docTemplate = `{
                 "shortDescription": {
                     "type": "string"
                 },
+                "source": {
+                    "type": "string"
+                },
                 "tags": {
                     "type": "array",
                     "items": {
@@ -913,8 +952,18 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "X-API-Token",
+            "in": "header"
         }
     }
 }`

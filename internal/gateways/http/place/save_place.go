@@ -18,6 +18,7 @@ import (
 // @Success 200 {object} domain.Place "Saved place"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
+// @Security ApiKeyAuth
 // @Router /places [post]
 func SavePlace(placeUseCase usecase.Place) gin.HandlerFunc {
 	return func(c *gin.Context) {

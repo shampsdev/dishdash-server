@@ -16,6 +16,7 @@ import (
 // @Success 200 "Tag deleted"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
+// @Security ApiKeyAuth
 // @Router /places/tag/{id} [delete]
 func DeleteTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {

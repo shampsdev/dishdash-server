@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Schemes http https
 // @Param lobby body usecase.SaveLobbyInput true "lobby data"
-// @Success 200 {object} domain.Lobby "Saved lobby"
+// @Success 200 {object} usecase.LobbyOutput "Saved lobby"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Router /lobbies [post]

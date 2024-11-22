@@ -28,6 +28,7 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
 		Source:           "api",
+		Url:              placeInput.Url,
 	}
 	id, err := p.pRepo.SavePlace(ctx, place)
 	if err != nil {
@@ -59,6 +60,8 @@ func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInp
 		PriceAvg:         placeInput.PriceAvg,
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
+		Source:           placeInput.Source,
+		Url:              placeInput.Url,
 	}
 	err := p.pRepo.UpdatePlace(ctx, place)
 	if err != nil {
@@ -95,6 +98,18 @@ func (p PlaceUseCase) GetPlaceByID(ctx context.Context, id int64) (*domain.Place
 		return nil, err
 	}
 	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return place, nil
+}
+
+func (p PlaceUseCase) GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error) {
+	place, err := p.pRepo.GetPlaceByUrl(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
 	if err != nil {
 		return nil, err
 	}

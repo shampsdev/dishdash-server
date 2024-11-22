@@ -7,7 +7,6 @@ import (
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/gateways/ws/event"
-	"dishdash.ru/internal/usecase"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
 )
@@ -41,6 +40,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
 	listenEvent(event.Match)
+	listenEvent(event.SettingsUpdate)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -70,17 +70,12 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	cli1Emit(event.StartSwipes)
 	sdk.Sleep()
 
-	sioSess.NewStep("Swipe both likes (1)")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	sioSess.NewStep("Swipe like and dislike")
+	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.DISLIKE})
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	sdk.Sleep()
 
-	sioSess.NewStep("Vote like and dislike")
-	cli1Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteLike})
-	cli2Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteDislike})
-	sdk.Sleep()
-
-	sioSess.NewStep("Swipe both likes (2)")
+	sioSess.NewStep("Swipe both likes")
 	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	sdk.Sleep()
@@ -101,6 +96,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	}
 	listenEvent(event.JoinLobby)
 	listenEvent(event.Finish)
+	listenEvent(event.SettingsUpdate)
 	listenEvent(event.Error)
 
 	sioSess.NewStep("Rejoin")
