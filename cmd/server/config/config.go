@@ -14,7 +14,8 @@ import (
 type Config struct {
 	DEBUG  bool `default:"false" envconfig:"DEBUG"`
 	Server struct {
-		Port uint16 `envconfig:"HTTP_PORT" default:"8000"`
+		MetricsPort uint16 `envconfig:"METRICS_PORT" default:"9090"`
+		Port        uint16 `envconfig:"HTTP_PORT"    default:"8000"`
 	}
 	DB struct {
 		User        string `envconfig:"POSTGRES_USER"`
