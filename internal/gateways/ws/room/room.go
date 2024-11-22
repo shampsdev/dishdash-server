@@ -24,6 +24,17 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			return
 		}
 
+		defer func() {
+			s.Metrics.ActiveConnections.Dec()
+			c.Log.Info("Leave room")
+			if c.Room.Empty() {
+				err := cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
+				if err != nil {
+					c.Log.WithError(err).Error("error while deleting room")
+				}
+			}
+		}()
+
 		if c.Room == nil {
 			log.Warn("room not found in context while disconnect")
 			return
@@ -41,14 +52,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				Name:   c.User.Name,
 				Avatar: c.User.Avatar,
 			})
-
-		c.Log.Info("Leave room")
-		if c.Room.Empty() {
-			err = cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
-			if err != nil {
-				c.Log.WithError(err).Error("error while deleting room")
-			}
-		}
 	})
 
 	s.On(event.JoinLobby, EventOpts{
@@ -252,7 +255,7 @@ func broadcastToOthersInRoom(s *socketio.Server, userID, room, event string, arg
 		c.lock.RLock()
 		defer c.lock.RUnlock()
 		if c.User.ID != userID {
-			conn.Emit(event, args...)
+			c.Emit(event, args...)
 		}
 	})
 }

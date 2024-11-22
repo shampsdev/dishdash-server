@@ -19,16 +19,26 @@ import (
 const shutdownDuration = 1500 * time.Millisecond
 
 type Server struct {
-	HttpServer http.Server
-	Router     *gin.Engine
+	HttpServer       http.Server
+	MetricHttpServer http.Server
+	Router           *gin.Engine
+	MetricRouter     *gin.Engine
 }
 
 func NewServer(useCases usecase.Cases, router *gin.Engine) *Server {
+	r := gin.New()
+	r.Use(gin.Recovery())
+
 	s := &Server{
-		Router: router,
+		Router:       router,
+		MetricRouter: r,
 		HttpServer: http.Server{
 			Addr:    fmt.Sprintf(":%d", config.C.Server.Port),
 			Handler: router,
+		},
+		MetricHttpServer: http.Server{
+			Addr:    fmt.Sprintf(":%d", config.C.Server.MetricsPort),
+			Handler: r,
 		},
 	}
 

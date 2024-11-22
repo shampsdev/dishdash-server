@@ -9,6 +9,7 @@ import (
 
 type RoomRepo interface {
 	GetRoom(ctx context.Context, id string) (*Room, error)
+	GetActiveRoomCount() (int, error)
 	DeleteRoom(ctx context.Context, id string) error
 }
 
@@ -67,6 +68,10 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 	}
 
 	return room, nil
+}
+
+func (r *InMemoryRoomRepo) GetActiveRoomCount() (int, error) {
+	return len(r.rooms), nil
 }
 
 func (r *InMemoryRoomRepo) DeleteRoom(_ context.Context, id string) error {

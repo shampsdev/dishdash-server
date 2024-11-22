@@ -12,17 +12,22 @@ import (
 	"dishdash.ru/internal/usecase"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/mitchellh/mapstructure"
+	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
 
 type Server struct {
 	SIO *socketio.Server
+
+	Metrics ServerMetrics
 }
+
 type Context struct {
 	lock sync.RWMutex
 
-	Conn socketio.Conn
-	Log  *log.Entry
+	Conn   socketio.Conn
+	Server *Server
+	Log    *log.Entry
 
 	User *domain.User
 	Room *usecase.Room
@@ -35,18 +40,22 @@ type EventOpts struct {
 }
 
 func NewServer(sio *socketio.Server) *Server {
+	s := &Server{
+		SIO:     sio,
+		Metrics: NewServerMetrics(),
+	}
+
 	sio.OnConnect("/", func(conn socketio.Conn) error {
+		defer s.Metrics.ActiveConnections.Inc()
+
 		log.Println("connected: ", conn.ID())
 		conn.SetContext(&Context{
-			Conn: conn,
-			Log:  log.WithField("user", conn.ID()),
+			Conn:   conn,
+			Server: s,
+			Log:    log.WithField("user", conn.ID()),
 		})
 		return nil
 	})
-
-	s := &Server{
-		SIO: sio,
-	}
 
 	return s
 }
@@ -64,6 +73,7 @@ func (c *Context) HandleError(err error) {
 func (c *Context) Emit(eventName string, args ...interface{}) {
 	c.Log.Debugf("Emit %s", eventName)
 	c.Conn.Emit(eventName, args...)
+	c.Server.Metrics.Responses.WithLabelValues(eventName).Inc()
 }
 
 func (s *Server) GetContext(conn socketio.Conn) (*Context, bool) {
@@ -98,6 +108,10 @@ func (s *Server) On(
 	f interface{},
 ) {
 	s.SIO.OnEvent("/", eventName, func(conn socketio.Conn, eventData interface{}) {
+		s.Metrics.Requests.WithLabelValues(eventName).Inc()
+		timer := prometheus.NewTimer(s.Metrics.ResponseDuration.WithLabelValues(eventName))
+		defer timer.ObserveDuration()
+
 		c, ok := s.GetContext(conn)
 		if !ok {
 			return

@@ -35,6 +35,22 @@ func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 	return nil
 }
 
+func (sr *SwipeRepo) GetSwipesCount(ctx context.Context) (int, error) {
+	const query = `
+	SELECT COUNT(*)
+	FROM "swipe"
+`
+	row := sr.db.QueryRow(ctx, query)
+	var count int
+	err := row.Scan(
+		&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, err
+}
+
 func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error) {
 	const query = `
 	SELECT lobby_id, place_id, user_id, type
