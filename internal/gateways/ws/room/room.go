@@ -27,7 +27,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		defer func() {
 			s.Metrics.ActiveConnections.Dec()
 			c.Log.Info("Leave room")
-			if c.Room.Empty() {
+			if c.Room != nil && c.Room.Empty() {
 				err := cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
 				if err != nil {
 					c.Log.WithError(err).Error("error while deleting room")
