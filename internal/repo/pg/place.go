@@ -115,6 +115,18 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 	return nil
 }
 
+func (pr *PlaceRepo) DeletePlace(ctx context.Context, id int64) error {
+	const deleteQuery = `
+	DELETE FROM "place"
+	WHERE id=$1
+`
+	_, err := pr.db.Exec(ctx, deleteQuery, id)
+	if err != nil {
+		return fmt.Errorf("can't delete place: %w", err)
+	}
+	return nil
+}
+
 func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
 	const getPlaceQuery = `
 	SELECT

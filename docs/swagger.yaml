@@ -403,6 +403,31 @@ paths:
       summary: Update a place
       tags:
       - places
+  /places/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a place with same id in the database
+      parameters:
+      - description: Place ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a place
+      tags:
+      - places
   /places/tag:
     get:
       consumes:
