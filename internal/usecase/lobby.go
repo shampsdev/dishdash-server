@@ -192,7 +192,7 @@ func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*Lob
 	if dist > input.Dist || errors.Is(err, repo.ErrLobbyNotFound) {
 		lobby, err = l.SaveLobby(ctx, SaveLobbyInput{
 			Location: input.Location,
-			PriceAvg: 500,
+			PriceAvg: 1200,
 		})
 		if err != nil {
 			return nil, err

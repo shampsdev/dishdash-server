@@ -5,14 +5,6 @@
         "Name": "User1 join lobby",
         "Events": [
           {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar1",
-              "id": "id1",
-              "name": "user1"
-            }
-          },
-          {
             "EventName": "settingsUpdate",
             "Data": {
               "location": {
@@ -20,10 +12,18 @@
                 "lon": 30.310011
               },
               "maxDistance": 4000,
-              "priceMax": 800,
-              "priceMin": 200,
+              "priceMax": 1500,
+              "priceMin": 900,
               "tags": [],
               "userId": ""
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
             }
           }
         ]
@@ -87,6 +87,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -100,7 +101,8 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 5
             }
@@ -128,6 +130,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -141,7 +144,8 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 1
             }
@@ -151,47 +155,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "card",
-            "Data": {
-              "card": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
-                "id": 2,
-                "images": [
-                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9606,
-                  "lon": 30.2871
-                },
-                "priceAvg": 120,
-                "reviewCount": 1000,
-                "reviewRating": 4.6,
-                "shortDescription": "Лучший кофе у ИТМО",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "coffee.png",
-                    "id": 3,
-                    "name": "coffee"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Zoomer Coffee",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
-              },
-              "id": 2
-            }
-          },
           {
             "EventName": "match",
             "Data": {
@@ -210,6 +173,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -223,9 +187,53 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 0
+            }
+          },
+          {
+            "EventName": "card",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
+              },
+              "id": 2
             }
           }
         ]
@@ -246,22 +254,6 @@
         "Name": "User2 join lobby",
         "Events": [
           {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar1",
-              "id": "id1",
-              "name": "user1"
-            }
-          },
-          {
-            "EventName": "userJoined",
-            "Data": {
-              "avatar": "avatar2",
-              "id": "id2",
-              "name": "user2"
-            }
-          },
-          {
             "EventName": "settingsUpdate",
             "Data": {
               "location": {
@@ -275,6 +267,22 @@
                 4
               ],
               "userId": ""
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
             }
           }
         ]
@@ -304,6 +312,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -317,7 +326,8 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 5
             }
@@ -345,6 +355,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.5,
                 "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -358,7 +369,8 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 1
             }
@@ -368,42 +380,6 @@
       {
         "Name": "Swipe both likes",
         "Events": [
-          {
-            "EventName": "match",
-            "Data": {
-              "card": {
-                "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-                "id": 1,
-                "images": [
-                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-                ],
-                "location": {
-                  "lat": 59.9505,
-                  "lon": 30.2956
-                },
-                "priceAvg": 450,
-                "reviewCount": 1000,
-                "reviewRating": 4.5,
-                "shortDescription": "Ресторан узбекской кухни",
-                "tags": [
-                  {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe"
-                  },
-                  {
-                    "icon": "food.png",
-                    "id": 4,
-                    "name": "food"
-                  }
-                ],
-                "title": "Пловная",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
-              },
-              "id": 0
-            }
-          },
           {
             "EventName": "card",
             "Data": {
@@ -422,6 +398,7 @@
                 "reviewCount": 1000,
                 "reviewRating": 4.6,
                 "shortDescription": "Лучший кофе у ИТМО",
+                "source": "manual",
                 "tags": [
                   {
                     "icon": "cafe.png",
@@ -440,9 +417,48 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2024-10-20T16:49:33.612961Z"
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
               },
               "id": 2
+            }
+          },
+          {
+            "EventName": "match",
+            "Data": {
+              "card": {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                "id": 1,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9505,
+                  "lon": 30.2956
+                },
+                "priceAvg": 450,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Ресторан узбекской кухни",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe"
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food"
+                  }
+                ],
+                "title": "Пловная",
+                "updatedAt": "2024-11-22T11:05:07.822108Z",
+                "url": null
+              },
+              "id": 0
             }
           }
         ]

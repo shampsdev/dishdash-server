@@ -26,6 +26,7 @@ type Tag interface {
 type Place interface {
 	SavePlace(ctx context.Context, place *domain.Place) (int64, error)
 	UpdatePlace(ctx context.Context, place *domain.Place) error
+	DeletePlace(ctx context.Context, id int64) error
 	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)

@@ -27,7 +27,7 @@ func (p PlaceUseCase) SavePlace(ctx context.Context, placeInput SavePlaceInput) 
 		PriceAvg:         placeInput.PriceAvg,
 		ReviewRating:     placeInput.ReviewRating,
 		ReviewCount:      placeInput.ReviewCount,
-		Source:           "api",
+		Source:           placeInput.Source,
 		Url:              placeInput.Url,
 	}
 	id, err := p.pRepo.SavePlace(ctx, place)
@@ -82,6 +82,14 @@ func (p PlaceUseCase) UpdatePlace(ctx context.Context, placeInput UpdatePlaceInp
 	}
 
 	return place, nil
+}
+
+func (p PlaceUseCase) DeletePlace(ctx context.Context, id int64) error {
+	err := p.pRepo.DeletePlace(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p PlaceUseCase) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
