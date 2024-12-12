@@ -15,16 +15,61 @@ import (
 
 type State string
 
-type VoteOption int
+type VoteType string
 
-var (
-	VoteDislike VoteOption
-	VoteLike    VoteOption = 1
+const (
+	VoteTypeMatch  VoteType = "match"
+	VoteTypeFinish VoteType = "finish"
 )
 
 type Match struct {
 	ID    int           `json:"id"`
 	Place *domain.Place `json:"card"`
+}
+
+type OptionID int64
+
+type VoteOption struct {
+	ID   OptionID `json:"id"`
+	Desc string   `json:"description"`
+}
+
+type Vote interface {
+	isVote()
+}
+
+type BaseVote struct {
+	ID      int64        `json:"id"`
+	Options []VoteOption `json:"options"`
+	Type    VoteType     `json:"type"`
+	votes   map[string]OptionID
+}
+
+type FinishVote struct {
+	BaseVote
+}
+
+func (v *FinishVote) isVote() {}
+
+type MatchVote struct {
+	BaseVote
+	Place *domain.Place `json:"card"`
+}
+
+func (v *MatchVote) isVote() {}
+
+const (
+	OptionIDLike OptionID = iota
+	OptionIDDislike
+
+	OptionIDFinish
+	OptionIDContinue
+)
+
+type VoteResult struct {
+	Type     VoteType `json:"type"`
+	VoteID   int64    `json:"voteId"`
+	OptionID OptionID `json:"optionId"`
 }
 
 type Room struct {
@@ -39,7 +84,9 @@ type Room struct {
 	places     []*domain.Place
 	swipes     []*domain.Swipe
 	matches    []*Match
-	matchVotes map[string]VoteOption
+	result     *domain.Place
+
+	votes map[int64]Vote
 
 	lobbyUseCase     Lobby
 	placeUseCase     Place
@@ -64,7 +111,8 @@ func NewRoom(
 		places:           make([]*domain.Place, 0),
 		usersPlace:       make(map[string]*domain.Place),
 		swipes:           make([]*domain.Swipe, 0),
-		matchVotes:       make(map[string]VoteOption),
+		matches:          make([]*Match, 0),
+		votes:            make(map[int64]Vote),
 		lobbyUseCase:     lobbyUseCase,
 		placeUseCase:     placeUseCase,
 		swipeUseCase:     swipeUseCase,
@@ -72,6 +120,16 @@ func NewRoom(
 		placeRecommender: placeRecommender,
 		log:              log.WithFields(log.Fields{"room": lobby.ID}),
 	}
+
+	r.votes[0] = &FinishVote{
+		BaseVote{
+			ID:      0,
+			Options: []VoteOption{{ID: OptionIDFinish, Desc: "Finish"}, {ID: OptionIDContinue, Desc: "Continue"}},
+			Type:    VoteTypeFinish,
+			votes:   make(map[string]OptionID),
+		},
+	}
+
 	r.state = lobby.State
 	r.log.Debugf("state: %s", r.state)
 
@@ -260,12 +318,6 @@ func (r *Room) InLobby() bool {
 	return r.state == domain.InLobby
 }
 
-func (r *Room) Voting() bool {
-	r.lock.RLock()
-	defer r.lock.RUnlock()
-	return r.state == domain.Voting
-}
-
 func (r *Room) Swiping() bool {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
@@ -369,7 +421,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	return err
 }
 
-func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, error) {
+func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*MatchVote, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
@@ -403,10 +455,22 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*Match, 
 		})]}
 		match.ID = len(r.matches)
 		r.matches = append(r.matches, match)
-		if err := r.setState(domain.Voting); err != nil {
-			return nil, err
+		r.result = match.Place
+
+		vote := &MatchVote{
+			BaseVote: BaseVote{
+				ID: int64(len(r.votes)),
+				Options: []VoteOption{
+					{ID: OptionIDLike, Desc: "Like"},
+					{ID: OptionIDDislike, Desc: "Dislike"},
+				},
+				Type:  VoteTypeMatch,
+				votes: make(map[string]OptionID),
+			},
+			Place: match.Place,
 		}
-		return match, nil
+		r.votes[vote.ID] = vote
+		return vote, nil
 	}
 
 	return nil, nil
@@ -421,6 +485,9 @@ func (r *Room) setState(state domain.LobbyState) error {
 func (r *Room) Result() *domain.Place {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
+	if r.result != nil {
+		return r.result
+	}
 	return r.matches[len(r.matches)-1].Place
 }
 
@@ -430,30 +497,109 @@ func (r *Room) Matches() []*Match {
 	return r.matches
 }
 
-func (r *Room) Vote(userID string, option VoteOption) error {
-	r.lock.Lock()
-	defer r.lock.Unlock()
-	r.matchVotes[userID] = option
-	if len(r.matchVotes) == len(r.usersMap) {
-		if r.allVotedLike() {
-			if err := r.setState(domain.Finished); err != nil {
-				return err
-			}
-		} else {
-			if err := r.setState(domain.Swiping); err != nil {
-				return err
-			}
-		}
-		r.matchVotes = make(map[string]VoteOption)
+func (r *Room) Votes() []Vote {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	votes := make([]Vote, 0, len(r.votes))
+	for _, vote := range r.votes {
+		votes = append(votes, vote)
 	}
-	return nil
+	return votes
 }
 
-func (r *Room) allVotedLike() bool {
-	for _, vote := range r.matchVotes {
-		if vote == VoteDislike {
-			return false
+func (r *Room) Vote(userID string, voteID int64, optionID OptionID) (*VoteResult, error) {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+
+	vote, ok := r.votes[voteID]
+	if !ok {
+		return nil, fmt.Errorf("vote with id %d not found", voteID)
+	}
+
+	switch v := vote.(type) {
+	case *MatchVote:
+		if optionID != OptionIDLike && optionID != OptionIDDislike {
+			return nil, fmt.Errorf("invalid option id: %d", optionID)
+		}
+		v.votes[userID] = optionID
+
+		log.Debugf("<User %s> voted for <Option %d> in %s", userID, optionID, v.Type)
+		res := r.voteMatchResult(v)
+
+		if res != nil && res.OptionID == OptionIDLike {
+			r.result = v.Place
+			err := r.setState(domain.Finished)
+			if err != nil {
+				return nil, fmt.Errorf("error while setting lobby state: %w", err)
+			}
+			return res, nil
+		}
+
+		return res, nil
+	case *FinishVote:
+		if optionID != OptionIDFinish && optionID != OptionIDContinue {
+			return nil, fmt.Errorf("invalid option id: %d", optionID)
+		}
+		v.votes[userID] = optionID
+
+		log.Debugf("<User %s> voted for <Option %d> in %s", userID, optionID, v.Type)
+		res := r.voteFinishResult(v)
+		if res != nil && res.OptionID == OptionIDFinish {
+			err := r.setState(domain.Finished)
+			if err != nil {
+				return nil, fmt.Errorf("error while setting lobby state: %w", err)
+			}
+			return res, nil
+		}
+
+		return res, nil
+	}
+
+	log.Warnf("Unknown voting type: %T", vote)
+	return nil, fmt.Errorf("unknown voting type: %T", vote)
+}
+
+func (r *Room) voteMatchResult(vote *MatchVote) *VoteResult {
+	if len(vote.votes) != len(r.usersMap) {
+		return nil
+	}
+	likes := 0
+	for _, vote := range vote.votes {
+		if vote == OptionIDLike {
+			likes++
 		}
 	}
-	return true
+	if likes == len(r.usersMap) {
+		return &VoteResult{
+			VoteID:   vote.ID,
+			Type:     VoteTypeMatch,
+			OptionID: OptionIDLike,
+		}
+	}
+
+	return &VoteResult{
+		VoteID:   vote.ID,
+		Type:     VoteTypeMatch,
+		OptionID: OptionIDDislike,
+	}
+}
+
+func (r *Room) voteFinishResult(vote *FinishVote) *VoteResult {
+	if len(vote.votes) != len(r.usersMap) {
+		return nil
+	}
+	likes := 0
+	for _, vote := range vote.votes {
+		if vote == OptionIDFinish {
+			likes++
+		}
+	}
+	if likes == len(r.usersMap) {
+		return &VoteResult{
+			VoteID:   vote.ID,
+			Type:     VoteTypeFinish,
+			OptionID: OptionIDFinish,
+		}
+	}
+	return nil
 }

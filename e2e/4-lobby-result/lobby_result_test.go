@@ -39,7 +39,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 		cli1.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
-	listenEvent(event.Match)
+	listenEvent(event.VoteAnnounce)
 	listenEvent(event.SettingsUpdate)
 
 	assert.NoError(t, cli1.Connect())

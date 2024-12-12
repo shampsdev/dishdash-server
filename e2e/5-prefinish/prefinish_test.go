@@ -4,21 +4,22 @@ import (
 	"testing"
 
 	"dishdash.ru/e2e/sdk"
+
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/gateways/ws/event"
-
+	"dishdash.ru/internal/usecase"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_LobbySwipe(t *testing.T) {
+func Test_Prefinish(t *testing.T) {
 	sdk.RunSessionTest(t, sdk.SessionTest{
-		GoldenFile: "lobby_swipe",
-		Run:        LobbySwipe,
+		GoldenFile: "prefinish",
+		Run:        Prefinish,
 	})
 }
 
-func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
+func Prefinish(t *testing.T) *sdk.SocketIOSession {
 	user1 := sdk.PostUserWithID(t, &domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	user2 := sdk.PostUserWithID(t, &domain.User{ID: "id2", Name: "user2", Avatar: "avatar2"})
 
@@ -39,12 +40,10 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
 
-	listenEvent(event.Error)
-	listenEvent(event.UserJoined)
-	listenEvent(event.StartSwipes)
-	listenEvent(event.SettingsUpdate)
-	listenEvent(event.Place)
 	listenEvent(event.VoteAnnounce)
+	listenEvent(event.Voted)
+	listenEvent(event.VoteResult)
+	listenEvent(event.Finish)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -52,14 +51,15 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 	cli1Emit := sdk.EmitWithLogFunc(cli1, user1.Name)
 	cli2Emit := sdk.EmitWithLogFunc(cli2, user2.Name)
 
-	sioSess.NewStep("User1 join lobby")
+	sioSess.NewStep("Joining lobby")
 	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
-	sdk.Sleep()
-
-	sioSess.NewStep("Settings update")
+	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
+		LobbyID: lobby.ID,
+		UserID:  user2.ID,
+	})
 	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
 		Location:    lobby.Location,
 		PriceMin:    300,
@@ -69,25 +69,23 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 	})
 	sdk.Sleep()
 
-	sioSess.NewStep("User2 join lobby")
-	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
-		LobbyID: lobby.ID,
-		UserID:  user2.ID,
-	})
-	sdk.Sleep()
-
 	sioSess.NewStep("Start swipes")
 	cli1Emit(event.StartSwipes)
-	sdk.Sleep()
-
-	sioSess.NewStep("Swipe like and dislike")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.DISLIKE})
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe both likes")
 	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
 	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	sdk.Sleep()
+
+	sioSess.NewStep("Vote like and dislike")
+	cli1Emit(event.Vote, event.VoteEvent{VoteID: 1, OptionID: usecase.OptionIDLike})
+	cli2Emit(event.Vote, event.VoteEvent{VoteID: 1, OptionID: usecase.OptionIDDislike})
+	sdk.Sleep()
+
+	sioSess.NewStep("Vote finish")
+	cli1Emit(event.Vote, event.VoteEvent{VoteID: 0, OptionID: usecase.OptionIDFinish})
+	cli2Emit(event.Vote, event.VoteEvent{VoteID: 0, OptionID: usecase.OptionIDFinish})
 	sdk.Sleep()
 
 	assert.NoError(t, cli1.Close())

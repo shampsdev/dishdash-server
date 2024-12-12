@@ -97,6 +97,12 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				return
 			}
 
+			for _, v := range room.Votes() {
+				c.Emit(event.VoteAnnounce, event.VoteAnnounceEvent{
+					Vote: v,
+				})
+			}
+
 			err = room.AddUser(user)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while adding user to room: %w", err))
@@ -178,20 +184,19 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		})
 
 	s.On(event.Swipe, EventOpts{
-		Allowed: []domain.LobbyState{domain.Swiping, domain.Voting},
+		Allowed: []domain.LobbyState{domain.Swiping},
 	},
 		func(c *Context, se event.SwipeEvent) {
-			m, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
+			v, err := c.Room.Swipe(c.User.ID, c.Room.GetNextPlaceForUser(c.User.ID).ID, se.SwipeType)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while swiping: %w", err))
 				return
 			}
 
-			if m != nil {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.Match,
-					event.MatchEvent{
-						ID:   m.ID,
-						Card: m.Place,
+			if v != nil {
+				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteAnnounce,
+					event.VoteAnnounceEvent{
+						Vote: v,
 					})
 			}
 			p := c.Room.GetNextPlaceForUser(c.User.ID)
@@ -203,19 +208,19 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 
 	voteLock := sync.RWMutex{}
 	s.On(event.Vote, EventOpts{
-		Allowed: []domain.LobbyState{domain.Voting, domain.Swiping},
+		Allowed: []domain.LobbyState{domain.Swiping},
 	},
 		func(c *Context, ve event.VoteEvent) {
 			voteLock.Lock()
 			defer voteLock.Unlock()
-			err := c.Room.Vote(c.User.ID, ve.Option)
+			res, err := c.Room.Vote(c.User.ID, ve.VoteID, ve.OptionID)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while voting: %w", err))
 				return
 			}
 			s.SIO.BroadcastToRoom("/", c.Room.ID, event.Voted, event.VotedEvent{
-				ID:     ve.ID,
-				Option: ve.Option,
+				VoteID:   ve.VoteID,
+				OptionID: ve.OptionID,
 				User: struct {
 					ID     string `json:"id"`
 					Name   string `json:"name"`
@@ -227,9 +232,13 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				},
 			})
 
-			if c.Room.Swiping() || c.Room.Finished() {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.ReleaseMatch)
+			if res != nil {
+				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteResult, event.VoteResultEvent{
+					VoteID:   res.VoteID,
+					OptionID: res.OptionID,
+				})
 			}
+
 			if c.Room.Finished() {
 				s.SIO.BroadcastToRoom("/", c.Room.ID, event.Finish, event.FinishEvent{
 					Result:  c.Room.Result(),
