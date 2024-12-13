@@ -30,6 +30,5 @@ type LobbyState string
 var (
 	InLobby  LobbyState = "lobby"
 	Swiping  LobbyState = "swiping"
-	Voting   LobbyState = "voting"
 	Finished LobbyState = "finished"
 )

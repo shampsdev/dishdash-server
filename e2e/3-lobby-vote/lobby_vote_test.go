@@ -40,9 +40,9 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
 
-	listenEvent(event.Match)
+	listenEvent(event.VoteAnnounce)
 	listenEvent(event.Voted)
-	listenEvent(event.ReleaseMatch)
+	listenEvent(event.VoteResult)
 	listenEvent(event.Finish)
 
 	assert.NoError(t, cli1.Connect())
@@ -79,8 +79,8 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 	sdk.Sleep()
 
 	sioSess.NewStep("Vote like and dislike")
-	cli1Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteLike})
-	cli2Emit(event.Vote, event.VoteEvent{ID: 0, Option: usecase.VoteDislike})
+	cli1Emit(event.Vote, event.VoteEvent{VoteID: 1, OptionID: usecase.OptionIDLike})
+	cli2Emit(event.Vote, event.VoteEvent{VoteID: 1, OptionID: usecase.OptionIDDislike})
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe both likes (2)")
@@ -89,8 +89,8 @@ func LobbyVote(t *testing.T) *sdk.SocketIOSession {
 	sdk.Sleep()
 
 	sioSess.NewStep("Vote both likes")
-	cli1Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
-	cli2Emit(event.Vote, event.VoteEvent{ID: 1, Option: usecase.VoteLike})
+	cli1Emit(event.Vote, event.VoteEvent{VoteID: 2, OptionID: usecase.OptionIDLike})
+	cli2Emit(event.Vote, event.VoteEvent{VoteID: 2, OptionID: usecase.OptionIDLike})
 	sdk.Sleep()
 
 	assert.NoError(t, cli1.Close())
