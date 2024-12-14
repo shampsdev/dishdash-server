@@ -488,7 +488,10 @@ func (r *Room) Result() *domain.Place {
 	if r.result != nil {
 		return r.result
 	}
-	return r.matches[len(r.matches)-1].Place
+	if len(r.matches) > 0 {
+		return r.matches[len(r.matches)-1].Place
+	}
+	return nil
 }
 
 func (r *Room) Matches() []*Match {
