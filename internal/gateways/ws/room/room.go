@@ -98,9 +98,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			for _, v := range room.Votes() {
-				c.Emit(event.VoteAnnounce, event.VoteAnnounceEvent{
-					Vote: v,
-				})
+				c.Emit(event.VoteAnnounce, v)
 			}
 
 			err = room.AddUser(user)
@@ -194,10 +192,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			if v != nil {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteAnnounce,
-					event.VoteAnnounceEvent{
-						Vote: v,
-					})
+				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteAnnounce, v)
 			}
 			p := c.Room.GetNextPlaceForUser(c.User.ID)
 			c.Emit(event.Place, event.PlaceEvent{
