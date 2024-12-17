@@ -87,16 +87,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:54:38.729109Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               },
               "id": 1,
@@ -159,16 +163,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-12-14T14:54:38.729109Z",
+                    "updatedAt": "2024-12-17T19:58:02.812394Z",
                     "url": null
                   },
                   "id": 0
@@ -194,16 +202,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:54:38.729109Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               }
             }
@@ -300,16 +312,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:54:38.729109Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               },
               "id": 1,
