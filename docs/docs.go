@@ -810,6 +810,12 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "visible": {
+                    "type": "boolean"
                 }
             }
         },

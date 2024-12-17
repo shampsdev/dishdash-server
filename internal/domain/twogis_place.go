@@ -35,7 +35,13 @@ func (twoGisPlace *TwoGisPlace) parseTagToPlace() []*Tag {
 			log.Println("empty rubric found at index " + strconv.Itoa(i))
 			return nil
 		}
-		tags[i] = &Tag{0, rubric, "no_icon"}
+		tags[i] = &Tag{
+			ID:      0,
+			Name:    rubric,
+			Icon:    "no_icon",
+			Visible: true,
+			Order:   0,
+		}
 	}
 
 	return tags

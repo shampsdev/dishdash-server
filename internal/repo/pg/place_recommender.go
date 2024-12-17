@@ -86,7 +86,7 @@ func (pr *PlaceRecommender) RecommendPlaces(
 // TODO: duplicate with TagRepo.GetTagsByPlaceID
 func (pr *PlaceRecommender) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error) {
 	query := `
-	SELECT tag.id, tag.name, tag.icon
+	SELECT tag.id, tag.name, tag.icon, tag.visible, tag.order
 	FROM tag
 	JOIN place_tag ON tag.id = place_tag.tag_id
 	WHERE place_tag.place_id = $1
@@ -101,7 +101,7 @@ func (pr *PlaceRecommender) GetTagsByPlaceID(ctx context.Context, placeID int64)
 	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
-		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon, &tag.Visible, &tag.Order)
 		if err != nil {
 			return nil, fmt.Errorf("could not scan tag: %w", err)
 		}
