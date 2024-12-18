@@ -53,16 +53,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               },
               "id": 1,
@@ -88,11 +92,11 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
               },
-              "optionId": 1,
+              "optionId": 0,
               "voteId": 1
             }
           },
@@ -100,11 +104,11 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
               },
-              "optionId": 0,
+              "optionId": 1,
               "voteId": 1
             }
           },
@@ -143,16 +147,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               },
               "id": 2,
@@ -230,16 +238,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Шавафель",
-                    "updatedAt": "2024-12-14T14:53:36.702601Z",
+                    "updatedAt": "2024-12-17T19:57:02.104548Z",
                     "url": null
                   },
                   "id": 0
@@ -265,16 +277,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-12-14T14:53:36.702601Z",
+                    "updatedAt": "2024-12-17T19:57:02.104548Z",
                     "url": null
                   },
                   "id": 1
@@ -300,16 +316,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               }
             }
@@ -372,16 +392,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               },
               "id": 1,
@@ -407,11 +431,11 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar2",
-                "id": "id2",
-                "name": "user2"
+                "avatar": "avatar1",
+                "id": "id1",
+                "name": "user1"
               },
-              "optionId": 1,
+              "optionId": 0,
               "voteId": 1
             }
           },
@@ -419,11 +443,11 @@
             "EventName": "voted",
             "Data": {
               "User": {
-                "avatar": "avatar1",
-                "id": "id1",
-                "name": "user1"
+                "avatar": "avatar2",
+                "id": "id2",
+                "name": "user2"
               },
-              "optionId": 0,
+              "optionId": 1,
               "voteId": 1
             }
           },
@@ -462,16 +486,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               },
               "id": 2,
@@ -549,16 +577,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Шавафель",
-                    "updatedAt": "2024-12-14T14:53:36.702601Z",
+                    "updatedAt": "2024-12-17T19:57:02.104548Z",
                     "url": null
                   },
                   "id": 0
@@ -584,16 +616,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-12-14T14:53:36.702601Z",
+                    "updatedAt": "2024-12-17T19:57:02.104548Z",
                     "url": null
                   },
                   "id": 1
@@ -619,16 +655,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-12-14T14:53:36.702601Z",
+                "updatedAt": "2024-12-17T19:57:02.104548Z",
                 "url": null
               }
             }
