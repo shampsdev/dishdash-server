@@ -28,10 +28,6 @@ func (t TagUseCase) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	return t.tRepo.GetAllTags(ctx)
 }
 
-func (t TagUseCase) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
-	return t.tRepo.SaveApiTag(ctx, place)
-}
-
 func (t TagUseCase) DeleteTag(ctx context.Context, tagId int64) error {
 	return t.tRepo.DeleteTag(ctx, tagId)
 }

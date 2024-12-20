@@ -23,7 +23,6 @@ Prod: https://dishdash.ru/api/v1
 ```
 cp .env.example .env
 ```
-В частности в .env нужен `TWOGIS_API_KEY`
 
 Есть два варианта запуска:
 

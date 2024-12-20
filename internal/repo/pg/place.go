@@ -406,34 +406,3 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 	log.Debugf("Total places from database: %d", len(places))
 	return places, nil
 }
-
-func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-	var existingID int64
-
-	log.Debugf("Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
-
-	err := pr.db.QueryRow(ctx, `
-    SELECT id FROM "place"
-    WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
-	if err != nil {
-		log.Debugf("Error after executing query: %v", err)
-
-		if strings.Contains(err.Error(), "no rows in result set") {
-			log.Debug("No rows found, adding new place.")
-			place := twogisPlace.ToPlace()
-			id, err := pr.SavePlace(ctx, place)
-			if err != nil {
-				log.WithError(err).Error("Failed to save new place")
-				return 0, fmt.Errorf("failed to save place: %w", err)
-			}
-			log.Debugf("New place saved successfully. ID: %d", id)
-			return id, nil
-		}
-
-		log.WithError(err).Error("Unexpected error")
-		return 0, err
-	}
-
-	log.Debugf("Place already exists. ID: %d", existingID)
-	return existingID, nil
-}
