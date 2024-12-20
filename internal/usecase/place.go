@@ -92,14 +92,6 @@ func (p PlaceUseCase) DeletePlace(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (p PlaceUseCase) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-	placeId, err := p.pRepo.SaveTwoGisPlace(ctx, twogisPlace)
-	if err != nil {
-		return 0, err
-	}
-	return placeId, nil
-}
-
 func (p PlaceUseCase) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
 	place, err := p.pRepo.GetPlaceByID(ctx, id)
 	if err != nil {
