@@ -20,7 +20,7 @@ func NewTagRepo(db *pgxpool.Pool) *TagRepo {
 }
 
 func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) {
-	query := `INSERT INTO tag (name, icon, visible, order) VALUES ($1, $2, $3, $4) RETURNING id`
+	query := `INSERT INTO "tag" ("name", "icon", "visible", "order") VALUES ($1, $2, $3, $4) RETURNING id`
 	var id int64
 	err := tr.db.QueryRow(ctx, query, tag.Name, tag.Icon, tag.Visible, tag.Order).Scan(&id)
 	if err != nil {
@@ -30,7 +30,7 @@ func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) 
 }
 
 func (tr *TagRepo) DeleteTag(ctx context.Context, tagId int64) error {
-	query := `DELETE FROM tag WHERE id=$1`
+	query := `DELETE FROM "tag" WHERE id=$1`
 	_, err := tr.db.Exec(ctx, query, tagId)
 	if err != nil {
 		return fmt.Errorf("could not delete tag: %w", err)
@@ -39,7 +39,7 @@ func (tr *TagRepo) DeleteTag(ctx context.Context, tagId int64) error {
 }
 
 func (tr *TagRepo) UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error) {
-	query := `UPDATE tag SET name = $1, icon = $2, visible = $3, order = $4 WHERE id = $5`
+	query := `UPDATE "tag" SET "name" = $1, "icon" = $2, "visible" = $3, "order" = $4 WHERE id = $5`
 	_, err := tr.db.Exec(ctx, query, tag.Name, tag.Icon, tag.Visible, tag.Order, tag.ID)
 	if err != nil {
 		return tag, fmt.Errorf("could not update tag: %w", err)
@@ -53,9 +53,9 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 	}
 	batch := &pgx.Batch{}
 
-	query := `INSERT INTO place_tag (tag_id, place_id) 
+	query := `INSERT INTO "place_tag" ("tag_id", "place_id") 
         VALUES ($1, $2)
-        ON CONFLICT (place_id, tag_id) DO NOTHING`
+        ON CONFLICT ("place_id", "tag_id") DO NOTHING`
 	for _, tagID := range tagIDs {
 		batch.Queue(query, tagID, placeID)
 	}
@@ -71,7 +71,7 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 }
 
 func (tr *TagRepo) DetachTagsFromPlace(ctx context.Context, placeID int64) error {
-	query := `DELETE FROM place_tag WHERE place_id = $1`
+	query := `DELETE FROM "place_tag" WHERE "place_id" = $1`
 	_, err := tr.db.Exec(ctx, query, placeID)
 	if err != nil {
 		return fmt.Errorf("could not detach tags from place: %w", err)
@@ -80,7 +80,7 @@ func (tr *TagRepo) DetachTagsFromPlace(ctx context.Context, placeID int64) error
 }
 
 func (tr *TagRepo) DetachTagsFromLobby(ctx context.Context, lobbyID string) error {
-	query := `DELETE FROM lobby_tag WHERE lobby_id = $1`
+	query := `DELETE FROM "lobby_tag" WHERE "lobby_id" = $1`
 	_, err := tr.db.Exec(ctx, query, lobbyID)
 	if err != nil {
 		return fmt.Errorf("could not detach tags from lobby: %w", err)
@@ -94,7 +94,7 @@ func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyI
 	}
 	batch := &pgx.Batch{}
 
-	query := `INSERT INTO lobby_tag (tag_id, lobby_id) VALUES ($1, $2)`
+	query := `INSERT INTO "lobby_tag" ("tag_id", "lobby_id") VALUES ($1, $2)`
 	for _, tagID := range tagIDs {
 		batch.Queue(query, tagID, lobbyID)
 	}
