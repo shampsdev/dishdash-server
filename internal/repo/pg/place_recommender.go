@@ -2,9 +2,9 @@ package pg
 
 import (
 	"context"
-	"fmt"
-
 	"dishdash.ru/internal/domain"
+	"encoding/json"
+	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -35,19 +35,26 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		p.review_count,
 		p.updated_at,
 		p.source,
-		p.url
+		p.url,
+		JSON_AGG(
+			JSON_BUILD_OBJECT(
+				'id', t.id,
+				'name', t.name,
+				'icon', t.icon,
+				'visible', t.visible,
+				'order', t.order
+			)
+		) AS tags
 	FROM place p
 	JOIN place_tag pt ON p.id = pt.place_id
 	JOIN tag t ON pt.tag_id = t.id
-
 	WHERE t.name = ANY ($1)
-	
 	GROUP BY p.id
-
 	ORDER BY
 		$2 * ST_Distance(p.location, ST_GeogFromWkb($3)) +
 		$4 * ABS(p.price_avg - $5)
-`
+	`
+
 	rows, err := pr.db.Query(ctx, query,
 		data.Tags,
 		opts.DistCoeff, data.Location.ToPostgis(),
@@ -60,57 +67,34 @@ func (pr *PlaceRecommender) RecommendPlaces(
 
 	var places []*domain.Place
 
+	// TODO: duplicate with repo.pg.place : scanPlace
 	for rows.Next() {
-		place, err := scanPlace(rows)
+		var place domain.Place
+		var tagsJSON []byte
+
+		err := rows.Scan(
+			&place.ID, &place.Title, &place.ShortDescription,
+			&place.Description, &place.Images, &place.Location,
+			&place.Address, &place.PriceAvg, &place.ReviewRating,
+			&place.ReviewCount, &place.UpdatedAt, &place.Source,
+			&place.Url, &tagsJSON,
+		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		places = append(places, place)
+
+		var tags []*domain.Tag
+		if err := json.Unmarshal(tagsJSON, &tags); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal tags JSON: %w", err)
+		}
+		place.Tags = tags
+
+		places = append(places, &place)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
-	for _, p := range places {
-		p.Tags, err = pr.GetTagsByPlaceID(ctx, p.ID)
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return places, nil
-}
-
-// TODO: Do in one query
-// TODO: duplicate with TagRepo.GetTagsByPlaceID
-func (pr *PlaceRecommender) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error) {
-	query := `
-	SELECT tag.id, tag.name, tag.icon, tag.visible, tag.order
-	FROM tag
-	JOIN place_tag ON tag.id = place_tag.tag_id
-	WHERE place_tag.place_id = $1
-	`
-
-	rows, err := pr.db.Query(ctx, query, placeID)
-	if err != nil {
-		return nil, fmt.Errorf("could not get tags by place ID: %w", err)
-	}
-	defer rows.Close()
-
-	tags := make([]*domain.Tag, 0)
-	for rows.Next() {
-		var tag domain.Tag
-		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon, &tag.Visible, &tag.Order)
-		if err != nil {
-			return nil, fmt.Errorf("could not scan tag: %w", err)
-		}
-		tags = append(tags, &tag)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating rows: %w", err)
-	}
-
-	return tags, nil
 }
