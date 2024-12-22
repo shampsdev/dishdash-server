@@ -35,8 +35,10 @@ type Config struct {
 	Recommendation struct {
 		PricePower float64 `default:"1" envconfig:"RECOMENDATION_PRICE_POWER"`
 		PriceCoeff float64 `default:"1" envconfig:"RECOMENDATION_PRICE_COEFF"`
+		PriceBound int     `default:"1000000" envconfig:"RECOMENDATION_PRICE_BOUND"`
 		DistPower  float64 `default:"1" envconfig:"RECOMENDATION_DIST_POWER"`
 		DistCoeff  float64 `default:"1" envconfig:"RECOMENDATION_DIST_COEFF"`
+		DistBound  int     `default:"1000000" envconfig:"RECOMENDATION_DIST_BOUND"`
 	}
 	Auth struct {
 		ApiToken string `envconfig:"API_TOKEN"`

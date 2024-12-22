@@ -57,18 +57,6 @@ func (pr *PlaceRecommender) RecommendPlaces(
 			return nil, fmt.Errorf("can't recommend from db: %w", err)
 		}
 		log.Debugf("Got %d places from db", len(dbPlaces))
-
-	case domain.RecommendationTypePriceBounds:
-		log.Debug("Using price bounds recommendation")
-		if opts.PriceBounds == nil {
-			return nil, errors.New("price bounds recommendation settings are chosen but not set")
-		}
-
-		dbPlaces, err = pr.dbPRRepo.RecommendPriceBound(ctx, *opts.PriceBounds, data)
-		if err != nil {
-			return nil, fmt.Errorf("can't recommend from db: %w", err)
-		}
-		log.Debugf("Got %d places from db", len(dbPlaces))
 	default:
 		return nil, fmt.Errorf("unknown recommendation type: %s", opts.Type)
 	}
@@ -85,11 +73,13 @@ func (pr *PlaceRecommender) RecommendPlaces(
 func (pr *PlaceRecommender) defaultRecommendationOpts() *domain.RecommendationOpts {
 	return &domain.RecommendationOpts{
 		Type: domain.RecommendationTypeClassic,
-		Classic: &domain.ClassicRecommendationOpts{
+		Classic: &domain.RecommendationOptsClassic{
 			PricePower: config.C.Recommendation.PricePower,
 			PriceCoeff: config.C.Recommendation.PriceCoeff,
+			PriceBound: config.C.Recommendation.PriceBound,
 			DistPower:  config.C.Recommendation.DistPower,
 			DistCoeff:  config.C.Recommendation.DistCoeff,
+			DistBound:  config.C.Recommendation.DistBound,
 		},
 	}
 }

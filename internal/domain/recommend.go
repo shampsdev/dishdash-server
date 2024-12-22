@@ -3,25 +3,21 @@ package domain
 type RecommendationType string
 
 const (
-	RecommendationTypeClassic     RecommendationType = "classic"
-	RecommendationTypePriceBounds RecommendationType = "priceBound"
+	RecommendationTypeClassic RecommendationType = "classic"
 )
 
 type RecommendationOpts struct {
-	Type        RecommendationType            `json:"type"`
-	Classic     *ClassicRecommendationOpts    `json:"classic"`
-	PriceBounds *PriceBoundRecommendationOpts `json:"priceBound"`
+	Type    RecommendationType         `json:"type"`
+	Classic *RecommendationOptsClassic `json:"classic"`
 }
 
-type ClassicRecommendationOpts struct {
+type RecommendationOptsClassic struct {
 	PricePower float64 `json:"pricePower"`
 	PriceCoeff float64 `json:"priceCoeff"`
+	PriceBound int     `json:"priceBound"`
 	DistPower  float64 `json:"distPower"`
 	DistCoeff  float64 `json:"distCoeff"`
-}
-
-type PriceBoundRecommendationOpts struct {
-	PriceBound int `json:"priceBound"`
+	DistBound  int     `json:"distBound"`
 }
 
 type RecommendData struct {
