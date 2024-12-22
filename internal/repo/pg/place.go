@@ -431,7 +431,6 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 		&p.Url,
 		&tagsJSON,
 	)
-
 	if err != nil {
 		return nil, err
 	}

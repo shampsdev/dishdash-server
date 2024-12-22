@@ -2,9 +2,12 @@ package pg
 
 import (
 	"context"
-	"dishdash.ru/internal/domain"
 	"encoding/json"
 	"fmt"
+	"strings"
+
+	"dishdash.ru/internal/domain"
+	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -71,10 +74,12 @@ func (pr *PlaceRecommender) RecommendPlaces(
 	for rows.Next() {
 		var place domain.Place
 		var tagsJSON []byte
+		loc := postgis.PointS{}
+		imagesStr := ""
 
 		err := rows.Scan(
 			&place.ID, &place.Title, &place.ShortDescription,
-			&place.Description, &place.Images, &place.Location,
+			&place.Description, &imagesStr, &loc,
 			&place.Address, &place.PriceAvg, &place.ReviewRating,
 			&place.ReviewCount, &place.UpdatedAt, &place.Source,
 			&place.Url, &tagsJSON,
@@ -82,6 +87,8 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
+		place.Images = strings.Split(imagesStr, ",")
+		place.Location = domain.FromPostgis(loc)
 
 		var tags []*domain.Tag
 		if err := json.Unmarshal(tagsJSON, &tags); err != nil {
