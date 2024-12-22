@@ -25,6 +25,13 @@ func (pr *PlaceRecommender) RecommendPlaces(
 	data domain.RecommendData,
 ) ([]*domain.Place, error) {
 	query := `
+	WITH filtered_places AS (
+		SELECT DISTINCT p.id
+		FROM place p
+		JOIN place_tag pt ON p.id = pt.place_id
+		JOIN tag t ON pt.tag_id = t.id
+		WHERE t.name = ANY ($1)
+	)
 	SELECT
 		p.id,
 		p.title,
@@ -49,9 +56,9 @@ func (pr *PlaceRecommender) RecommendPlaces(
 			)
 		) AS tags
 	FROM place p
+	JOIN filtered_places fp ON p.id = fp.id
 	JOIN place_tag pt ON p.id = pt.place_id
 	JOIN tag t ON pt.tag_id = t.id
-	WHERE t.name = ANY ($1)
 	GROUP BY p.id
 	ORDER BY
 		$2 * ST_Distance(p.location, ST_GeogFromWkb($3)) +
