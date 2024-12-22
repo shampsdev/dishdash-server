@@ -33,7 +33,9 @@ type Config struct {
 		MinDBPlaces        int `default:"5" envconfig:"DEFAULT_MIN_DB_PLACES"`
 	}
 	Recommendation struct {
+		PricePower float64 `default:"1" envconfig:"RECOMENDATION_PRICE_POWER"`
 		PriceCoeff float64 `default:"1" envconfig:"RECOMENDATION_PRICE_COEFF"`
+		DistPower  float64 `default:"1" envconfig:"RECOMENDATION_DIST_POWER"`
 		DistCoeff  float64 `default:"1" envconfig:"RECOMENDATION_DIST_COEFF"`
 	}
 	Auth struct {

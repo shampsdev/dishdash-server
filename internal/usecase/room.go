@@ -78,6 +78,8 @@ type Room struct {
 
 	lobby *domain.Lobby
 
+	recommendationOpts *domain.RecommendationOpts
+
 	state      domain.LobbyState
 	usersMap   map[string]*domain.User
 	usersPlace map[string]*domain.Place
@@ -335,10 +337,11 @@ func (r *Room) UpdateLobbySettings(
 	location domain.Coordinate,
 	priceAvg int,
 	tagIDs, placeIDs []int64,
+	recommendationOpts *domain.RecommendationOpts,
 ) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	return r.updateLobbySettings(ctx, location, priceAvg, tagIDs, placeIDs)
+	return r.updateLobbySettings(ctx, location, priceAvg, tagIDs, placeIDs, recommendationOpts)
 }
 
 func (r *Room) updateLobbySettings(
@@ -346,7 +349,9 @@ func (r *Room) updateLobbySettings(
 	location domain.Coordinate,
 	priceAvg int,
 	tagIDs, placeIDs []int64,
+	recommendationOpts *domain.RecommendationOpts,
 ) error {
+	r.recommendationOpts = recommendationOpts
 	lobby, err := r.lobbyUseCase.SetLobbySettings(ctx, UpdateLobbySettingsInput{
 		ID:       r.lobby.ID,
 		PriceAvg: priceAvg,
@@ -371,7 +376,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 
 	if len(r.lobby.Tags) == 0 {
 		r.log.Warn("Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'")
-		err := r.updateLobbySettings(ctx, r.lobby.Location, 500, []int64{3}, nil)
+		err := r.updateLobbySettings(ctx, r.lobby.Location, 500, []int64{3}, nil, r.recommendationOpts)
 		if err != nil {
 			r.log.WithError(err).Error("Action 'UpdateLobby' failed")
 			return err
@@ -381,6 +386,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 
 	var err error
 	r.places, err = r.placeRecommender.RecommendPlaces(ctx,
+		r.recommendationOpts,
 		domain.RecommendData{
 			Location: r.lobby.Location,
 			PriceAvg: r.lobby.PriceAvg,
@@ -400,6 +406,7 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 		filter.Map(r.places, func(p *domain.Place) int64 {
 			return p.ID
 		}),
+		r.recommendationOpts,
 	)
 	if err != nil {
 		return fmt.Errorf("error while updating lobby settings: %w", err)

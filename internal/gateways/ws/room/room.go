@@ -145,7 +145,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 	},
 		func(c *Context, se event.SettingsUpdateEvent) {
 			ctx := context.Background()
-			err := c.Room.UpdateLobbySettings(ctx, se.Location, (se.PriceMax+se.PriceMax)/2, se.Tags, nil)
+			err := c.Room.UpdateLobbySettings(ctx, se.Location, (se.PriceMax+se.PriceMax)/2, se.Tags, nil, se.RecommendationOpts)
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while updating lobby: %w", err))
 				return
