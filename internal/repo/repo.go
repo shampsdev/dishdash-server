@@ -9,7 +9,6 @@ import (
 type Tag interface {
 	SaveTag(ctx context.Context, tag *domain.Tag) (int64, error)
 	GetAllTags(ctx context.Context) ([]*domain.Tag, error)
-	SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error)
 
 	DeleteTag(ctx context.Context, tagId int64) error
 	UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error)
@@ -27,7 +26,6 @@ type Place interface {
 	SavePlace(ctx context.Context, place *domain.Place) (int64, error)
 	UpdatePlace(ctx context.Context, place *domain.Place) error
 	DeletePlace(ctx context.Context, id int64) error
-	SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error)
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
@@ -39,7 +37,7 @@ type Place interface {
 }
 
 type PlaceRecommender interface {
-	RecommendPlaces(ctx context.Context, opts domain.RecommendOpts, data domain.RecommendData) ([]*domain.Place, error)
+	RecommendClassic(ctx context.Context, opts domain.RecommendationOptsClassic, data domain.RecommendData) ([]*domain.Place, error)
 }
 
 type User interface {

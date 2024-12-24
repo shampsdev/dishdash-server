@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/internal/domain"
@@ -22,9 +20,9 @@ func NewTagRepo(db *pgxpool.Pool) *TagRepo {
 }
 
 func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) {
-	query := `INSERT INTO tag (name, icon) VALUES ($1, $2) RETURNING id`
+	query := `INSERT INTO "tag" ("name", "icon", "visible", "order") VALUES ($1, $2, $3, $4) RETURNING id`
 	var id int64
-	err := tr.db.QueryRow(ctx, query, tag.Name, tag.Icon).Scan(&id)
+	err := tr.db.QueryRow(ctx, query, tag.Name, tag.Icon, tag.Visible, tag.Order).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("could not insert tag: %w", err)
 	}
@@ -32,7 +30,7 @@ func (tr *TagRepo) SaveTag(ctx context.Context, tag *domain.Tag) (int64, error) 
 }
 
 func (tr *TagRepo) DeleteTag(ctx context.Context, tagId int64) error {
-	query := `DELETE FROM tag WHERE id=$1`
+	query := `DELETE FROM "tag" WHERE id=$1`
 	_, err := tr.db.Exec(ctx, query, tagId)
 	if err != nil {
 		return fmt.Errorf("could not delete tag: %w", err)
@@ -41,8 +39,8 @@ func (tr *TagRepo) DeleteTag(ctx context.Context, tagId int64) error {
 }
 
 func (tr *TagRepo) UpdateTag(ctx context.Context, tag *domain.Tag) (*domain.Tag, error) {
-	query := `UPDATE tag SET name = $1, icon = $2 WHERE id = $3`
-	_, err := tr.db.Exec(ctx, query, tag.Name, tag.Icon, tag.ID)
+	query := `UPDATE "tag" SET "name" = $1, "icon" = $2, "visible" = $3, "order" = $4 WHERE id = $5`
+	_, err := tr.db.Exec(ctx, query, tag.Name, tag.Icon, tag.Visible, tag.Order, tag.ID)
 	if err != nil {
 		return tag, fmt.Errorf("could not update tag: %w", err)
 	}
@@ -55,9 +53,9 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 	}
 	batch := &pgx.Batch{}
 
-	query := `INSERT INTO place_tag (tag_id, place_id) 
+	query := `INSERT INTO "place_tag" ("tag_id", "place_id") 
         VALUES ($1, $2)
-        ON CONFLICT (place_id, tag_id) DO NOTHING`
+        ON CONFLICT ("place_id", "tag_id") DO NOTHING`
 	for _, tagID := range tagIDs {
 		batch.Queue(query, tagID, placeID)
 	}
@@ -73,7 +71,7 @@ func (tr *TagRepo) AttachTagsToPlace(ctx context.Context, tagIDs []int64, placeI
 }
 
 func (tr *TagRepo) DetachTagsFromPlace(ctx context.Context, placeID int64) error {
-	query := `DELETE FROM place_tag WHERE place_id = $1`
+	query := `DELETE FROM "place_tag" WHERE "place_id" = $1`
 	_, err := tr.db.Exec(ctx, query, placeID)
 	if err != nil {
 		return fmt.Errorf("could not detach tags from place: %w", err)
@@ -82,7 +80,7 @@ func (tr *TagRepo) DetachTagsFromPlace(ctx context.Context, placeID int64) error
 }
 
 func (tr *TagRepo) DetachTagsFromLobby(ctx context.Context, lobbyID string) error {
-	query := `DELETE FROM lobby_tag WHERE lobby_id = $1`
+	query := `DELETE FROM "lobby_tag" WHERE "lobby_id" = $1`
 	_, err := tr.db.Exec(ctx, query, lobbyID)
 	if err != nil {
 		return fmt.Errorf("could not detach tags from lobby: %w", err)
@@ -96,7 +94,7 @@ func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyI
 	}
 	batch := &pgx.Batch{}
 
-	query := `INSERT INTO lobby_tag (tag_id, lobby_id) VALUES ($1, $2)`
+	query := `INSERT INTO "lobby_tag" ("tag_id", "lobby_id") VALUES ($1, $2)`
 	for _, tagID := range tagIDs {
 		batch.Queue(query, tagID, lobbyID)
 	}
@@ -113,7 +111,7 @@ func (tr *TagRepo) AttachTagsToLobby(ctx context.Context, tagIDs []int64, lobbyI
 
 func (tr *TagRepo) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*domain.Tag, error) {
 	query := `
-	SELECT tag.id, tag.name, tag.icon
+	SELECT tag.id, tag.name, tag.icon, tag.visible, tag.order
 	FROM tag
 	JOIN place_tag ON tag.id = place_tag.tag_id
 	WHERE place_tag.place_id = $1
@@ -128,7 +126,7 @@ func (tr *TagRepo) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*doma
 	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
-		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon, &tag.Visible, &tag.Order)
 		if err != nil {
 			return nil, fmt.Errorf("could not scan tag: %w", err)
 		}
@@ -144,7 +142,7 @@ func (tr *TagRepo) GetTagsByPlaceID(ctx context.Context, placeID int64) ([]*doma
 
 func (tr *TagRepo) GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Tag, error) {
 	query := `
-	SELECT tag.id, tag.name, tag.icon
+	SELECT tag.id, tag.name, tag.icon, tag.visible, tag.order
 	FROM tag
 	JOIN lobby_tag ON tag.id = lobby_tag.tag_id
 	WHERE lobby_tag.lobby_id = $1
@@ -159,7 +157,7 @@ func (tr *TagRepo) GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*dom
 	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
-		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon, &tag.Visible, &tag.Order)
 		if err != nil {
 			return nil, fmt.Errorf("could not scan tag: %w", err)
 		}
@@ -175,7 +173,7 @@ func (tr *TagRepo) GetTagsByLobbyID(ctx context.Context, lobbyID string) ([]*dom
 
 func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	query := `
-	SELECT tag.id, tag.name, tag.icon
+	SELECT tag.id, tag.name, tag.icon, tag.visible, tag.order
 	FROM tag
 	`
 
@@ -188,7 +186,7 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	tags := make([]*domain.Tag, 0)
 	for rows.Next() {
 		var tag domain.Tag
-		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon)
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Icon, &tag.Visible, &tag.Order)
 		if err != nil {
 			return nil, fmt.Errorf("could not scan tag: %w", err)
 		}
@@ -200,38 +198,4 @@ func (tr *TagRepo) GetAllTags(ctx context.Context) ([]*domain.Tag, error) {
 	}
 
 	return tags, nil
-}
-
-func (tr *TagRepo) SaveApiTag(ctx context.Context, place *domain.TwoGisPlace) ([]int64, error) {
-	var placeTags []int64
-	log.Debugf("Starting to process tags for place Name: %v", place.Name)
-
-	for _, rubric := range place.Rubrics {
-		var id int64
-		log.Debugf("Processing tag: %s", rubric)
-		err := tr.db.QueryRow(ctx, `
-        WITH s AS (
-            SELECT id
-            FROM tag
-            WHERE name = $1
-        ), i AS (
-            INSERT INTO tag (name, icon)
-            SELECT $1, ''
-            WHERE NOT EXISTS (SELECT 1 FROM s)
-            RETURNING id
-        )
-        SELECT id FROM i
-        UNION ALL
-        SELECT id FROM s
-        `, rubric).Scan(&id)
-		if err != nil {
-			log.WithError(err).Errorf("Can't insert or fetch tag '%s'", rubric)
-			continue
-		}
-		log.Debugf("Tag processed successfully: %d", id)
-		placeTags = append(placeTags, id)
-	}
-
-	log.Debugf("Finished processing tags for place: %v", place.Name)
-	return placeTags, nil
 }

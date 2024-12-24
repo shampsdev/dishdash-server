@@ -49,6 +49,10 @@ definitions:
         type: integer
       name:
         type: string
+      order:
+        type: integer
+      visible:
+        type: boolean
     type: object
   domain.User:
     properties:

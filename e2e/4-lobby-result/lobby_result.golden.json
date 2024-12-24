@@ -14,8 +14,26 @@
               "maxDistance": 4000,
               "priceMax": 1500,
               "priceMin": 900,
+              "recommendation": null,
               "tags": [],
               "userId": ""
+            }
+          },
+          {
+            "EventName": "voteAnnounce",
+            "Data": {
+              "id": 0,
+              "options": [
+                {
+                  "description": "Finish",
+                  "id": 2
+                },
+                {
+                  "description": "Continue",
+                  "id": 3
+                }
+              ],
+              "type": "finish"
             }
           },
           {
@@ -28,6 +46,7 @@
               "maxDistance": 4000,
               "priceMax": 300,
               "priceMin": 300,
+              "recommendation": null,
               "tags": [
                 4
               ],
@@ -48,7 +67,7 @@
         "Name": "Swipe both likes",
         "Events": [
           {
-            "EventName": "match",
+            "EventName": "voteAnnounce",
             "Data": {
               "card": {
                 "address": "Сытнинская ул., 4П, Санкт-Петербург",
@@ -70,19 +89,34 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-22T11:07:08.994434Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               },
-              "id": 0
+              "id": 1,
+              "options": [
+                {
+                  "description": "Like",
+                  "id": 0
+                },
+                {
+                  "description": "Dislike",
+                  "id": 1
+                }
+              ],
+              "type": "match"
             }
           }
         ]
@@ -100,6 +134,7 @@
               "maxDistance": 4000,
               "priceMax": 600,
               "priceMin": 0,
+              "recommendation": null,
               "tags": [
                 4
               ],
@@ -131,16 +166,20 @@
                       {
                         "icon": "cafe.png",
                         "id": 2,
-                        "name": "cafe"
+                        "name": "cafe",
+                        "order": 0,
+                        "visible": true
                       },
                       {
                         "icon": "food.png",
                         "id": 4,
-                        "name": "food"
+                        "name": "food",
+                        "order": 0,
+                        "visible": true
                       }
                     ],
                     "title": "Пловная",
-                    "updatedAt": "2024-11-22T11:07:08.994434Z",
+                    "updatedAt": "2024-12-17T19:58:02.812394Z",
                     "url": null
                   },
                   "id": 0
@@ -166,16 +205,20 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-22T11:07:08.994434Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               }
             }
@@ -199,8 +242,26 @@
               "maxDistance": 4000,
               "priceMax": 1500,
               "priceMin": 900,
+              "recommendation": null,
               "tags": [],
               "userId": ""
+            }
+          },
+          {
+            "EventName": "voteAnnounce",
+            "Data": {
+              "id": 0,
+              "options": [
+                {
+                  "description": "Finish",
+                  "id": 2
+                },
+                {
+                  "description": "Continue",
+                  "id": 3
+                }
+              ],
+              "type": "finish"
             }
           },
           {
@@ -213,6 +274,7 @@
               "maxDistance": 4000,
               "priceMax": 300,
               "priceMin": 300,
+              "recommendation": null,
               "tags": [
                 4
               ],
@@ -233,7 +295,7 @@
         "Name": "Swipe both likes",
         "Events": [
           {
-            "EventName": "match",
+            "EventName": "voteAnnounce",
             "Data": {
               "card": {
                 "address": "Сытнинская ул., 4П, Санкт-Петербург",
@@ -255,19 +317,34 @@
                   {
                     "icon": "cafe.png",
                     "id": 2,
-                    "name": "cafe"
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
                   },
                   {
                     "icon": "food.png",
                     "id": 4,
-                    "name": "food"
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2024-11-22T11:07:08.994434Z",
+                "updatedAt": "2024-12-17T19:58:02.812394Z",
                 "url": null
               },
-              "id": 0
+              "id": 1,
+              "options": [
+                {
+                  "description": "Like",
+                  "id": 0
+                },
+                {
+                  "description": "Dislike",
+                  "id": 1
+                }
+              ],
+              "type": "match"
             }
           }
         ]

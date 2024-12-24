@@ -14,11 +14,12 @@ const (
 	StartSwipes    = "startSwipes"
 	Place          = "card"
 	Swipe          = "swipe"
-	Match          = "match"
-	Vote           = "vote"
-	Voted          = "voted"
-	ReleaseMatch   = "releaseMatch"
 	Finish         = "finish"
+
+	VoteAnnounce = "voteAnnounce"
+	Vote         = "vote"
+	Voted        = "voted"
+	VoteResult   = "voteResult"
 
 	Error = "error"
 )
@@ -41,12 +42,13 @@ type UserLeftEvent struct {
 }
 
 type SettingsUpdateEvent struct {
-	Location    domain.Coordinate `json:"location"`
-	UserID      string            `json:"userId"`
-	PriceMin    int               `json:"priceMin"`
-	PriceMax    int               `json:"priceMax"`
-	MaxDistance int               `json:"maxDistance"`
-	Tags        []int64           `json:"tags"`
+	Location           domain.Coordinate          `json:"location"`
+	UserID             string                     `json:"userId"`
+	PriceMin           int                        `json:"priceMin"`
+	PriceMax           int                        `json:"priceMax"`
+	MaxDistance        int                        `json:"maxDistance"`
+	Tags               []int64                    `json:"tags"`
+	RecommendationOpts *domain.RecommendationOpts `json:"recommendation"`
 }
 
 type PlaceEvent struct {
@@ -58,24 +60,28 @@ type SwipeEvent struct {
 	SwipeType domain.SwipeType `json:"swipeType"`
 }
 
-type MatchEvent struct {
-	ID   int           `json:"id"`
-	Card *domain.Place `json:"card"`
+type VoteAnnounceEvent struct {
+	usecase.Vote
 }
 
 type VoteEvent struct {
-	ID     int64              `json:"id"`
-	Option usecase.VoteOption `json:"option"`
+	VoteID   int64            `json:"voteId"`
+	OptionID usecase.OptionID `json:"optionId"`
 }
 
 type VotedEvent struct {
-	ID     int64              `json:"id"`
-	Option usecase.VoteOption `json:"option"`
-	User   struct {
+	VoteID   int64            `json:"voteId"`
+	OptionID usecase.OptionID `json:"optionId"`
+	User     struct {
 		ID     string `json:"id"`
 		Name   string `json:"name"`
 		Avatar string `json:"avatar"`
 	}
+}
+
+type VoteResultEvent struct {
+	VoteID   int64            `json:"voteId"`
+	OptionID usecase.OptionID `json:"optionId"`
 }
 
 type FinishEvent struct {

@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -130,21 +131,25 @@ func (pr *PlaceRepo) DeletePlace(ctx context.Context, id int64) error {
 func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
 	const getPlaceQuery = `
 	SELECT
-		"id",
-		"title",
-		"short_description",
-		"description",
-		"images",
-		"location",
-		"address",
-		"price_avg",
-		"review_rating",
-		"review_count",
-		"updated_at",
-		"source",
-		"url"
-	FROM "place"
-	WHERE id=$1
+		p.id,
+		p.title,
+		p.short_description,
+		p.description,
+		p.images,
+		p.location,
+		p.address,
+		p.price_avg,
+		p.review_rating,
+		p.review_count,
+		p.updated_at, 
+		p.source,
+		p.url,
+		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+	FROM "place" AS p
+	JOIN "place_tag" AS pt ON p.id = pt.place_id 
+	JOIN "tag" AS t ON pt.tag_id = t.id
+	WHERE p.id=$1
+	GROUP BY p.id;
 `
 	row := pr.db.QueryRow(ctx, getPlaceQuery, id)
 	place, err := scanPlace(row)
@@ -157,21 +162,25 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error) {
 	const getPlaceQuery = `
 	SELECT
-		"id",
-		"title",
-		"short_description",
-		"description",
-		"images",
-		"location",
-		"address",
-		"price_avg",
-		"review_rating",
-		"review_count",
-		"updated_at",
-		"source",
-		"url"
-	FROM "place"
-	WHERE url=$1
+		p.id,
+		p.title,
+		p.short_description,
+		p.description,
+		p.images,
+		p.location,
+		p.address,
+		p.price_avg,
+		p.review_rating,
+		p.review_count,
+		p.updated_at, 
+		p.source,
+		p.url,
+		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+	FROM "place" AS p
+	JOIN "place_tag" AS pt ON p.id = pt.place_id 
+	JOIN "tag" AS t ON pt.tag_id = t.id
+	WHERE p.url=$1
+	GROUP BY p.id;
 `
 	row := pr.db.QueryRow(ctx, getPlaceQuery, url)
 	place, err := scanPlace(row)
@@ -188,20 +197,24 @@ func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Pla
 func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) {
 	const getPlacesQuery = `
 	SELECT
-		"id",
-		"title",
-		"short_description",
-		"description",
-		"images",
-		"location",
-		"address",
-		"price_avg",
-		"review_rating",
-		"review_count",
-		"updated_at", 
-		"source",
-		"url"
-	FROM "place"
+		p.id,
+		p.title,
+		p.short_description,
+		p.description,
+		p.images,
+		p.location,
+		p.address,
+		p.price_avg,
+		p.review_rating,
+		p.review_count,
+		p.updated_at, 
+		p.source,
+		p.url,
+		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+	FROM "place" AS p
+	JOIN "place_tag" AS pt ON p.id = pt.place_id 
+	JOIN "tag" AS t ON pt.tag_id = t.id
+	GROUP BY p.id;
 `
 	rows, err := pr.db.Query(ctx, getPlacesQuery)
 	if err != nil {
@@ -257,22 +270,26 @@ func (pr *PlaceRepo) DetachPlacesFromLobby(ctx context.Context, placeID string) 
 func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error) {
 	query := `
 	SELECT 
-	    place.id,
-		place.title,
-		place.short_description,
-		place.description,
-		place.images,
-		place.location,
-		place.address,
-		place.price_avg,
-		place.review_rating,
-		place.review_count,
-		place.updated_at,
-		place.source,
-		place.url
-	FROM place
-	JOIN place_lobby ON place.id = place_lobby.place_id
-	WHERE place_lobby.lobby_id = $1
+	    p.id,
+		p.title,
+		p.short_description,
+		p.description,
+		p.images,
+		p.location,
+		p.address,
+		p.price_avg,
+		p.review_rating,
+		p.review_count,
+		p.updated_at,
+		p.source,
+		p.url,
+		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+	FROM "place" AS p
+	JOIN "place_tag" AS pt ON p.id = pt.place_id 
+	JOIN "tag" AS t ON pt.tag_id = t.id
+	JOIN "place_lobby" AS pl ON p.id = pl.place_id
+	WHERE pl.lobby_id = $1
+	GROUP BY p.id;
 	`
 
 	rows, err := pr.db.Query(ctx, query, lobbyID)
@@ -301,30 +318,6 @@ type Scanner interface {
 	Scan(dest ...any) error
 }
 
-func scanPlace(s Scanner) (*domain.Place, error) {
-	p := new(domain.Place)
-	loc := postgis.PointS{}
-	imagesStr := ""
-	err := s.Scan(
-		&p.ID,
-		&p.Title,
-		&p.ShortDescription,
-		&p.Description,
-		&imagesStr,
-		&loc,
-		&p.Address,
-		&p.PriceAvg,
-		&p.ReviewRating,
-		&p.ReviewCount,
-		&p.UpdatedAt,
-		&p.Source,
-		&p.Url,
-	)
-	p.Location = domain.FromPostgis(loc)
-	p.Images = strings.Split(imagesStr, ",")
-	return p, err
-}
-
 func parseTagsToQuery(lobby *domain.Lobby) string {
 	query := "HAVING COUNT(DISTINCT CASE WHEN t.name IN (%s) THEN t.name END) > 0"
 	var queryTags string
@@ -351,7 +344,16 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			p.review_count,
 			p.updated_at,
 			p.source,
-			p.url
+			p.url,
+			JSON_AGG(
+				JSON_BUILD_OBJECT(
+					'id', t.id,
+					'name', t.name,
+					'icon', t.icon,
+					'visible', t.visible,
+					'order', t.order
+				)
+			) AS tags
 		FROM place p
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id
@@ -369,7 +371,7 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			)
 		  AND p.price_avg > $4
 		  AND p.price_avg < $5
-		  GROUP BY p.id
+		GROUP BY p.id;
 	`
 
 	query = fmt.Sprintf(query, parseTagsToQuery(lobby))
@@ -407,33 +409,45 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 	return places, nil
 }
 
-func (pr *PlaceRepo) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-	var existingID int64
+func scanPlace(s Scanner) (*domain.Place, error) {
+	p := new(domain.Place)
+	loc := postgis.PointS{}
+	imagesStr := ""
+	tagsJSON := ""
 
-	log.Debugf("Checking if place with title '%s' and address '%s' exists.", twogisPlace.Name, twogisPlace.Address)
-
-	err := pr.db.QueryRow(ctx, `
-    SELECT id FROM "place"
-    WHERE "title" = $1 AND "address" = $2;`, twogisPlace.Name, twogisPlace.Address).Scan(&existingID)
+	err := s.Scan(
+		&p.ID,
+		&p.Title,
+		&p.ShortDescription,
+		&p.Description,
+		&imagesStr,
+		&loc,
+		&p.Address,
+		&p.PriceAvg,
+		&p.ReviewRating,
+		&p.ReviewCount,
+		&p.UpdatedAt,
+		&p.Source,
+		&p.Url,
+		&tagsJSON,
+	)
 	if err != nil {
-		log.Debugf("Error after executing query: %v", err)
-
-		if strings.Contains(err.Error(), "no rows in result set") {
-			log.Debug("No rows found, adding new place.")
-			place := twogisPlace.ToPlace()
-			id, err := pr.SavePlace(ctx, place)
-			if err != nil {
-				log.WithError(err).Error("Failed to save new place")
-				return 0, fmt.Errorf("failed to save place: %w", err)
-			}
-			log.Debugf("New place saved successfully. ID: %d", id)
-			return id, nil
-		}
-
-		log.WithError(err).Error("Unexpected error")
-		return 0, err
+		return nil, err
 	}
 
-	log.Debugf("Place already exists. ID: %d", existingID)
-	return existingID, nil
+	p.Location = domain.FromPostgis(loc)
+
+	p.Images = strings.Split(imagesStr, ",")
+
+	var tags []domain.Tag
+	if err := json.Unmarshal([]byte(tagsJSON), &tags); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal tags: %w", err)
+	}
+
+	p.Tags = make([]*domain.Tag, len(tags))
+	for i := range tags {
+		p.Tags[i] = &tags[i]
+	}
+
+	return p, nil
 }

@@ -1,9 +1,6 @@
 package usecase
 
 import (
-	"dishdash.ru/cmd/server/config"
-	"dishdash.ru/external/twogis"
-	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo/pg"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -15,7 +12,6 @@ func Setup(pool *pgxpool.Pool) Cases {
 	ur := pg.NewUserRepo(pool)
 	sr := pg.NewSwipeRepo(pool)
 	prr := pg.NewPlaceRecommenderRepo(pool)
-	twogisRepo := &twogis.PlaceRecommender{}
 
 	pu := NewPlaceUseCase(tr, pr)
 	lu := NewLobbyUseCase(lr, ur, tr, pr, sr)
@@ -23,12 +19,7 @@ func Setup(pool *pgxpool.Pool) Cases {
 	uu := NewUserUseCase(ur)
 
 	placeRecommender := NewPlaceRecommender(
-		domain.RecommendOpts{
-			PriceCoeff: float64(config.C.Recommendation.PriceCoeff),
-			DistCoeff:  float64(config.C.Recommendation.DistCoeff),
-		},
 		prr,
-		twogisRepo,
 		pr,
 		tr,
 	)

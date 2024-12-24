@@ -92,20 +92,8 @@ func (p PlaceUseCase) DeletePlace(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (p PlaceUseCase) SaveTwoGisPlace(ctx context.Context, twogisPlace *domain.TwoGisPlace) (int64, error) {
-	placeId, err := p.pRepo.SaveTwoGisPlace(ctx, twogisPlace)
-	if err != nil {
-		return 0, err
-	}
-	return placeId, nil
-}
-
 func (p PlaceUseCase) GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error) {
 	place, err := p.pRepo.GetPlaceByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -117,10 +105,6 @@ func (p PlaceUseCase) GetPlaceByUrl(ctx context.Context, url string) (*domain.Pl
 	if err != nil {
 		return nil, err
 	}
-	place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
-	if err != nil {
-		return nil, err
-	}
 	return place, nil
 }
 
@@ -128,12 +112,6 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	places, err := p.pRepo.GetAllPlaces(ctx)
 	if err != nil {
 		return nil, err
-	}
-	for _, place := range places {
-		place.Tags, err = p.tRepo.GetTagsByPlaceID(ctx, place.ID)
-		if err != nil {
-			return nil, err
-		}
 	}
 	return places, nil
 }

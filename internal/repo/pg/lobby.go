@@ -30,7 +30,7 @@ func NewLobbyRepo(db *pgxpool.Pool) *LobbyRepo {
 
 func (lr *LobbyRepo) SaveLobby(ctx context.Context, lobby *domain.Lobby) (string, error) {
 	const saveQuery = `
-		INSERT INTO "lobby" (id, state, price_avg, location, created_at) 
+		INSERT INTO "lobby" (id, state, price_avg, location, created_at)
 		VALUES ($1, $2, $3, ST_GeogFromWkb($4), $5)
 `
 
@@ -83,14 +83,19 @@ func (lr *LobbyRepo) GetLobbyByID(ctx context.Context, id string) (*domain.Lobby
 	return lobby, nil
 }
 
+// NOTE
+// This function finds the nearest active lobby
+// that was created no longer than 2 min ago.
 func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error) {
 	const getQuery = `
 	SELECT lobby.id, ST_Distance(lobby.location, ST_GeogFromWkb($1)) as dist
-    FROM lobby
-    WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
-    	SELECT MIN (ST_Distance(lobby.location, ST_GeogFromWkb($1))) 
-    	FROM lobby
-  	) AND lobby.state = 'lobby';
+	FROM lobby
+	WHERE ST_Distance(lobby.location, ST_GeogFromWkb($1), true) = (
+	    SELECT MIN(ST_Distance(lobby.location, ST_GeogFromWkb($1)))
+	    FROM lobby
+	    WHERE lobby.state = 'lobby'
+	)
+	AND lobby.created_at >= NOW() - INTERVAL '30 seconds';
 `
 	row := lr.db.QueryRow(ctx, getQuery,
 		loc.ToPostgis(),
@@ -110,7 +115,7 @@ func (lr *LobbyRepo) NearestActiveLobbyID(ctx context.Context, loc domain.Coordi
 
 func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error {
 	const query = `
-		UPDATE lobby SET price_avg = $1, location = ST_GeogFromWkb($2) 
+		UPDATE lobby SET price_avg = $1, location = ST_GeogFromWkb($2)
 		WHERE id = $3
 `
 	_, err := lr.db.Exec(ctx, query,
@@ -126,7 +131,7 @@ func (lr *LobbyRepo) UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
 
 func (lr *LobbyRepo) SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error {
 	const query = `
-		UPDATE lobby SET state = $1 
+		UPDATE lobby SET state = $1
 		WHERE id = $2
 `
 	_, err := lr.db.Exec(ctx, query, state, lobbyID)
