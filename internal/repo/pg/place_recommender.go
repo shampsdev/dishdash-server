@@ -19,9 +19,9 @@ func NewPlaceRecommenderRepo(db *pgxpool.Pool) *PlaceRecommender {
 	return &PlaceRecommender{db: db}
 }
 
-func (pr *PlaceRecommender) RecommendPlaces(
+func (pr *PlaceRecommender) RecommendClassic(
 	ctx context.Context,
-	opts domain.RecommendOpts,
+	opts domain.RecommendationOptsClassic,
 	data domain.RecommendData,
 ) ([]*domain.Place, error) {
 	query := `
@@ -31,6 +31,8 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id
 		WHERE t.name = ANY ($1)
+		AND p.price_avg BETWEEN $2 AND $3
+		AND ST_Distance(p.location, ST_GeogFromWkb($4)) <= $5
 	)
 	SELECT
 		p.id,
@@ -61,15 +63,21 @@ func (pr *PlaceRecommender) RecommendPlaces(
 	JOIN tag t ON pt.tag_id = t.id
 	GROUP BY p.id
 	ORDER BY
-		$2 * ST_Distance(p.location, ST_GeogFromWkb($3)) +
-		$4 * ABS(p.price_avg - $5)
+		$6 * (ST_Distance(p.location, ST_GeogFromWkb($7)) ^ $8) +
+		$9 * (ABS(p.price_avg - $10) ^ $11)
 	`
 
-	rows, err := pr.db.Query(ctx, query,
+	return pr.queryPlaces(ctx, query,
 		data.Tags,
-		opts.DistCoeff, data.Location.ToPostgis(),
-		opts.PriceCoeff, data.PriceAvg,
+		data.PriceAvg-opts.PriceBound, data.PriceAvg+opts.PriceBound,
+		data.Location.ToPostgis(), opts.DistBound,
+		opts.DistCoeff, data.Location.ToPostgis(), opts.DistPower,
+		opts.PriceCoeff, data.PriceAvg, opts.PricePower,
 	)
+}
+
+func (pr *PlaceRecommender) queryPlaces(ctx context.Context, query string, params ...interface{}) ([]*domain.Place, error) {
+	rows, err := pr.db.Query(ctx, query, params...)
 	if err != nil {
 		return nil, fmt.Errorf("error while place recommending from db: %w", err)
 	}
@@ -77,7 +85,6 @@ func (pr *PlaceRecommender) RecommendPlaces(
 
 	var places []*domain.Place
 
-	// TODO: duplicate with repo.pg.place : scanPlace
 	for rows.Next() {
 		var place domain.Place
 		var tagsJSON []byte

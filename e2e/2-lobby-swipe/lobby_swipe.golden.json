@@ -14,6 +14,7 @@
               "maxDistance": 4000,
               "priceMax": 1500,
               "priceMin": 900,
+              "recommendation": null,
               "tags": [],
               "userId": ""
             }
@@ -58,6 +59,7 @@
               "maxDistance": 4000,
               "priceMax": 300,
               "priceMin": 300,
+              "recommendation": null,
               "tags": [
                 4
               ],
@@ -309,6 +311,7 @@
               "maxDistance": 4000,
               "priceMax": 600,
               "priceMin": 0,
+              "recommendation": null,
               "tags": [
                 4
               ],

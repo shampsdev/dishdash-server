@@ -37,7 +37,7 @@ type Place interface {
 }
 
 type PlaceRecommender interface {
-	RecommendPlaces(ctx context.Context, opts domain.RecommendOpts, data domain.RecommendData) ([]*domain.Place, error)
+	RecommendClassic(ctx context.Context, opts domain.RecommendationOptsClassic, data domain.RecommendData) ([]*domain.Place, error)
 }
 
 type User interface {

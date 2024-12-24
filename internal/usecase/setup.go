@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"dishdash.ru/cmd/server/config"
-	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo/pg"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -21,10 +19,6 @@ func Setup(pool *pgxpool.Pool) Cases {
 	uu := NewUserUseCase(ur)
 
 	placeRecommender := NewPlaceRecommender(
-		domain.RecommendOpts{
-			PriceCoeff: float64(config.C.Recommendation.PriceCoeff),
-			DistCoeff:  float64(config.C.Recommendation.DistCoeff),
-		},
 		prr,
 		pr,
 		tr,
