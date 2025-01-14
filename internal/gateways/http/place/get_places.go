@@ -16,6 +16,7 @@ import (
 // @Schemes http https
 // @Success 200 {array} domain.Place "List of places"
 // @Failure 500
+// @Security ApiKeyAuth
 // @Router /places [get]
 func GetAllPlaces(placeUseCase usecase.Place) gin.HandlerFunc {
 	return func(c *gin.Context) {

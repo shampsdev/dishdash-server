@@ -18,6 +18,7 @@ import (
 // @Success 200
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
+// @Security ApiKeyAuth
 // @Router /lobbies/{id} [delete]
 func DeleteLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {

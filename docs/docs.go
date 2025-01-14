@@ -179,6 +179,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete a lobby in the database",
                 "consumes": [
                     "application/json"
@@ -214,6 +219,11 @@ const docTemplate = `{
         },
         "/place/by_url": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a place from the database by url",
                 "consumes": [
                     "application/json"
@@ -250,6 +260,11 @@ const docTemplate = `{
         },
         "/places": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a list of places from the database",
                 "consumes": [
                     "application/json"
@@ -554,6 +569,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a list of users from the database",
                 "consumes": [
                     "application/json"
