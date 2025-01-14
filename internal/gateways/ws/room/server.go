@@ -95,7 +95,7 @@ func (s *Server) GetContext(conn socketio.Conn) (*Context, bool) {
 
 	if c.Room != nil && c.User != nil {
 		c.Log = log.WithFields(log.Fields{
-			"room": c.Room.ID,
+			"room": c.Room.ID(),
 			"user": c.User.ID,
 		})
 	}

@@ -28,7 +28,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			s.Metrics.ActiveConnections.Dec()
 			c.Log.Info("Leave room")
 			if c.Room != nil && c.Room.Empty() {
-				err := cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID)
+				err := cases.RoomRepo.DeleteRoom(context.Background(), c.Room.ID())
 				if err != nil {
 					c.Log.WithError(err).Error("error while deleting room")
 				}
@@ -45,8 +45,8 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			c.HandleError(fmt.Errorf("error while removing user from room: %w", err))
 		}
 
-		s.SIO.LeaveRoom("", c.Room.ID, conn)
-		s.SIO.BroadcastToRoom("", c.Room.ID, event.UserLeft,
+		s.SIO.LeaveRoom("", c.Room.ID(), conn)
+		s.SIO.BroadcastToRoom("", c.Room.ID(), event.UserLeft,
 			event.UserLeftEvent{
 				ID:     c.User.ID,
 				Name:   c.User.Name,
@@ -107,13 +107,13 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				return
 			}
 
-			c.Conn.Join(room.ID)
+			c.Conn.Join(room.ID())
 			c.lock.Lock()
 			c.Conn.SetContext(c)
 			c.lock.Unlock()
 			c.Log.Info("User joined")
 
-			broadcastToOthersInRoom(s.SIO, c.User.ID, c.Room.ID, event.UserJoined,
+			broadcastToOthersInRoom(s.SIO, c.User.ID, c.Room.ID(), event.UserJoined,
 				event.UserJoinedEvent{
 					ID:     user.ID,
 					Name:   user.Name,
@@ -152,7 +152,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			se.UserID = c.User.ID
-			s.SIO.BroadcastToRoom("", c.Room.ID, event.SettingsUpdate, se)
+			s.SIO.BroadcastToRoom("", c.Room.ID(), event.SettingsUpdate, se)
 		})
 
 	s.On(event.StartSwipes, EventOpts{
@@ -166,8 +166,8 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			c.Log.Info("Start swipes")
-			s.SIO.BroadcastToRoom("", c.Room.ID, event.StartSwipes)
-			s.SIO.ForEach("", c.Room.ID, func(conn socketio.Conn) {
+			s.SIO.BroadcastToRoom("", c.Room.ID(), event.StartSwipes)
+			s.SIO.ForEach("", c.Room.ID(), func(conn socketio.Conn) {
 				c, ok := s.GetContext(conn)
 				if !ok {
 					return
@@ -192,7 +192,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			}
 
 			if v != nil {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteAnnounce, v)
+				s.SIO.BroadcastToRoom("/", c.Room.ID(), event.VoteAnnounce, v)
 			}
 			p := c.Room.GetNextPlaceForUser(c.User.ID)
 			c.Emit(event.Place, event.PlaceEvent{
@@ -213,7 +213,7 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 				c.HandleError(fmt.Errorf("error while voting: %w", err))
 				return
 			}
-			s.SIO.BroadcastToRoom("/", c.Room.ID, event.Voted, event.VotedEvent{
+			s.SIO.BroadcastToRoom("/", c.Room.ID(), event.Voted, event.VotedEvent{
 				VoteID:   ve.VoteID,
 				OptionID: ve.OptionID,
 				User: struct {
@@ -228,14 +228,14 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 			})
 
 			if res != nil {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.VoteResult, event.VoteResultEvent{
+				s.SIO.BroadcastToRoom("/", c.Room.ID(), event.VoteResult, event.VoteResultEvent{
 					VoteID:   res.VoteID,
 					OptionID: res.OptionID,
 				})
 			}
 
 			if c.Room.Finished() {
-				s.SIO.BroadcastToRoom("/", c.Room.ID, event.Finish, event.FinishEvent{
+				s.SIO.BroadcastToRoom("/", c.Room.ID(), event.Finish, event.FinishEvent{
 					Result:  c.Room.Result(),
 					Matches: c.Room.Matches(),
 				})

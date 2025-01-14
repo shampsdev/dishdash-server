@@ -9,6 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/internal/domain"
+	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase/state"
 	"dishdash.ru/pkg/filter"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
@@ -73,7 +75,7 @@ type VoteResult struct {
 }
 
 type Room struct {
-	ID   string
+	id   string
 	lock sync.RWMutex
 
 	lobby *domain.Lobby
@@ -107,7 +109,7 @@ func NewRoom(
 	placeRecommender *PlaceRecommender,
 ) (*Room, error) {
 	r := &Room{
-		ID:               lobby.ID,
+		id:               lobby.ID,
 		lobby:            lobby,
 		usersMap:         make(map[string]*domain.User),
 		places:           make([]*domain.Place, 0),
@@ -153,14 +155,18 @@ func NewRoom(
 	return r, nil
 }
 
+func (r *Room) ID() string {
+	return r.id
+}
+
 func (r *Room) loadFromDB() error {
 	var err error
-	r.swipes, err = r.swipeUseCase.GetSwipesByLobbyID(context.Background(), r.ID)
+	r.swipes, err = r.swipeUseCase.GetSwipesByLobbyID(context.Background(), r.id)
 	if err != nil {
 		return fmt.Errorf("failed to get swipes: %w", err)
 	}
 
-	users, err := r.userUseCase.GetUsersByLobbyID(context.Background(), r.ID)
+	users, err := r.userUseCase.GetUsersByLobbyID(context.Background(), r.id)
 	if err != nil {
 		return fmt.Errorf("failed to get users: %w", err)
 	}
@@ -238,13 +244,25 @@ func (r *Room) Settings() UpdateLobbySettingsInput {
 
 func (r *Room) settings() UpdateLobbySettingsInput {
 	return UpdateLobbySettingsInput{
-		ID:       r.ID,
+		ID:       r.id,
 		PriceAvg: r.lobby.PriceAvg,
 		Location: r.lobby.Location,
 		Tags: filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
 			return t.ID
 		}),
 	}
+}
+
+func (r *Room) OnJoin(c *state.Context[*Room]) error {
+	r.usersMap[c.User.ID] = c.User
+
+	c.BroadcastToOthers(event.UserJoined, event.UserJoinedEvent{
+		ID:     c.User.ID,
+		Name:   c.User.Name,
+		Avatar: c.User.Avatar,
+	})
+
+	return nil
 }
 
 func (r *Room) AddUser(user *domain.User) error {
@@ -366,6 +384,66 @@ func (r *Room) updateLobbySettings(
 	r.lobby.Tags = lobby.Tags
 	r.lobby.Places = lobby.Places
 	return nil
+}
+
+func (r *Room) OnStartSwipes(c *state.Context[*Room]) error {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+
+	r.log.Debug("Request started: Action 'StartSwipes' initiated")
+
+	if len(r.lobby.Tags) == 0 {
+		r.log.Warn("Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'")
+		err := r.updateLobbySettings(c.Ctx, r.lobby.Location, 500, []int64{3}, nil, r.recommendationOpts)
+		if err != nil {
+			r.log.WithError(err).Error("Action 'UpdateLobby' failed")
+			return err
+		}
+		r.log.Debug("Request successful: Action 'UpdateLobby' completed with default tags")
+	}
+
+	var err error
+	r.places, err = r.placeRecommender.RecommendPlaces(c.Ctx,
+		r.recommendationOpts,
+		domain.RecommendData{
+			Location: r.lobby.Location,
+			PriceAvg: r.lobby.PriceAvg,
+			Tags:     r.lobby.TagNames(),
+		},
+	)
+	if err != nil {
+		r.log.WithError(err).Error("Action 'GetPlacesForLobby' failed")
+		return err
+	}
+	r.log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
+
+	err = r.updateLobbySettings(c.Ctx, r.lobby.Location, r.lobby.PriceAvg,
+		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+			return t.ID
+		}),
+		filter.Map(r.places, func(p *domain.Place) int64 {
+			return p.ID
+		}),
+		r.recommendationOpts,
+	)
+	if err != nil {
+		return fmt.Errorf("error while updating lobby settings: %w", err)
+	}
+	r.log.Debug("Request successful: Action 'UpdateLobby' completed")
+
+	r.log.Debug("Request successful: Action 'UpdateLobby' completed")
+	for id := range r.usersMap {
+		if len(r.places) > 0 {
+			r.usersPlace[id] = r.places[0]
+			r.log.Debugf("<User %s> is assigned to <Place %d>", id, r.places[0].ID)
+		} else {
+			log.Warnf("No places available to assign to <User %s>", id)
+		}
+	}
+
+	log.Info("Swipes successfully started")
+	err = r.setState(domain.Swiping)
+	return err
 }
 
 func (r *Room) StartSwipes(ctx context.Context) error {
