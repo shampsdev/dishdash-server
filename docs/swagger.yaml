@@ -227,6 +227,8 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: delete a lobby
       tags:
       - lobbies
@@ -331,6 +333,8 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Get place by url
       tags:
       - places
@@ -350,6 +354,8 @@ paths:
             type: array
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Get places
       tags:
       - places
@@ -542,6 +548,8 @@ paths:
             type: array
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: Get users
       tags:
       - users
