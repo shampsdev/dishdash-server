@@ -256,11 +256,11 @@ func (r *Room) settings() UpdateLobbySettingsInput {
 func (r *Room) OnJoin(c *state.Context[*Room]) error {
 	r.usersMap[c.User.ID] = c.User
 
-	c.BroadcastToOthers(event.UserJoined, event.UserJoinedEvent{
-		ID:     c.User.ID,
-		Name:   c.User.Name,
-		Avatar: c.User.Avatar,
-	})
+	// c.BroadcastToOthers(event.UserJoined, event.UserJoinedEvent{
+	// 	ID:     c.User.ID,
+	// 	Name:   c.User.Name,
+	// 	Avatar: c.User.Avatar,
+	// })
 
 	return nil
 }

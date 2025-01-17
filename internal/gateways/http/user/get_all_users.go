@@ -17,6 +17,7 @@ import (
 // @Success 200 {array} domain.User "List of users"
 // @Failure 500
 // @Router /users [get]
+// @Security ApiKeyAuth
 func GetAllUsers(userUseCase usecase.User) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		users, err := userUseCase.GetAllUsers(c)
