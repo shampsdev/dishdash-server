@@ -47,7 +47,7 @@ func (c *Context[State]) Call(f interface{}, args ...interface{}) error {
 		// func(State, Context, any)
 		vArgs = []rf.Value{rf.ValueOf(c.State), rf.ValueOf(c), rf.ValueOf(eventDataCasted)}
 	} else {
-		return fmt.Errorf(fmt.Sprintf("illegal call %v %v", rf.TypeOf(f), rf.ValueOf(f)))
+		return fmt.Errorf("illegal call %v %v", rf.TypeOf(f), rf.ValueOf(f))
 	}
 
 	rets := rf.ValueOf(f).Call(vArgs)
