@@ -21,8 +21,9 @@ type SocketIO struct {
 
 func NewSocketIO(sio *socketio.Server, cases usecase.Cases) *SocketIO {
 	s := &SocketIO{
-		sio:   sio,
-		cases: cases,
+		sio:     sio,
+		cases:   cases,
+		metrics: NewServerMetrics(),
 	}
 	s.setup()
 	return s
