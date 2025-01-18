@@ -3,14 +3,13 @@ package newroom
 import (
 	"context"
 	"fmt"
-	"reflect"
 
 	"dishdash.ru/internal/gateways/ws/event"
 	"dishdash.ru/internal/usecase"
+	"dishdash.ru/internal/usecase/nevent"
 	"dishdash.ru/internal/usecase/state"
 
 	socketio "github.com/googollee/go-socket.io"
-	"github.com/mitchellh/mapstructure"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -18,8 +17,6 @@ type SocketIO struct {
 	sio   *socketio.Server
 	cases usecase.Cases
 }
-
-type Context = state.Context[*usecase.Room]
 
 func NewSocketIO(sio *socketio.Server, cases usecase.Cases) *SocketIO {
 	s := &SocketIO{
@@ -37,12 +34,12 @@ func (s *SocketIO) setup() {
 		return nil
 	})
 
-	s.sio.OnEvent("/", event.JoinLobby, func(conn socketio.Conn, joinEvent event.JoinLobbyEvent) {
-		c, _ := conn.Context().(*Context)
+	s.sio.OnEvent("/", event.JoinLobby, func(conn socketio.Conn, joinEvent nevent.JoinLobby) {
+		c, _ := conn.Context().(*state.Context[*usecase.NRoom])
 		c.Log = log.WithFields(log.Fields{
 			"user":  joinEvent.UserID,
 			"room":  joinEvent.LobbyID,
-			"event": event.JoinLobby,
+			"event": nevent.JoinLobbyEvent,
 		})
 
 		user, err := s.cases.User.GetUserByID(context.Background(), joinEvent.UserID)
@@ -58,8 +55,9 @@ func (s *SocketIO) setup() {
 			return
 		}
 		c.State = room
+		c.Ctx = context.Background()
 
-		err = c.State.AddUser(c.User)
+		err = c.State.OnJoin(c)
 		if err != nil {
 			c.Error(fmt.Errorf("error while adding user to room: %w", err))
 			return
@@ -69,7 +67,7 @@ func (s *SocketIO) setup() {
 	})
 
 	s.sio.OnError("/", func(conn socketio.Conn, err error) {
-		c, ok := conn.Context().(*Context)
+		c, ok := conn.Context().(*state.Context[*usecase.NRoom])
 		if ok {
 			c.Error(err)
 		} else {
@@ -79,7 +77,7 @@ func (s *SocketIO) setup() {
 	})
 
 	s.sio.OnDisconnect("/", func(conn socketio.Conn, msg string) {
-		c, ok := conn.Context().(*Context)
+		c, ok := conn.Context().(*state.Context[*usecase.NRoom])
 		if !ok {
 			log.Infof("disconnected with msg \"%s\" ", msg)
 			return
@@ -89,7 +87,7 @@ func (s *SocketIO) setup() {
 			return
 		}
 
-		err := c.State.RemoveUser(c.User.ID)
+		err := c.State.OnLeave(c)
 		if err != nil {
 			c.Error(fmt.Errorf("error while removing user from room: %w", err))
 		}
@@ -103,15 +101,15 @@ func (s *SocketIO) setup() {
 	})
 }
 
-func (s *SocketIO) ForEach(roomID string, f func(c *Context)) {
+func (s *SocketIO) ForEach(roomID string, f func(c *state.Context[*usecase.NRoom])) {
 	s.sio.ForEach("/", roomID, func(conn socketio.Conn) {
-		f(conn.Context().(*Context))
+		f(conn.Context().(*state.Context[*usecase.NRoom]))
 	})
 }
 
 func (s *SocketIO) On(event string, f interface{}) {
-	s.sio.OnEvent("/", event, func(conn socketio.Conn, eventData interface{}) {
-		c, _ := conn.Context().(*Context)
+	s.sio.OnEvent("/", event, func(conn socketio.Conn, args interface{}) {
+		c, _ := conn.Context().(*state.Context[*usecase.NRoom])
 		if c.User == nil {
 			c.Error(fmt.Errorf("not authenticated"))
 			return
@@ -130,41 +128,9 @@ func (s *SocketIO) On(event string, f interface{}) {
 		c.Log.Debug("Event received")
 
 		c.Ctx = context.Background()
-
-		// Black magic
-		eventDataCasted := reflect.New(reflect.TypeOf(f).In(1)).Elem().Interface()
-		err := mapstructure.Decode(eventData, &eventDataCasted)
+		err := c.Call(f, args)
 		if err != nil {
 			c.Error(err)
-			return
-		}
-
-		var args []reflect.Value
-
-		if reflect.TypeOf(f).NumIn() == 1 {
-			// func(zio.Context)
-			args = []reflect.Value{reflect.ValueOf(c)}
-		} else if reflect.TypeOf(f).NumIn() == 2 && reflect.ValueOf(f).Type().In(0).Kind() == reflect.TypeOf(c).Kind() {
-			// func(zio.Context, any)
-			args = []reflect.Value{reflect.ValueOf(c), reflect.ValueOf(eventDataCasted)}
-		} else if reflect.TypeOf(f).NumIn() == 2 &&
-			reflect.ValueOf(f).Type().In(0).Kind() == reflect.TypeOf(&usecase.Room{}).Kind() {
-			// func(*usecase.Room, zio.Context)
-			args = []reflect.Value{reflect.ValueOf(c.State), reflect.ValueOf(c)}
-		} else if reflect.TypeOf(f).NumIn() == 3 &&
-			reflect.ValueOf(f).Type().In(0).Kind() == reflect.TypeOf(&usecase.Room{}).Kind() {
-			// func(*usecase.Room, zio.Context, any)
-			args = []reflect.Value{reflect.ValueOf(c.State), reflect.ValueOf(c), reflect.ValueOf(eventDataCasted)}
-		} else {
-			panic(fmt.Sprintf("illegal event handler %v %v", reflect.TypeOf(f), reflect.ValueOf(f)))
-		}
-
-		rets := reflect.ValueOf(f).Call(args)
-		if len(rets) == 1 {
-			err, ok := rets[0].Interface().(error)
-			if ok && err != nil {
-				c.Error(err)
-			}
 		}
 	})
 }

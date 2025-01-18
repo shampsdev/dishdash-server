@@ -8,7 +8,7 @@ import (
 )
 
 type RoomRepo interface {
-	GetRoom(ctx context.Context, id string) (*Room, error)
+	GetRoom(ctx context.Context, id string) (*NRoom, error)
 	GetActiveRoomCount() (int, error)
 	DeleteRoom(ctx context.Context, id string) error
 }
@@ -21,7 +21,7 @@ type InMemoryRoomRepo struct {
 	placeRecommender *PlaceRecommender
 
 	roomsMutex sync.RWMutex
-	rooms      map[string]*Room
+	rooms      map[string]*NRoom
 }
 
 func NewInMemoryRoomRepo(
@@ -37,11 +37,11 @@ func NewInMemoryRoomRepo(
 		userUseCase:      userUseCase,
 		placeRecommender: placeRecomender,
 		swipeUseCase:     swipeUseCase,
-		rooms:            make(map[string]*Room),
+		rooms:            make(map[string]*NRoom),
 	}
 }
 
-func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error) {
+func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*NRoom, error) {
 	r.roomsMutex.Lock()
 	defer r.roomsMutex.Unlock()
 	room, ok := r.rooms[id]
@@ -52,7 +52,7 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 		}
 
 		log.Infof("Create room: %s", id)
-		room, err := NewRoom(
+		room, err := NewNRoom(
 			lobby,
 			r.lobbyUseCase,
 			r.placesUseCase,

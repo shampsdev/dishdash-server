@@ -9,9 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
 	"dishdash.ru/internal/usecase/state"
-	"dishdash.ru/pkg/filter"
+	"dishdash.ru/pkg/algo"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
@@ -247,7 +246,7 @@ func (r *Room) settings() UpdateLobbySettingsInput {
 		ID:       r.id,
 		PriceAvg: r.lobby.PriceAvg,
 		Location: r.lobby.Location,
-		Tags: filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+		Tags: algo.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
 			return t.ID
 		}),
 	}
@@ -290,7 +289,7 @@ func (r *Room) syncUsersWithBd() error {
 	r.lobby.Users, err = r.lobbyUseCase.SetLobbyUsers(
 		context.Background(),
 		r.lobby.ID,
-		filter.Map(r.users(), func(u *domain.User) string {
+		algo.Map(r.users(), func(u *domain.User) string {
 			return u.ID
 		}),
 	)
@@ -386,66 +385,6 @@ func (r *Room) updateLobbySettings(
 	return nil
 }
 
-func (r *Room) OnStartSwipes(c *state.Context[*Room]) error {
-	r.lock.Lock()
-	defer r.lock.Unlock()
-
-	r.log.Debug("Request started: Action 'StartSwipes' initiated")
-
-	if len(r.lobby.Tags) == 0 {
-		r.log.Warn("Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'")
-		err := r.updateLobbySettings(c.Ctx, r.lobby.Location, 500, []int64{3}, nil, r.recommendationOpts)
-		if err != nil {
-			r.log.WithError(err).Error("Action 'UpdateLobby' failed")
-			return err
-		}
-		r.log.Debug("Request successful: Action 'UpdateLobby' completed with default tags")
-	}
-
-	var err error
-	r.places, err = r.placeRecommender.RecommendPlaces(c.Ctx,
-		r.recommendationOpts,
-		domain.RecommendData{
-			Location: r.lobby.Location,
-			PriceAvg: r.lobby.PriceAvg,
-			Tags:     r.lobby.TagNames(),
-		},
-	)
-	if err != nil {
-		r.log.WithError(err).Error("Action 'GetPlacesForLobby' failed")
-		return err
-	}
-	r.log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
-
-	err = r.updateLobbySettings(c.Ctx, r.lobby.Location, r.lobby.PriceAvg,
-		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
-			return t.ID
-		}),
-		filter.Map(r.places, func(p *domain.Place) int64 {
-			return p.ID
-		}),
-		r.recommendationOpts,
-	)
-	if err != nil {
-		return fmt.Errorf("error while updating lobby settings: %w", err)
-	}
-	r.log.Debug("Request successful: Action 'UpdateLobby' completed")
-
-	r.log.Debug("Request successful: Action 'UpdateLobby' completed")
-	for id := range r.usersMap {
-		if len(r.places) > 0 {
-			r.usersPlace[id] = r.places[0]
-			r.log.Debugf("<User %s> is assigned to <Place %d>", id, r.places[0].ID)
-		} else {
-			log.Warnf("No places available to assign to <User %s>", id)
-		}
-	}
-
-	log.Info("Swipes successfully started")
-	err = r.setState(domain.Swiping)
-	return err
-}
-
 func (r *Room) StartSwipes(ctx context.Context) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
@@ -478,10 +417,10 @@ func (r *Room) StartSwipes(ctx context.Context) error {
 	r.log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
 
 	err = r.updateLobbySettings(ctx, r.lobby.Location, r.lobby.PriceAvg,
-		filter.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
+		algo.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
 			return t.ID
 		}),
-		filter.Map(r.places, func(p *domain.Place) int64 {
+		algo.Map(r.places, func(p *domain.Place) int64 {
 			return p.ID
 		}),
 		r.recommendationOpts,
@@ -531,7 +470,7 @@ func (r *Room) Swipe(userID string, placeID int64, t domain.SwipeType) (*MatchVo
 	})
 	r.usersPlace[userID] = r.places[(pIdx+1)%len(r.places)]
 
-	likes := filter.Count(r.swipes, func(swipe *domain.Swipe) bool {
+	likes := algo.Count(r.swipes, func(swipe *domain.Swipe) bool {
 		return swipe.PlaceID == placeID && swipe.Type == domain.LIKE
 	})
 	if likes == len(r.usersMap) {

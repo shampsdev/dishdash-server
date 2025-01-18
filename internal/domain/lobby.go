@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"dishdash.ru/pkg/filter"
+	"dishdash.ru/pkg/algo"
 )
 
 type Lobby struct {
@@ -20,7 +20,7 @@ type Lobby struct {
 }
 
 func (l *Lobby) TagNames() []string {
-	return filter.Map(l.Tags, func(t *Tag) string {
+	return algo.Map(l.Tags, func(t *Tag) string {
 		return t.Name
 	})
 }

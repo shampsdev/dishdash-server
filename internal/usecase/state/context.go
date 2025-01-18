@@ -19,28 +19,32 @@ type Context[State WithID] struct {
 	conn Conn
 }
 
-func NewContext[State WithID](s Server[State], conn Conn) Context[State] {
-	return Context[State]{
+func NewContext[State WithID](s Server[State], conn Conn) *Context[State] {
+	return &Context[State]{
 		s:    s,
 		conn: conn,
 		Log:  logrus.NewEntry(logrus.New()),
 	}
 }
 
-func (c *Context[State]) Emit(event string, data interface{}) {
-	c.conn.Emit(event, data)
+type Event interface {
+	Event() string
 }
 
-func (c *Context[State]) Broadcast(event string, data interface{}) {
+func (c *Context[State]) Emit(e Event) {
+	c.conn.Emit(e.Event(), e)
+}
+
+func (c *Context[State]) Broadcast(e Event) {
 	c.s.ForEach(c.State.ID(), func(c *Context[State]) {
-		c.Emit(event, data)
+		c.Emit(e)
 	})
 }
 
-func (c *Context[State]) BroadcastToOthers(event string, data interface{}) {
+func (c *Context[State]) BroadcastToOthers(e Event) {
 	c.s.ForEach(c.State.ID(), func(cc *Context[State]) {
 		if cc.User.ID != c.User.ID {
-			cc.Emit(event, data)
+			cc.Emit(e)
 		}
 	})
 }
@@ -49,8 +53,8 @@ func (c *Context[State]) ForEach(f func(c *Context[State])) {
 	c.s.ForEach(c.State.ID(), f)
 }
 
-func (c *Context[State]) Close() {
-	c.conn.Close()
+func (c *Context[State]) Close() error {
+	return c.conn.Close()
 }
 
 func (c *Context[State]) Error(err error) {

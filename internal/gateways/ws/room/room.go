@@ -72,7 +72,8 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 
 			c.User = user
 
-			room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
+			// room, err := cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
+			var room *usecase.Room
 			if err != nil {
 				c.HandleError(fmt.Errorf("error while getting room: %w", err))
 				return
