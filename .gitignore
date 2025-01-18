@@ -29,3 +29,4 @@ go.work
 # Dev
 .env
 bin
+e2e/*/ERROR_*.json

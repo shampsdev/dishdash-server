@@ -33,6 +33,12 @@ type Event interface {
 
 func (c *Context[State]) Emit(e Event) {
 	c.conn.Emit(e.Event(), e)
+
+	log.WithFields(log.Fields{
+		"event": e.Event(),
+		"user":  c.User.ID,
+		"room":  c.State.ID(),
+	}).Debug("Event emitted")
 }
 
 func (c *Context[State]) Broadcast(e Event) {

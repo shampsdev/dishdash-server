@@ -17,4 +17,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		(*usecase.NRoom).OnSettingsUpdate)
 	s.On(nevent.VoteEvent,
 		(*usecase.NRoom).OnVote)
+	s.On(nevent.LeaveLobbyEvent,
+		(*usecase.NRoom).OnLeaveLobby)
 }

@@ -79,7 +79,6 @@ func NewNRoom(
 	}
 
 	r.state = lobby.State
-	r.log.Debugf("state: %s", r.state)
 
 	if r.state != domain.InLobby {
 		// can't load swiping lobby
@@ -88,6 +87,8 @@ func NewNRoom(
 			return nil, fmt.Errorf("failed to set state: %w", err)
 		}
 	}
+
+	r.log.Debugf("state: %s", r.state)
 
 	err := r.Load()
 	if err != nil {
@@ -188,33 +189,38 @@ func (r *NRoom) OnJoin(c *state.Context[*NRoom]) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
-	if r.state != domain.InLobby {
-		return fmt.Errorf("can't add user to lobby in state %s", r.state)
-	}
+	switch r.state {
+	case domain.InLobby:
+		r.usersMap[c.User.ID] = c.User
 
-	r.usersMap[c.User.ID] = c.User
+		err := r.syncUsersWithBd(c.Ctx)
+		if err != nil {
+			return fmt.Errorf("failed to sync users with db: %w", err)
+		}
 
-	err := r.syncUsersWithBd(c.Ctx)
-	if err != nil {
-		return fmt.Errorf("failed to sync users with db: %w", err)
-	}
-
-	c.BroadcastToOthers(nevent.UserJoined{
-		ID:     c.User.ID,
-		Name:   c.User.Name,
-		Avatar: c.User.Avatar,
-	})
-	for _, u := range r.users() {
-		c.Emit(nevent.UserJoined{
-			ID:     u.ID,
-			Name:   u.Name,
-			Avatar: u.Avatar,
+		c.BroadcastToOthers(nevent.UserJoined{
+			ID:     c.User.ID,
+			Name:   c.User.Name,
+			Avatar: c.User.Avatar,
 		})
+		for _, u := range r.users() {
+			c.Emit(nevent.UserJoined{
+				ID:     u.ID,
+				Name:   u.Name,
+				Avatar: u.Avatar,
+			})
+		}
+		for _, v := range r.votes {
+			c.Emit(v)
+		}
+	case domain.Finished:
+		r.emitFinish(c)
+	default:
+		return fmt.Errorf("cannot join room in state %s", r.state)
 	}
 
 	c.Emit(nevent.SettingsUpdate{
 		Location:    r.lobby.Location,
-		UserID:      c.User.ID,
 		PriceMin:    r.lobby.PriceAvg - 300,
 		PriceMax:    r.lobby.PriceAvg + 300,
 		MaxDistance: 4000,
@@ -223,10 +229,6 @@ func (r *NRoom) OnJoin(c *state.Context[*NRoom]) error {
 		}),
 		RecommendationOpts: r.recommendationOpts,
 	})
-
-	if r.state == domain.Finished {
-		r.emitFinish(c)
-	}
 
 	return nil
 }
@@ -258,7 +260,7 @@ func (r *NRoom) Empty() bool {
 	return len(r.usersMap) == 0
 }
 
-func (r *NRoom) OnLeaveLobby(c *state.Context[*NRoom]) error {
+func (r *NRoom) OnLeaveLobby(c *state.Context[*NRoom], ev nevent.LeaveLobby) error {
 	err := c.Close()
 	if err != nil {
 		return fmt.Errorf("error while closing connection: %w", err)
@@ -295,7 +297,9 @@ func (r *NRoom) OnSettingsUpdate(c *state.Context[*NRoom], ev nevent.SettingsUpd
 	if err != nil {
 		return fmt.Errorf("error while updating lobby settings: %w", err)
 	}
-	c.BroadcastToOthers(ev)
+
+	ev.UserID = c.User.ID
+	c.Broadcast(ev)
 
 	return nil
 }
@@ -433,7 +437,7 @@ func (r *NRoom) OnSwipe(c *state.Context[*NRoom], ev nevent.Swipe) error {
 		r.matches = append(r.matches, match)
 		r.result = match.Place
 
-		vote := &nevent.MatchVote{
+		vote := nevent.MatchVote{
 			BaseVote: nevent.BaseVote{
 				ID: int64(len(r.votes)),
 				Options: []nevent.VoteOption{
@@ -469,7 +473,7 @@ func (r *NRoom) OnVote(c *state.Context[*NRoom], ev nevent.Vote) error {
 	var res *nevent.VoteResult
 
 	switch v := vote.(type) {
-	case *nevent.MatchVote:
+	case nevent.MatchVote:
 		if ev.OptionID != nevent.OptionIDLike && ev.OptionID != nevent.OptionIDDislike {
 			return fmt.Errorf("invalid option id: %d", ev.OptionID)
 		}
@@ -486,7 +490,7 @@ func (r *NRoom) OnVote(c *state.Context[*NRoom], ev nevent.Vote) error {
 			}
 		}
 
-	case *nevent.FinishVote:
+	case nevent.FinishVote:
 		if ev.OptionID != nevent.OptionIDFinish && ev.OptionID != nevent.OptionIDContinue {
 			return fmt.Errorf("invalid option id: %d", ev.OptionID)
 		}
@@ -506,13 +510,9 @@ func (r *NRoom) OnVote(c *state.Context[*NRoom], ev nevent.Vote) error {
 		return fmt.Errorf("unknown voting type: %T", vote)
 	}
 
-	if res != nil {
-		c.Broadcast(res)
-	}
-
-	c.BroadcastToOthers(nevent.Voted{
-		VoteID:   0,
-		OptionID: 0,
+	c.Broadcast(nevent.Voted{
+		VoteID:   ev.VoteID,
+		OptionID: ev.OptionID,
 		User: nevent.UserJoined{
 			ID:     c.User.ID,
 			Name:   c.User.Name,
@@ -520,14 +520,18 @@ func (r *NRoom) OnVote(c *state.Context[*NRoom], ev nevent.Vote) error {
 		},
 	})
 
+	if res != nil {
+		c.Broadcast(res)
+	}
+
 	if r.state == domain.Finished {
-		r.emitFinish(c)
+		c.ForEach(r.emitFinish)
 	}
 
 	return nil
 }
 
-func (r *NRoom) voteMatchResult(vote *nevent.MatchVote) *nevent.VoteResult {
+func (r *NRoom) voteMatchResult(vote nevent.MatchVote) *nevent.VoteResult {
 	if len(vote.Votes) != len(r.usersMap) {
 		return nil
 	}
@@ -552,7 +556,7 @@ func (r *NRoom) voteMatchResult(vote *nevent.MatchVote) *nevent.VoteResult {
 	}
 }
 
-func (r *NRoom) voteFinishResult(vote *nevent.FinishVote) *nevent.VoteResult {
+func (r *NRoom) voteFinishResult(vote nevent.FinishVote) *nevent.VoteResult {
 	if len(vote.Votes) != len(r.usersMap) {
 		return nil
 	}
@@ -578,7 +582,7 @@ func (r *NRoom) emitFinish(c *state.Context[*NRoom]) {
 		matchResult = r.matches[len(r.matches)-1].Place
 	}
 
-	c.Broadcast(nevent.Finish{
+	c.Emit(nevent.Finish{
 		Result:  matchResult,
 		Matches: r.matches,
 	})

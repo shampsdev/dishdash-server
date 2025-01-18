@@ -91,7 +91,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
@@ -103,7 +103,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"
@@ -127,7 +127,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
@@ -139,7 +139,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"
@@ -333,7 +333,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
@@ -345,7 +345,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"
@@ -369,7 +369,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar2",
                 "id": "id2",
                 "name": "user2"
@@ -381,7 +381,7 @@
           {
             "EventName": "voted",
             "Data": {
-              "User": {
+              "user": {
                 "avatar": "avatar1",
                 "id": "id1",
                 "name": "user1"

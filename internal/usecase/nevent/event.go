@@ -34,6 +34,10 @@ type JoinLobby struct {
 
 func (e JoinLobby) Event() string { return JoinLobbyEvent }
 
+type LeaveLobby struct{}
+
+func (e LeaveLobby) Event() string { return LeaveLobbyEvent }
+
 type UserJoined struct {
 	ID     string `json:"id"`
 	Name   string `json:"name"`
@@ -110,10 +114,11 @@ type BaseVote struct {
 	ID      int64               `json:"id"`
 	Options []VoteOption        `json:"options"`
 	Type    VoteType            `json:"type"`
-	Votes   map[string]OptionID `json:"votes"`
+	Votes   map[string]OptionID `json:"-"`
 }
 
 type VoteAnnounce interface {
+	Event() string
 	isVoteAnnounce()
 }
 
@@ -133,7 +138,7 @@ func (v MatchVote) Event() string   { return VoteAnnounceEvent }
 func (v MatchVote) isVoteAnnounce() {}
 
 type VoteResult struct {
-	Type     VoteType `json:"type"`
+	Type     VoteType `json:"-"`
 	VoteID   int64    `json:"voteId"`
 	OptionID OptionID `json:"optionId"`
 }
