@@ -1,8 +1,7 @@
 name: CI
 
-on:
-  push:
-  pull_request:
+
+on: [workflow_call]
 
 jobs:
   build:
@@ -24,6 +23,11 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.60.3
+      
+      - name: Unit test
+        run: |
+          go mod tidy
+          go test -v ./...
 
       - name: E2E Test
         run: |
