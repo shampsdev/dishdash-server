@@ -6,7 +6,7 @@ import (
 	"dishdash.ru/e2e/sdk"
 
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase/event"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
 )
@@ -39,8 +39,8 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 		cli1.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
-	listenEvent(event.VoteAnnounce)
-	listenEvent(event.SettingsUpdate)
+	listenEvent(event.VoteAnnounceEvent)
+	listenEvent(event.SettingsUpdateEvent)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -49,15 +49,15 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	cli2Emit := sdk.EmitWithLogFunc(cli2, user2.Name)
 
 	sioSess.NewStep("Joining lobby")
-	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli1Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
-	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli2Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
-	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+	cli1Emit(event.SettingsUpdateEvent, event.SettingsUpdate{
 		Location:    lobby.Location,
 		PriceMin:    300,
 		PriceMax:    300,
@@ -67,21 +67,21 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	sdk.Sleep()
 
 	sioSess.NewStep("Start swipes")
-	cli1Emit(event.StartSwipes)
+	cli1Emit(event.StartSwipesEvent)
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe like and dislike")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.DISLIKE})
-	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli1Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.DISLIKE})
+	cli2Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe both likes")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli1Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
+	cli2Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
 	sdk.Sleep()
 
-	cli1Emit(event.LeaveLobby)
-	cli2Emit(event.LeaveLobby)
+	cli1Emit(event.LeaveLobbyEvent)
+	cli2Emit(event.LeaveLobbyEvent)
 	sdk.Sleep()
 
 	// leave to check if lobby will be finished
@@ -94,15 +94,15 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	listenEvent = func(eventName string) {
 		cli3.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 	}
-	listenEvent(event.JoinLobby)
-	listenEvent(event.Finish)
-	listenEvent(event.SettingsUpdate)
-	listenEvent(event.Error)
+	listenEvent(event.JoinLobbyEvent)
+	listenEvent(event.FinishEvent)
+	listenEvent(event.SettingsUpdateEvent)
+	listenEvent(event.ErrorEvent)
 
 	sioSess.NewStep("Rejoin")
 	assert.NoError(t, cli3.Connect())
 	cli3Emit := sdk.EmitWithLogFunc(cli3, user1.Name)
-	cli3Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli3Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})

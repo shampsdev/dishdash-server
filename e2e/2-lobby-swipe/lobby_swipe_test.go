@@ -5,7 +5,7 @@ import (
 
 	"dishdash.ru/e2e/sdk"
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase/event"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
@@ -39,12 +39,12 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 		cli2.OnEvent(eventName, sioSess.SioAddFunc(user2.Name, eventName))
 	}
 
-	listenEvent(event.Error)
-	listenEvent(event.UserJoined)
-	listenEvent(event.StartSwipes)
-	listenEvent(event.SettingsUpdate)
-	listenEvent(event.Place)
-	listenEvent(event.VoteAnnounce)
+	listenEvent(event.ErrorEvent)
+	listenEvent(event.UserJoinedEvent)
+	listenEvent(event.StartSwipesEvent)
+	listenEvent(event.SettingsUpdateEvent)
+	listenEvent(event.PlaceEvent)
+	listenEvent(event.VoteAnnounceEvent)
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -53,14 +53,14 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 	cli2Emit := sdk.EmitWithLogFunc(cli2, user2.Name)
 
 	sioSess.NewStep("User1 join lobby")
-	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli1Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
 	sdk.Sleep()
 
 	sioSess.NewStep("Settings update")
-	cli1Emit(event.SettingsUpdate, event.SettingsUpdateEvent{
+	cli1Emit(event.SettingsUpdateEvent, event.SettingsUpdate{
 		Location:    lobby.Location,
 		PriceMin:    300,
 		PriceMax:    300,
@@ -70,24 +70,24 @@ func LobbySwipe(t *testing.T) *sdk.SocketIOSession {
 	sdk.Sleep()
 
 	sioSess.NewStep("User2 join lobby")
-	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli2Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})
 	sdk.Sleep()
 
 	sioSess.NewStep("Start swipes")
-	cli1Emit(event.StartSwipes)
+	cli1Emit(event.StartSwipesEvent)
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe like and dislike")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.DISLIKE})
+	cli1Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
+	cli2Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.DISLIKE})
 	sdk.Sleep()
 
 	sioSess.NewStep("Swipe both likes")
-	cli1Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
-	cli2Emit(event.Swipe, event.SwipeEvent{SwipeType: domain.LIKE})
+	cli1Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
+	cli2Emit(event.SwipeEvent, event.Swipe{SwipeType: domain.LIKE})
 	sdk.Sleep()
 
 	assert.NoError(t, cli1.Close())

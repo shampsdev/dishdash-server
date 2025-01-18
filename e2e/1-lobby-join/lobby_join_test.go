@@ -5,7 +5,7 @@ import (
 
 	"dishdash.ru/e2e/sdk"
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
+	"dishdash.ru/internal/usecase/event"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/stretchr/testify/assert"
@@ -34,8 +34,8 @@ func LobbyJoin(t *testing.T) *sdk.SocketIOSession {
 	sioSess.AddUser(user1.Name)
 	sioSess.AddUser(user2.Name)
 
-	cli1.OnEvent(event.UserJoined, sioSess.SioAddFunc(user1.Name, event.UserJoined))
-	cli2.OnEvent(event.UserJoined, sioSess.SioAddFunc(user2.Name, event.UserJoined))
+	cli1.OnEvent(event.UserJoinedEvent, sioSess.SioAddFunc(user1.Name, event.UserJoinedEvent))
+	cli2.OnEvent(event.UserJoinedEvent, sioSess.SioAddFunc(user2.Name, event.UserJoinedEvent))
 
 	assert.NoError(t, cli1.Connect())
 	assert.NoError(t, cli2.Connect())
@@ -44,12 +44,12 @@ func LobbyJoin(t *testing.T) *sdk.SocketIOSession {
 	cli1Emit := sdk.EmitWithLogFunc(cli1, user1.Name)
 	cli2Emit := sdk.EmitWithLogFunc(cli2, user2.Name)
 
-	cli1Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli1Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user1.ID,
 	})
 	sdk.Sleep()
-	cli2Emit(event.JoinLobby, event.JoinLobbyEvent{
+	cli2Emit(event.JoinLobbyEvent, event.JoinLobby{
 		LobbyID: lobby.ID,
 		UserID:  user2.ID,
 	})

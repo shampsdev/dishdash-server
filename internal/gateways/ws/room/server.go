@@ -1,144 +1,160 @@
 package room
 
 import (
-	"errors"
+	"context"
 	"fmt"
-	"reflect"
-	"slices"
-	"sync"
 
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/gateways/ws/event"
 	"dishdash.ru/internal/usecase"
+	"dishdash.ru/internal/usecase/event"
+	"dishdash.ru/internal/usecase/state"
+
 	socketio "github.com/googollee/go-socket.io"
-	"github.com/mitchellh/mapstructure"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
 
-type Server struct {
-	SIO *socketio.Server
-
-	Metrics ServerMetrics
+type SocketIO struct {
+	sio     *socketio.Server
+	metrics ServerMetrics
+	cases   usecase.Cases
 }
 
-type Context struct {
-	lock sync.RWMutex
-
-	Conn   socketio.Conn
-	Server *Server
-	Log    *log.Entry
-
-	User *domain.User
-	Room *usecase.Room
-}
-
-type EventOpts struct {
-	// Allowed lobby states
-	// If empty, then any lobby state is allowed
-	Allowed []domain.LobbyState
-}
-
-func NewServer(sio *socketio.Server) *Server {
-	s := &Server{
-		SIO:     sio,
-		Metrics: NewServerMetrics(),
+func NewSocketIO(sio *socketio.Server, cases usecase.Cases) *SocketIO {
+	s := &SocketIO{
+		sio:   sio,
+		cases: cases,
 	}
-
-	sio.OnConnect("/", func(conn socketio.Conn) error {
-		defer s.Metrics.ActiveConnections.Inc()
-
-		log.Println("connected: ", conn.ID())
-		conn.SetContext(&Context{
-			Conn:   conn,
-			Server: s,
-			Log:    log.WithField("user", conn.ID()),
-		})
-		return nil
-	})
-
+	s.setup()
 	return s
 }
 
-func (c *Context) HandleError(err error) {
-	c.Log.Error(err)
-	c.Conn.Emit(event.Error, event.ErrorEvent{
-		Error: err.Error(),
+func (s *SocketIO) setup() {
+	s.sio.OnConnect("/", func(conn socketio.Conn) error {
+		defer s.metrics.ActiveConnections.Inc()
+		c := state.NewContext(s, s.wrapSocketIOConn(conn))
+		conn.SetContext(c)
+		return nil
 	})
-	if err := c.Conn.Close(); err != nil {
-		c.Log.WithError(err).Error("Error closing connection")
-	}
-}
 
-func (c *Context) Emit(eventName string, args ...interface{}) {
-	c.Log.Debugf("Emit %s", eventName)
-	c.Conn.Emit(eventName, args...)
-	c.Server.Metrics.Responses.WithLabelValues(eventName).Inc()
-}
-
-func (s *Server) GetContext(conn socketio.Conn) (*Context, bool) {
-	if conn.Context() == nil {
-		return nil, false
-	}
-	c, ok := conn.Context().(*Context)
-	if !ok {
-		err := errors.New("context not found (maybe did not join)")
-		log.Error(err)
-		conn.Emit(event.Error, event.ErrorEvent{
-			Error: err.Error(),
-		})
-		if err := conn.Close(); err != nil {
-			log.WithError(err).Error("Error closing connection")
-		}
-		return nil, false
-	}
-
-	if c.Room != nil && c.User != nil {
+	s.sio.OnEvent("/", event.JoinLobbyEvent, func(conn socketio.Conn, joinEvent event.JoinLobby) {
+		c, _ := conn.Context().(*state.Context[*usecase.Room])
 		c.Log = log.WithFields(log.Fields{
-			"room": c.Room.ID(),
-			"user": c.User.ID,
+			"user":  joinEvent.UserID,
+			"room":  joinEvent.LobbyID,
+			"event": event.JoinLobbyEvent,
 		})
-	}
-	return c, true
-}
 
-func (s *Server) On(
-	eventName string,
-	opts EventOpts,
-	f interface{},
-) {
-	s.SIO.OnEvent("/", eventName, func(conn socketio.Conn, eventData interface{}) {
-		s.Metrics.Requests.WithLabelValues(eventName).Inc()
-		timer := prometheus.NewTimer(s.Metrics.ResponseDuration.WithLabelValues(eventName))
-		defer timer.ObserveDuration()
-
-		c, ok := s.GetContext(conn)
-		if !ok {
+		user, err := s.cases.User.GetUserByID(context.Background(), joinEvent.UserID)
+		if err != nil {
+			c.Error(fmt.Errorf("error while getting user: %w", err))
 			return
 		}
-		c.Log = c.Log.WithField("event", eventName)
-		c.Log.Debug("Event received")
+		c.User = user
 
-		if c.Room != nil {
-			if len(opts.Allowed) != 0 && !slices.Contains(opts.Allowed, c.Room.State()) {
-				c.HandleError(fmt.Errorf("event '%s' is not allowed in lobby state '%s'", eventName, c.Room.State()))
-				return
+		room, err := s.cases.RoomRepo.GetRoom(context.Background(), joinEvent.LobbyID)
+		if err != nil {
+			c.Error(fmt.Errorf("error while getting room: %w", err))
+			return
+		}
+		c.State = room
+		c.Ctx = context.Background()
+
+		err = c.State.OnJoin(c)
+		if err != nil {
+			c.Error(fmt.Errorf("error while adding user to room: %w", err))
+			return
+		}
+
+		conn.Join(room.ID())
+	})
+
+	s.sio.OnError("/", func(conn socketio.Conn, err error) {
+		c, ok := conn.Context().(*state.Context[*usecase.Room])
+		if ok {
+			c.Error(err)
+		} else {
+			log.Error(err)
+			conn.Emit("error", err.Error())
+		}
+	})
+
+	s.sio.OnDisconnect("/", func(conn socketio.Conn, msg string) {
+		c, ok := conn.Context().(*state.Context[*usecase.Room])
+		if !ok {
+			log.Infof("disconnected with msg \"%s\" ", msg)
+			return
+		}
+
+		if c.State == nil {
+			return
+		}
+
+		err := c.State.OnLeave(c)
+		if err != nil {
+			c.Error(fmt.Errorf("error while removing user from room: %w", err))
+		}
+		if c.State.Empty() {
+			err := s.cases.RoomRepo.DeleteRoom(context.Background(), c.State.ID())
+			if err != nil {
+				c.Error(fmt.Errorf("error while deleting room: %w", err))
 			}
 		}
-
-		// Black magic
-		if reflect.TypeOf(f).NumIn() == 1 {
-			reflect.ValueOf(f).Call([]reflect.Value{reflect.ValueOf(c)})
-			return
-		}
-
-		eventDataCasted := reflect.New(reflect.TypeOf(f).In(1)).Elem().Interface()
-		err := mapstructure.Decode(eventData, &eventDataCasted)
-		if err != nil {
-			c.HandleError(err)
-			return
-		}
-		c.Conn = conn
-		reflect.ValueOf(f).Call([]reflect.Value{reflect.ValueOf(c), reflect.ValueOf(eventDataCasted)})
+		s.sio.LeaveRoom("/", c.State.ID(), conn)
 	})
+}
+
+func (s *SocketIO) ForEach(roomID string, f func(c *state.Context[*usecase.Room])) {
+	s.sio.ForEach("/", roomID, func(conn socketio.Conn) {
+		f(conn.Context().(*state.Context[*usecase.Room]))
+	})
+}
+
+func (s *SocketIO) On(event string, f interface{}) {
+	s.sio.OnEvent("/", event, func(conn socketio.Conn, args interface{}) {
+		s.metrics.Requests.WithLabelValues(event).Inc()
+		timer := prometheus.NewTimer(s.metrics.ResponseDuration.WithLabelValues(event))
+		defer timer.ObserveDuration()
+
+		c, _ := conn.Context().(*state.Context[*usecase.Room])
+		if c.User == nil {
+			c.Error(fmt.Errorf("not authenticated"))
+			return
+		}
+
+		if c.State == nil {
+			c.Error(fmt.Errorf("not in room"))
+			return
+		}
+
+		c.Log = c.Log.WithFields(log.Fields{
+			"room":  c.State.ID(),
+			"user":  c.User.ID,
+			"event": event,
+		})
+		c.Log.Debug("Event received")
+
+		c.Ctx = context.Background()
+		err := c.Call(f, args)
+		if err != nil {
+			c.Error(err)
+		}
+	})
+}
+
+type socketIOConn struct {
+	conn socketio.Conn
+	sio  *SocketIO
+}
+
+func (s *SocketIO) wrapSocketIOConn(conn socketio.Conn) *socketIOConn {
+	return &socketIOConn{conn: conn, sio: s}
+}
+
+func (s *socketIOConn) Emit(event string, data interface{}) {
+	s.sio.metrics.Responses.WithLabelValues(event).Inc()
+	s.conn.Emit(event, data)
+}
+
+func (s *socketIOConn) Close() error {
+	return s.conn.Close()
 }

@@ -1,4 +1,4 @@
-package nevent
+package event
 
 import "dishdash.ru/internal/domain"
 
