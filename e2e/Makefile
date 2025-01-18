@@ -27,6 +27,7 @@ e2e-export-vars:
 	@echo "POSTGRES_DB=$(E2E_DB_NAME)" >> $(E2E_ENV_FILE)
 	@echo "HTTP_PORT=8001" >> $(E2E_ENV_FILE)
 	@echo "DEBUG=True" >> $(E2E_ENV_FILE)
+	@echo "RUN_E2E_TESTS=True" >> $(E2E_ENV_FILE)
 
 e2e-create-db:
 	@echo "Launching e2e database"
