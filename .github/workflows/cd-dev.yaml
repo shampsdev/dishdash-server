@@ -1,15 +1,14 @@
 name: CD Dev
 
-on:
-  workflow_run:
-    workflows: ["CI"]
-    types:
-      - completed
+on: [workflow_dispatch]
 
 jobs:
-  deploy_to_dev:
-    name: Deploy to Dev
-    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.head_branch == 'dev' || github.event.workflow_run.head_branch == 'main') }}
+  ci:
+    uses: ./.github/workflows/ci.yaml
+
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    needs: [ci]
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -19,8 +18,6 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-        with: 
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Set short git commit SHA
         id: vars
@@ -42,10 +39,10 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            shampiniony/dishdash-backend:dev
-            shampiniony/dishdash-backend:dev-${{ env.COMMIT_SHORT_SHA }}
-
-      - name: Trigger Watchtower to update dev container
+            ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:dev
+            ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:${{ env.COMMIT_SHORT_SHA }}
+            
+      - name: Trigger watchtower to update container(s)
         shell: bash
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN }}" ${{ secrets.WATCHTOWER_UPDATE_ENDPOINT_DEV }}
+          curl -H "Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN_DEV }}" ${{ secrets.WATCHTOWER_UPDATE_ENDPOINT_DEV }}

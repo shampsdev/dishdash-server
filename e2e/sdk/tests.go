@@ -3,6 +3,8 @@ package sdk
 import (
 	"flag"
 	"fmt"
+	"os"
+	"strconv"
 	"testing"
 
 	"dishdash.ru/cmd/server/config"
@@ -18,6 +20,10 @@ type SessionTest struct {
 var updateGolden = flag.Bool("update-golden", false, "Update golden files")
 
 func RunSessionTest(t *testing.T, td SessionTest) {
+	if run, err := strconv.ParseBool(os.Getenv("RUN_E2E_TESTS")); err != nil || !run {
+		t.Skip("Not running E2E tests, because RUN_E2E_TESTS env var is not set to true")
+		return
+	}
 	flag.Parse()
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp:   true,
