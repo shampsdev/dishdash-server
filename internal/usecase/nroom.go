@@ -260,7 +260,7 @@ func (r *NRoom) Empty() bool {
 	return len(r.usersMap) == 0
 }
 
-func (r *NRoom) OnLeaveLobby(c *state.Context[*NRoom], ev nevent.LeaveLobby) error {
+func (r *NRoom) OnLeaveLobby(c *state.Context[*NRoom], _ nevent.LeaveLobby) error {
 	err := c.Close()
 	if err != nil {
 		return fmt.Errorf("error while closing connection: %w", err)
