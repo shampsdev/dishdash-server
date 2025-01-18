@@ -28,26 +28,26 @@ func (c *Context[State]) Call(f interface{}, args ...interface{}) error {
 	}
 
 	fNumIn := rf.ValueOf(f).Type().NumIn()
-	fIn0Kind := rf.ValueOf(f).Type().In(0).Kind()
+	fIn0 := rf.ValueOf(f).Type().In(0)
 
 	var vArgs []rf.Value
 
 	if fNumIn == 1 {
 		// func(Context)
 		vArgs = []rf.Value{rf.ValueOf(c)}
-	} else if fNumIn == 2 && fIn0Kind == rf.TypeOf(c).Kind() {
+	} else if fNumIn == 2 && fIn0 == rf.TypeOf(c) && eventDataCasted != nil {
 		// func(Context, any)
 		vArgs = []rf.Value{rf.ValueOf(c), rf.ValueOf(eventDataCasted)}
 	} else if fNumIn == 2 &&
-		fIn0Kind == rf.TypeOf(c.State).Kind() {
+		fIn0 == rf.TypeOf(c.State) {
 		// func(State, Context)
 		vArgs = []rf.Value{rf.ValueOf(c.State), rf.ValueOf(c)}
 	} else if fNumIn == 3 &&
-		fIn0Kind == rf.TypeOf(c.State).Kind() {
+		fIn0 == rf.TypeOf(c.State) && eventDataCasted != nil {
 		// func(State, Context, any)
 		vArgs = []rf.Value{rf.ValueOf(c.State), rf.ValueOf(c), rf.ValueOf(eventDataCasted)}
 	} else {
-		panic(fmt.Sprintf("illegal event handler %v %v", rf.TypeOf(f), rf.ValueOf(f)))
+		return fmt.Errorf(fmt.Sprintf("illegal call %v %v", rf.TypeOf(f), rf.ValueOf(f)))
 	}
 
 	rets := rf.ValueOf(f).Call(vArgs)
