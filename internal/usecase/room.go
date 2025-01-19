@@ -234,6 +234,9 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 }
 
 func (r *Room) OnLeave(c *state.Context[*Room]) error {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+
 	_, has := r.usersMap[c.User.ID]
 	if !has {
 		return nil
