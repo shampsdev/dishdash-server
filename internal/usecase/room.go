@@ -22,15 +22,17 @@ type Room struct {
 
 	recommendationOpts *domain.RecommendationOpts
 
-	state      domain.LobbyState
-	usersMap   map[string]*domain.User
-	usersPlace map[string]*domain.Place
-	places     []*domain.Place
-	swipes     []*domain.Swipe
-	matches    []*event.Match
-	result     *domain.Place
+	state          domain.LobbyState
+	usersMap       map[string]*domain.User
+	connectedUsers map[string]*domain.User
+	usersPlace     map[string]*domain.Place
+	places         []*domain.Place
+	swipes         []*domain.Swipe
+	matches        []*event.Match
+	result         *domain.Place
 
-	votes map[int64]event.VoteAnnounce
+	votes  map[int64]event.VoteAnnounce
+	voteID int64
 
 	lobbyUseCase     Lobby
 	placeUseCase     Place
@@ -57,18 +59,19 @@ func NewRoom(
 		userUseCase:      userUseCase,
 		placeRecommender: placeRecommender,
 
-		usersMap:   make(map[string]*domain.User),
-		places:     make([]*domain.Place, 0),
-		usersPlace: make(map[string]*domain.Place),
-		swipes:     make([]*domain.Swipe, 0),
-		matches:    make([]*event.Match, 0),
-		votes:      make(map[int64]event.VoteAnnounce),
-		log:        log.WithFields(log.Fields{"room": lobby.ID}),
+		usersMap:       make(map[string]*domain.User),
+		connectedUsers: make(map[string]*domain.User),
+		places:         make([]*domain.Place, 0),
+		usersPlace:     make(map[string]*domain.Place),
+		swipes:         make([]*domain.Swipe, 0),
+		matches:        make([]*event.Match, 0),
+		votes:          make(map[int64]event.VoteAnnounce),
+		log:            log.WithFields(log.Fields{"room": lobby.ID}),
 	}
 
 	r.votes[0] = event.FinishVote{
 		BaseVote: event.BaseVote{
-			ID: 0,
+			ID: r.voteID,
 			Options: []event.VoteOption{
 				{ID: event.OptionIDFinish, Desc: "Finish"},
 				{ID: event.OptionIDContinue, Desc: "Continue"},
@@ -77,6 +80,7 @@ func NewRoom(
 			Votes: make(map[string]event.OptionID),
 		},
 	}
+	r.voteID++
 
 	r.state = lobby.State
 
@@ -189,8 +193,10 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
+	r.connectedUsers[c.User.ID] = c.User
 	switch r.state {
 	case domain.InLobby:
+		c.Log.Debug("user joined lobby")
 		r.usersMap[c.User.ID] = c.User
 
 		err := r.syncUsersWithBd(c.Ctx)
@@ -198,25 +204,37 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 			return fmt.Errorf("failed to sync users with db: %w", err)
 		}
 
-		c.BroadcastToOthers(event.UserJoined{
-			ID:     c.User.ID,
-			Name:   c.User.Name,
-			Avatar: c.User.Avatar,
+	case domain.Swiping:
+		_, has := r.usersMap[c.User.ID]
+		if !has {
+			return fmt.Errorf("user %s is not in lobby", c.User.ID)
+		}
+		c.Log.Debug("user rejoined lobby")
+		c.Emit(event.Place{
+			ID:   r.usersPlace[c.User.ID].ID,
+			Card: r.usersPlace[c.User.ID],
 		})
-		for _, u := range r.users() {
-			c.Emit(event.UserJoined{
-				ID:     u.ID,
-				Name:   u.Name,
-				Avatar: u.Avatar,
-			})
-		}
-		for _, v := range r.votes {
-			c.Emit(v)
-		}
 	case domain.Finished:
 		r.emitFinish(c)
+		return nil
 	default:
 		return fmt.Errorf("cannot join room in state %s", r.state)
+	}
+
+	c.BroadcastToOthers(event.UserJoined{
+		ID:     c.User.ID,
+		Name:   c.User.Name,
+		Avatar: c.User.Avatar,
+	})
+	for _, u := range r.users() {
+		c.Emit(event.UserJoined{
+			ID:     u.ID,
+			Name:   u.Name,
+			Avatar: u.Avatar,
+		})
+	}
+	for _, v := range r.votes {
+		c.Emit(v)
 	}
 
 	c.Emit(event.SettingsUpdate{
@@ -241,13 +259,17 @@ func (r *Room) OnLeave(c *state.Context[*Room]) error {
 	if !has {
 		return nil
 	}
-	delete(r.usersMap, c.User.ID)
+	delete(r.connectedUsers, c.User.ID)
 
-	if r.state == domain.InLobby {
-		err := r.syncUsersWithBd(c.Ctx)
-		if err != nil {
+	switch r.state {
+	case domain.InLobby:
+		delete(r.usersMap, c.User.ID)
+
+		if err := r.syncUsersWithBd(c.Ctx); err != nil {
 			return fmt.Errorf("error while syncing users with bd: %w", err)
 		}
+	case domain.Swiping:
+	case domain.Finished:
 	}
 
 	c.BroadcastToOthers(event.UserLeft{
@@ -255,6 +277,12 @@ func (r *Room) OnLeave(c *state.Context[*Room]) error {
 	})
 
 	return nil
+}
+
+func (r *Room) Active() bool {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+	return len(r.connectedUsers) > 0
 }
 
 func (r *Room) Empty() bool {
@@ -442,7 +470,7 @@ func (r *Room) OnSwipe(c *state.Context[*Room], ev event.Swipe) error {
 
 		vote := event.MatchVote{
 			BaseVote: event.BaseVote{
-				ID: int64(len(r.votes)),
+				ID: r.voteID,
 				Options: []event.VoteOption{
 					{ID: event.OptionIDLike, Desc: "Like"},
 					{ID: event.OptionIDDislike, Desc: "Dislike"},
@@ -452,6 +480,7 @@ func (r *Room) OnSwipe(c *state.Context[*Room], ev event.Swipe) error {
 			},
 			Place: match.Place,
 		}
+		r.voteID++
 		r.votes[vote.ID] = vote
 		c.Broadcast(vote)
 	}
@@ -524,6 +553,7 @@ func (r *Room) OnVote(c *state.Context[*Room], ev event.Vote) error {
 	})
 
 	if res != nil {
+		delete(r.votes, ev.VoteID)
 		c.Broadcast(res)
 	}
 

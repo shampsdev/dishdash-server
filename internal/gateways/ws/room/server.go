@@ -60,6 +60,8 @@ func (s *SocketIO) setup() {
 		c.State = room
 		c.Ctx = context.Background()
 
+		c.Log.Debug("Event received")
+
 		err = c.State.OnJoin(c)
 		if err != nil {
 			c.Error(fmt.Errorf("error while adding user to room: %w", err))
@@ -103,13 +105,6 @@ func (s *SocketIO) setup() {
 			c.Error(fmt.Errorf("error while removing user from room: %w", err))
 		}
 		c.Log.Info("Leave room")
-
-		if c.State.Empty() {
-			err := s.cases.RoomRepo.DeleteRoom(context.Background(), c.State.ID())
-			if err != nil {
-				c.Error(fmt.Errorf("error while deleting room: %w", err))
-			}
-		}
 		s.sio.LeaveRoom("/", c.State.ID(), conn)
 	})
 }
