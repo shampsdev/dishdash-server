@@ -80,6 +80,9 @@ func (s *SocketIO) setup() {
 	})
 
 	s.sio.OnDisconnect("/", func(conn socketio.Conn, msg string) {
+		defer func() {
+			s.metrics.ActiveConnections.Dec()
+		}()
 		c, ok := conn.Context().(*state.Context[*usecase.Room])
 		if !ok {
 			log.Infof("disconnected with msg \"%s\" ", msg)
@@ -90,10 +93,17 @@ func (s *SocketIO) setup() {
 			return
 		}
 
+		c.Log = log.WithFields(log.Fields{
+			"user": c.User.ID,
+			"room": c.State.ID(),
+		})
+
 		err := c.State.OnLeave(c)
 		if err != nil {
 			c.Error(fmt.Errorf("error while removing user from room: %w", err))
 		}
+		c.Log.Info("Leave room")
+
 		if c.State.Empty() {
 			err := s.cases.RoomRepo.DeleteRoom(context.Background(), c.State.ID())
 			if err != nil {
