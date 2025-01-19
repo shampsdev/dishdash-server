@@ -110,8 +110,8 @@ func (s *SocketIO) ForEach(roomID string, f func(c *state.Context[*usecase.Room]
 	})
 }
 
-func (s *SocketIO) On(event string, f interface{}) {
-	s.sio.OnEvent("/", event, func(conn socketio.Conn, args interface{}) {
+func (s *SocketIO) On(event string, f state.HandlerFunc[*usecase.Room]) {
+	s.sio.OnEvent("/", event, func(conn socketio.Conn, arg interface{}) {
 		s.metrics.Requests.WithLabelValues(event).Inc()
 		timer := prometheus.NewTimer(s.metrics.ResponseDuration.WithLabelValues(event))
 		defer timer.ObserveDuration()
@@ -135,7 +135,7 @@ func (s *SocketIO) On(event string, f interface{}) {
 		c.Log.Debug("Event received")
 
 		c.Ctx = context.Background()
-		err := c.Call(f, args)
+		err := f(c, arg)
 		if err != nil {
 			c.Error(err)
 		}
