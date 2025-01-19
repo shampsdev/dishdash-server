@@ -70,11 +70,11 @@ func (r *InMemoryRoomRepo) GetRoom(ctx context.Context, id string) (*Room, error
 			return nil, err
 		}
 		r.rooms[id] = room
+		r.activeRooms[id] = time.Now()
 		return room, nil
 	}
 
 	r.activeRooms[id] = time.Now()
-
 	return room, nil
 }
 

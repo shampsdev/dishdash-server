@@ -33,6 +33,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 	listenEvent := func(eventName string) {
 		cli1.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 	}
+	listenEvent(event.UserJoinedEvent)
 	listenEvent(event.VoteAnnounceEvent)
 	listenEvent(event.SettingsUpdateEvent)
 
@@ -80,6 +81,7 @@ func LobbyResult(t *testing.T) *sdk.SocketIOSession {
 		cli1.OnEvent(eventName, sioSess.SioAddFunc(user1.Name, eventName))
 	}
 	listenEvent(event.JoinLobbyEvent)
+	listenEvent(event.UserJoinedEvent)
 	listenEvent(event.PlaceEvent)
 	listenEvent(event.VoteAnnounceEvent)
 	listenEvent(event.SettingsUpdateEvent)

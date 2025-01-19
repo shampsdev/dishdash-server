@@ -5,6 +5,14 @@
         "Name": "Joining lobby",
         "Events": [
           {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            }
+          },
+          {
             "EventName": "voteAnnounce",
             "Data": {
               "id": 0,
@@ -102,7 +110,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-01-19T22:53:21.562973Z",
+                "updatedAt": "2025-01-19T23:08:37.026218Z",
                 "url": null
               },
               "id": 1,
@@ -167,10 +175,18 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-01-19T22:53:21.562973Z",
+                "updatedAt": "2025-01-19T23:08:37.026218Z",
                 "url": null
               },
               "id": 2
+            }
+          },
+          {
+            "EventName": "userJoined",
+            "Data": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
             }
           },
           {
@@ -226,7 +242,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-01-19T22:53:21.562973Z",
+                "updatedAt": "2025-01-19T23:08:37.026218Z",
                 "url": null
               },
               "id": 1,
