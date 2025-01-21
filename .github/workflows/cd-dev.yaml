@@ -46,9 +46,16 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Pushed ${{ env.COMMIT_SHORT_SHA }} to docker hub
-          message: See changes at ${{ github.event.compare }}. Triggering the webhook...
-        
+          title: "Docker image sent: ${{ env.COMMIT_SHORT_SHA }}"
+          message: |
+            ✅ Docker image for commit: ${{ github.sha }} has been successfully built and pushed to Docker Hub.  
+            Branches/tags:: dev, ${{ env.COMMIT_SHORT_SHA }}.
+            
+            Repository: ${{ github.repository }}
+            Commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            
+            Triggering portainer webhook...
+
       - name: Trigger portainer webhook to update container
         id: portainer_webhook
         shell: bash
@@ -60,20 +67,28 @@ jobs:
             echo "Error: expected 204, but got $response"
             exit 1
           fi
-      
+
       - name: Shoutrrr - success
         if: ${{ success() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Deploying ${{ env.COMMIT_SHORT_SHA }}
-          message: Deploy successfully started.
-      
+          title: "Deployment of ${{ env.COMMIT_SHORT_SHA }} has been successfully started"
+          message: |
+            ✅ Container has been successfully updated via Portainer.  
+            Commit: ${{ github.sha }}
+            Repository: ${{ github.repository }}
+            
+             Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
       - name: Shoutrrr - fail
         if: ${{ failure() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Deploy Failed
-          message: There was an error during deployment.
-                  
+          title: "Deployment failed"
+          message: |
+            ❌ An error occurred during deployment for commit ${{ github.sha }}.
+            Repository: ${{ github.repository }}
+            
+            Check the pipeline logs for details.                  
