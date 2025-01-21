@@ -46,15 +46,15 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Docker образ отправлен: ${{ env.COMMIT_SHORT_SHA }}"
+          title: "Docker image sent: ${{ env.COMMIT_SHORT_SHA }}"
           message: |
-            ✅ Docker образ для коммита: ${{ github.sha }} успешно собран и отправлен в Docker Hub.
-            Ветки/теги: dev, ${{ env.COMMIT_SHORT_SHA }}.
+            ✅ Docker image for commit: ${{ github.sha }} has been successfully built and pushed to Docker Hub.  
+            Branches/tags:: dev, ${{ env.COMMIT_SHORT_SHA }}.
             
-            Репозиторий: ${{ github.repository }}
-            Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Repository: ${{ github.repository }}
+            Commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             
-            Запускаем webhook для Portainer...
+            Triggering portainer webhook...
 
       - name: Trigger portainer webhook to update container
         id: portainer_webhook
@@ -73,23 +73,22 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Деплой ${{ env.COMMIT_SHORT_SHA }} успешно запущен"
+          title: "Deployment of ${{ env.COMMIT_SHORT_SHA }} has been successfully started"
           message: |
-            ✅ Контейнер успешно обновлён через Portainer.
-            Коммит: ${{ github.sha }}
-            Репозиторий: ${{ github.repository }}
+            ✅ Container has been successfully updated via Portainer.  
+            Commit: ${{ github.sha }}
+            Repository: ${{ github.repository }}
             
-            Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+             Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
       - name: Shoutrrr - fail
         if: ${{ failure() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Деплой провален"
+          title: "Deployment failed"
           message: |
-            ❌ Произошла ошибка во время деплоя для коммита ${{ github.sha }}.
-            Репозиторий: ${{ github.repository }}
+            ❌ An error occurred during deployment for commit ${{ github.sha }}.
+            Repository: ${{ github.repository }}
             
-            Проверьте логи pipeline для подробностей.
-                  
+            Check the pipeline logs for details.                  
