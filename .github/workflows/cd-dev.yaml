@@ -41,8 +41,39 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:dev
             ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:${{ env.COMMIT_SHORT_SHA }}
-            
-      - name: Trigger watchtower to update container(s)
+
+      - name: Docker hub push notification
+        uses: containrrr/shoutrrr-action@v1
+        with:
+          url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
+          title: Pushed ${{ env.COMMIT_SHORT_SHA }} to docker hub
+          message: See changes at ${{ github.event.compare }}. Triggering the webhook...
+        
+      - name: Trigger portainer webhook to update container
+        id: portainer_webhook
         shell: bash
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN_DEV }}" ${{ secrets.WATCHTOWER_UPDATE_ENDPOINT_DEV }}
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH }}?tag=dev")
+
+          if [ "$response" -ne 204 ]; then
+            echo "Error: expected 204, but got $response"
+            exit 1
+          fi
+      
+      - name: Shoutrrr - success
+        if: ${{ success() }}
+        uses: containrrr/shoutrrr-action@v1
+        with:
+          url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
+          title: Deploying ${{ env.COMMIT_SHORT_SHA }}
+          message: Deploy successfully started.
+      
+      - name: Shoutrrr - fail
+        if: ${{ failure() }}
+        uses: containrrr/shoutrrr-action@v1
+        with:
+          url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
+          title: Deploy Failed
+          message: There was an error during deployment.
+                  
