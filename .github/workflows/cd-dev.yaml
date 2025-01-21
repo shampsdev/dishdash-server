@@ -46,9 +46,16 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Pushed ${{ env.COMMIT_SHORT_SHA }} to docker hub
-          message: See changes at ${{ github.event.compare }}. Triggering the webhook...
-        
+          title: "Docker образ отправлен: ${{ env.COMMIT_SHORT_SHA }}"
+          message: |
+            ✅ Docker образ для коммита: ${{ github.sha }} успешно собран и отправлен в Docker Hub.
+            Ветки/теги: dev, ${{ env.COMMIT_SHORT_SHA }}.
+            
+            Репозиторий: ${{ github.repository }}
+            Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            
+            Запускаем webhook для Portainer...
+
       - name: Trigger portainer webhook to update container
         id: portainer_webhook
         shell: bash
@@ -60,20 +67,29 @@ jobs:
             echo "Error: expected 204, but got $response"
             exit 1
           fi
-      
+
       - name: Shoutrrr - success
         if: ${{ success() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Deploying ${{ env.COMMIT_SHORT_SHA }}
-          message: Deploy successfully started.
-      
+          title: "Деплой ${{ env.COMMIT_SHORT_SHA }} успешно запущен"
+          message: |
+            ✅ Контейнер успешно обновлён через Portainer.
+            Коммит: ${{ github.sha }}
+            Репозиторий: ${{ github.repository }}
+            
+            Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
       - name: Shoutrrr - fail
         if: ${{ failure() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: Deploy Failed
-          message: There was an error during deployment.
+          title: "Деплой провален"
+          message: |
+            ❌ Произошла ошибка во время деплоя для коммита ${{ github.sha }}.
+            Репозиторий: ${{ github.repository }}
+            
+            Проверьте логи pipeline для подробностей.
                   
