@@ -42,6 +42,7 @@ jobs:
             echo "VERSION_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           else
             echo "VERSION_TAG=${{ env.COMMIT_SHORT_SHA }}" >> $GITHUB_ENV
+          fi
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
