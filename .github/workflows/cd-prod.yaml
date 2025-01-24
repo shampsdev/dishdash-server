@@ -20,10 +20,10 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - name: Fail if branch is not main
-        if: github.ref != 'refs/heads/main'
+      - name: Fail if not on main branch or release tag
+        if: github.ref != 'refs/heads/main' && github.event.release.tag_name == ''
         run: |
-          echo "This workflow should not be triggered on a branch other than main"
+          echo "This workflow should only run on the 'main' branch or for a release with a tag name."
           exit 1
 
       - name: Check out the repo
