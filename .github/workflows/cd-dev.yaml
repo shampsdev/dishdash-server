@@ -46,10 +46,10 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Docker image sent: ${{ env.COMMIT_SHORT_SHA }}"
+          title: "[DEV] Docker image sent: ${{ env.COMMIT_SHORT_SHA }}"
           message: |
             ✅ Docker image for commit: ${{ github.sha }} has been successfully built and pushed to Docker Hub.  
-            Branches/tags:: dev, ${{ env.COMMIT_SHORT_SHA }}.
+            Branches/tags: dev, ${{ env.COMMIT_SHORT_SHA }}.
             
             Repository: ${{ github.repository }}
             Commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH }}?tag=dev")
+            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH_DEV }}?tag=dev")
 
           if [ "$response" -ne 204 ]; then
             echo "Error: expected 204, but got $response"
@@ -79,7 +79,7 @@ jobs:
             Commit: ${{ github.sha }}
             Repository: ${{ github.repository }}
             
-             Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
       - name: Shoutrrr - fail
         if: ${{ failure() }}
@@ -91,4 +91,4 @@ jobs:
             ❌ An error occurred during deployment for commit ${{ github.sha }}.
             Repository: ${{ github.repository }}
             
-            Check the pipeline logs for details.                  
+            Check the pipeline logs for details.
