@@ -308,7 +308,7 @@ func (r *Room) syncUsersWithBd(ctx context.Context) error {
 		}),
 	)
 	if err != nil {
-		return fmt.Errorf("error while setting lobby users: %w", err)
+		return fmt.Errorf("failed to set lobby state: %w", err)
 	}
 	return nil
 }
@@ -331,6 +331,10 @@ func (r *Room) OnSettingsUpdate(c *state.Context[*Room], ev event.SettingsUpdate
 
 	ev.UserID = c.User.ID
 	c.Broadcast(ev)
+
+	c.BroadcastToOthers(event.UserLeft{
+		ID: c.User.ID,
+	})
 
 	return nil
 }
