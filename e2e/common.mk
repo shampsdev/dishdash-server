@@ -1,3 +1,4 @@
+export E2E_TESTING=true
 include ../e2e.env
 
 test:

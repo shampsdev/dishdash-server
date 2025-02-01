@@ -39,14 +39,12 @@ func MustInit() *Framework {
 
 	config.Load("../e2e.env")
 	fw.Cfg = config.C
-	fw.Log.Infof("Loaded config")
 
 	var err error
 	fw.DB, err = pgxpool.NewWithConfig(context.Background(), fw.Cfg.PGXConfig())
 	if err != nil {
 		panic(err)
 	}
-	fw.Log.Infof("Connected to database")
 
 	fw.HttpCli = &http.Client{Timeout: 10 * time.Second}
 	fw.ApiHost = "http://localhost:8001/api/v1"

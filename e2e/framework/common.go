@@ -29,6 +29,11 @@ var allEvents = map[string]struct{}{
 }
 
 func (fw *Framework) TestMain(m *testing.M) {
+	if t, err := strconv.ParseBool(os.Getenv("E2E_TESTING")); err != nil || !t {
+		fw.Log.Debugf("Skipping, because E2E_TESTING is not set to true")
+		return
+	}
+
 	err := fw.SetupDB()
 	if err != nil {
 		panic(err)
