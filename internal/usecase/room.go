@@ -332,10 +332,6 @@ func (r *Room) OnSettingsUpdate(c *state.Context[*Room], ev event.SettingsUpdate
 	ev.UserID = c.User.ID
 	c.Broadcast(ev)
 
-	c.BroadcastToOthers(event.UserLeft{
-		ID: c.User.ID,
-	})
-
 	return nil
 }
 

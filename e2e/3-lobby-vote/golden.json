@@ -1,0 +1,667 @@
+[
+  {
+    "Name": "Joining lobby",
+    "Events": {
+      "user1": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "id": 0,
+            "options": [
+              {
+                "description": "Finish",
+                "id": 2
+              },
+              {
+                "description": "Continue",
+                "id": 3
+              }
+            ],
+            "type": "finish"
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "id": 0,
+            "options": [
+              {
+                "description": "Finish",
+                "id": 2
+              },
+              {
+                "description": "Continue",
+                "id": 3
+              }
+            ],
+            "type": "finish"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Settings update",
+    "Events": {}
+  },
+  {
+    "Name": "Start swipes",
+    "Events": {}
+  },
+  {
+    "Name": "Swipe both likes (1)",
+    "Events": {
+      "user1": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Кронверкский проспект, 27",
+              "description": "Вкусная сырная шаверма и не только",
+              "id": 5,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+              ],
+              "location": {
+                "lat": 59.9615,
+                "lon": 30.3124
+              },
+              "priceAvg": 320,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Вкусная шаверма",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Шавафель",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            },
+            "id": 1,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Кронверкский проспект, 27",
+              "description": "Вкусная сырная шаверма и не только",
+              "id": 5,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+              ],
+              "location": {
+                "lat": 59.9615,
+                "lon": 30.3124
+              },
+              "priceAvg": 320,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Вкусная шаверма",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Шавафель",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            },
+            "id": 1,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Vote like and dislike",
+    "Events": {
+      "user1": [
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            },
+            "voteId": 1
+          }
+        },
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 1,
+            "user": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            },
+            "voteId": 1
+          }
+        },
+        {
+          "Event": "voteResult",
+          "Data": {
+            "optionId": 1,
+            "voteId": 1
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            },
+            "voteId": 1
+          }
+        },
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 1,
+            "user": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            },
+            "voteId": 1
+          }
+        },
+        {
+          "Event": "voteResult",
+          "Data": {
+            "optionId": 1,
+            "voteId": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Swipe both likes (2)",
+    "Events": {
+      "user1": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            },
+            "id": 2,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            },
+            "id": 2,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Vote both likes",
+    "Events": {
+      "user1": [
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            },
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            },
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "voteResult",
+          "Data": {
+            "optionId": 0,
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "finish",
+          "Data": {
+            "matches": [
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Шавафель",
+                  "updatedAt": "2025-02-01T23:26:56.653603Z",
+                  "url": null
+                },
+                "id": 0
+              },
+              {
+                "card": {
+                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                  "id": 1,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9505,
+                    "lon": 30.2956
+                  },
+                  "priceAvg": 450,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Ресторан узбекской кухни",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Пловная",
+                  "updatedAt": "2025-02-01T23:26:56.653603Z",
+                  "url": null
+                },
+                "id": 1
+              }
+            ],
+            "result": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            }
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar1",
+              "id": "id1",
+              "name": "user1"
+            },
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "voted",
+          "Data": {
+            "optionId": 0,
+            "user": {
+              "avatar": "avatar2",
+              "id": "id2",
+              "name": "user2"
+            },
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "voteResult",
+          "Data": {
+            "optionId": 0,
+            "voteId": 2
+          }
+        },
+        {
+          "Event": "finish",
+          "Data": {
+            "matches": [
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Шавафель",
+                  "updatedAt": "2025-02-01T23:26:56.653603Z",
+                  "url": null
+                },
+                "id": 0
+              },
+              {
+                "card": {
+                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                  "id": 1,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9505,
+                    "lon": 30.2956
+                  },
+                  "priceAvg": 450,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Ресторан узбекской кухни",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Пловная",
+                  "updatedAt": "2025-02-01T23:26:56.653603Z",
+                  "url": null
+                },
+                "id": 1
+              }
+            ],
+            "result": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-01T23:26:56.653603Z",
+              "url": null
+            }
+          }
+        }
+      ]
+    }
+  }
+]

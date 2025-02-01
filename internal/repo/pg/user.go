@@ -50,6 +50,7 @@ func (ur *UserRepo) SaveUserWithID(ctx context.Context, user *domain.User, id st
 	const query = `
 		INSERT INTO "user" (id, name, avatar, telegram, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6)
+		ON CONFLICT DO NOTHING
 	`
 	now := time.Now().UTC()
 	_, err := ur.db.Exec(ctx, query,
