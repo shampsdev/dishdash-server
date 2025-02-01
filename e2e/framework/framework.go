@@ -23,8 +23,7 @@ type Framework struct {
 	ApiHost string
 	SIOHost string
 
-	ignoreEvents map[string]struct{}
-	Session      *session.Session
+	Session *session.Session
 }
 
 func MustInit() *Framework {
