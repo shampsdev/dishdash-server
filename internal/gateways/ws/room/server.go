@@ -111,7 +111,9 @@ func (s *SocketIO) setup() {
 
 func (s *SocketIO) ForEach(roomID string, f func(c *state.Context[*usecase.Room])) {
 	s.sio.ForEach("/", roomID, func(conn socketio.Conn) {
-		f(conn.Context().(*state.Context[*usecase.Room]))
+		if c, ok := conn.Context().(*state.Context[*usecase.Room]); ok {
+			f(c)
+		}
 	})
 }
 

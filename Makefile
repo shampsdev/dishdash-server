@@ -41,7 +41,7 @@ db-reset: ## Reset database (down + up + default-data)
 ##@ Tools
 GOLANGCI_LINT = $(shell pwd)/bin/golangci-lint
 golangci-lint-install:
-	$(call go-get-tool,$(GOLANGCI_LINT),github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.3)
+	$(call go-get-tool,$(GOLANGCI_LINT),github.com/golangci/golangci-lint/cmd/golangci-lint@v1.63.4)
 
 SWAG = $(shell pwd)/bin/swag
 swag-install:

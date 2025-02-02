@@ -1,0 +1,43 @@
+[
+  {
+    "Name": "Joining lobby",
+    "Events": {
+      "user1": [
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
+          }
+        },
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
+          }
+        },
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
+          }
+        }
+      ]
+    }
+  }
+]
