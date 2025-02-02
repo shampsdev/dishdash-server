@@ -33,44 +33,36 @@ func NewPlaceRecommender(
 
 func (pr *PlaceRecommender) RecommendPlaces(
 	ctx context.Context,
-	opts *domain.RecommendationOpts,
-	data domain.RecommendData,
+	settings domain.LobbySettings,
 ) ([]*domain.Place, error) {
 	log.Debug("Starting recommendation process")
-
-	if opts == nil {
-		opts = pr.defaultRecommendationOpts()
-	}
-
 	var dbPlaces []*domain.Place
 	var err error
 
-	switch opts.Type {
-	case domain.RecommendationTypeClassic:
+	switch settings.Type {
+	case domain.ClassicPlacesLobbyType:
 		log.Debug("Using classic recommendation")
-		if opts.Classic == nil {
+		if settings.ClassicPlaces == nil {
 			return nil, errors.New("classic recommendation settings are chosen but not set")
 		}
 
-		dbPlaces, err = pr.dbPRRepo.RecommendClassic(ctx, *opts.Classic, data)
+		if settings.ClassicPlaces.Recommendation == nil {
+			settings.ClassicPlaces.Recommendation = defaultRecommendationOpts()
+		}
+
+		dbPlaces, err = pr.dbPRRepo.RecommendClassicPlaces(ctx, *settings.ClassicPlaces)
 		if err != nil {
 			return nil, fmt.Errorf("can't recommend from db: %w", err)
 		}
 		log.Debugf("Got %d places from db", len(dbPlaces))
 	default:
-		return nil, fmt.Errorf("unknown recommendation type: %s", opts.Type)
+		return nil, fmt.Errorf("unsupported recommendation type: %s", settings.Type)
 	}
 
-	if pr.goodEnough(dbPlaces, data) {
-		return dbPlaces, nil
-	}
-
-	log.Debug("Can't recommend good enough places")
-
-	return nil, errors.New("can't recommend places good enough")
+	return dbPlaces, nil
 }
 
-func (pr *PlaceRecommender) defaultRecommendationOpts() *domain.RecommendationOpts {
+func defaultRecommendationOpts() *domain.RecommendationOpts {
 	return &domain.RecommendationOpts{
 		Type: domain.RecommendationTypeClassic,
 		Classic: &domain.RecommendationOptsClassic{
@@ -82,8 +74,4 @@ func (pr *PlaceRecommender) defaultRecommendationOpts() *domain.RecommendationOp
 			DistBound:  config.C.Recommendation.DistBound,
 		},
 	}
-}
-
-func (pr *PlaceRecommender) goodEnough(_ []*domain.Place, _ domain.RecommendData) bool {
-	return true
 }

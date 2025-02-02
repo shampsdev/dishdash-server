@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"dishdash.ru/internal/domain"
 	"dishdash.ru/internal/repo"
@@ -32,53 +32,50 @@ func NewLobbyUseCase(
 	}
 }
 
-func (l LobbyUseCase) SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*LobbyOutput, error) {
+func (l LobbyUseCase) CreateLobby(ctx context.Context, settings domain.LobbySettings) (*domain.Lobby, error) {
 	lobby := &domain.Lobby{
 		State:    domain.InLobby,
-		PriceAvg: lobbyInput.PriceAvg,
-		Location: lobbyInput.Location,
+		Type:     settings.Type,
+		Settings: settings,
 	}
+	var err error
+	settings, err = l.validateLobbySettings(settings)
+	if err != nil {
+		return nil, fmt.Errorf("invalid lobby settings: %w", err)
+	}
+
 	id, err := l.lRepo.SaveLobby(ctx, lobby)
 	if err != nil {
 		return nil, err
 	}
 	lobby.ID = id
 
-	return l.GetOutputLobbyByID(ctx, id)
+	return l.GetLobbyByID(ctx, id)
 }
 
-func (l LobbyUseCase) SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error) {
-	lobby := &domain.Lobby{
-		ID:       lobbyInput.ID,
-		PriceAvg: lobbyInput.PriceAvg,
-		Location: lobbyInput.Location,
-	}
-	err := l.lRepo.UpdateLobby(ctx, lobby)
-	if err != nil {
-		return nil, err
-	}
+func (l LobbyUseCase) validateLobbySettings(settings domain.LobbySettings) (domain.LobbySettings, error) {
+	switch settings.Type {
+	case domain.ClassicPlacesLobbyType:
+		if settings.ClassicPlaces == nil {
+			return domain.LobbySettings{}, fmt.Errorf("classic places settings are required")
+		}
 
-	err = l.tRepo.DetachTagsFromLobby(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
+		if settings.ClassicPlaces.Recommendation == nil {
+			settings.ClassicPlaces.Recommendation = defaultRecommendationOpts()
+		}
 
-	err = l.tRepo.AttachTagsToLobby(ctx, lobbyInput.Tags, lobby.ID)
-	if err != nil {
-		return nil, err
+		return settings, nil
+	default:
+		return domain.LobbySettings{}, fmt.Errorf("unsupported lobby type: %s", settings.Type)
 	}
+}
 
-	err = l.pRepo.DetachPlacesFromLobby(ctx, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
+func (l LobbyUseCase) SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error {
+	return l.lRepo.SetLobbySettings(ctx, lobbyID, settings)
+}
 
-	err = l.pRepo.AttachPlacesToLobby(ctx, lobbyInput.Places, lobby.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return l.GetLobbyByID(ctx, lobby.ID)
+func (l LobbyUseCase) AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error {
+	return l.pRepo.AttachPlacesToLobby(ctx, placeIDs, lobbyID)
 }
 
 func (l LobbyUseCase) SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error {
@@ -119,11 +116,6 @@ func (l LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobb
 	}
 	lobby.ID = id
 
-	lobby.Tags, err = l.tRepo.GetTagsByLobbyID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
 	lobby.Swipes, err = l.sRepo.GetSwipesByLobbyID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -140,63 +132,4 @@ func (l LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobb
 	}
 
 	return lobby, nil
-}
-
-func (l LobbyUseCase) GetOutputLobbyByID(ctx context.Context, id string) (*LobbyOutput, error) {
-	lobby, err := l.lRepo.GetLobbyByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	lobby.ID = id
-
-	lobby.Tags, err = l.tRepo.GetTagsByLobbyID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	lobby.Users, err = l.uRepo.GetUsersByLobbyID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	lobbyOutput := &LobbyOutput{
-		ID:        lobby.ID,
-		State:     lobby.State,
-		PriceAvg:  lobby.PriceAvg,
-		Location:  lobby.Location,
-		CreatedAt: lobby.CreatedAt,
-		Tags:      lobby.Tags,
-		Users:     lobby.Users,
-	}
-
-	return lobbyOutput, nil
-}
-
-func (l LobbyUseCase) NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*LobbyOutput, float64, error) {
-	id, dist, err := l.lRepo.NearestActiveLobbyID(ctx, loc)
-	if err != nil {
-		return nil, 0, err
-	}
-	lobby, err := l.GetOutputLobbyByID(ctx, id)
-	if err != nil {
-		return nil, 0, err
-	}
-	return lobby, dist, nil
-}
-
-func (l LobbyUseCase) FindLobby(ctx context.Context, input FindLobbyInput) (*LobbyOutput, error) {
-	lobby, dist, err := l.NearestActiveLobby(ctx, input.Location)
-	if err != nil && !errors.Is(err, repo.ErrLobbyNotFound) {
-		return nil, err
-	}
-	if dist > input.Dist || errors.Is(err, repo.ErrLobbyNotFound) {
-		lobby, err = l.SaveLobby(ctx, SaveLobbyInput{
-			Location: input.Location,
-			PriceAvg: 1200,
-		})
-		if err != nil {
-			return nil, err
-		}
-	}
-	return l.GetOutputLobbyByID(ctx, lobby.ID)
 }

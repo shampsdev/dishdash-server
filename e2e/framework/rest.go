@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase"
 )
 
 func (fw *Framework) postUserWithID(user *domain.User) (*domain.User, error) {
@@ -29,26 +28,30 @@ func (fw *Framework) postUserWithID(user *domain.User) (*domain.User, error) {
 	return respUser, nil
 }
 
-func (fw *Framework) MustFindLobby() *domain.Lobby {
-	lobby, err := fw.FindLobby()
+func (fw *Framework) MustCreateLobby() *domain.Lobby {
+	lobby, err := fw.CreateLobby()
 	if err != nil {
 		panic(err)
 	}
 	return lobby
 }
 
-func (fw *Framework) FindLobby() (*domain.Lobby, error) {
-	findLobbyInput := usecase.FindLobbyInput{
-		Dist: 0,
-		// ИТМО - Кронверкский проспект, 49
-		Location: domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
+func (fw *Framework) CreateLobby() (*domain.Lobby, error) {
+	settings := domain.LobbySettings{
+		Type: domain.ClassicPlacesLobbyType,
+		ClassicPlaces: &domain.ClassicPlacesSettings{
+			// ИТМО - Кронверкский проспект, 49
+			Location: domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
+			PriceAvg: 300,
+			Tags:     []int64{4},
+		},
 	}
-	b, err := json.Marshal(findLobbyInput)
+	b, err := json.Marshal(settings)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal find lobby input: %w", err)
 	}
 
-	resp, err := fw.HttpCli.Post(fmt.Sprintf("%s/lobbies/find", fw.ApiHost), "application/json", bytes.NewReader(b))
+	resp, err := fw.HttpCli.Post(fmt.Sprintf("%s/lobbies", fw.ApiHost), "application/json", bytes.NewReader(b))
 	if err != nil {
 		return nil, fmt.Errorf("failed to post find lobby: %w", err)
 	}

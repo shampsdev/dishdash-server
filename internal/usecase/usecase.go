@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	"dishdash.ru/internal/domain"
 )
@@ -63,45 +62,12 @@ type Place interface {
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 }
 
-type SaveLobbyInput struct {
-	PriceAvg int               `json:"priceAvg"`
-	Location domain.Coordinate `json:"location"`
-}
-
-type UpdateLobbySettingsInput struct {
-	ID       string
-	PriceAvg int               `json:"priceAvg"`
-	Location domain.Coordinate `json:"location"`
-	Tags     []int64           `json:"tags"`
-	Places   []int64           `json:"places"`
-}
-
-type FindLobbyInput struct {
-	Dist     float64           `json:"dist"`
-	Location domain.Coordinate `json:"location"`
-}
-
-type LobbyOutput struct {
-	ID        string            `json:"id"`
-	State     domain.LobbyState `json:"state"`
-	PriceAvg  int               `json:"priceAvg"`
-	Location  domain.Coordinate `json:"location"`
-	CreatedAt time.Time         `json:"createdAt"`
-
-	Tags  []*domain.Tag  `json:"tags"`
-	Users []*domain.User `json:"users"`
-}
-
 type Lobby interface {
-	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*LobbyOutput, error)
+	CreateLobby(ctx context.Context, settings domain.LobbySettings) (*domain.Lobby, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
-	GetOutputLobbyByID(ctx context.Context, id string) (*LobbyOutput, error)
 
-	FindLobby(ctx context.Context, input FindLobbyInput) (*LobbyOutput, error)
-	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*LobbyOutput, float64, error)
-
-	SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error)
+	SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
 	SetLobbyUsers(ctx context.Context, lobbyID string, userIDs []string) ([]*domain.User, error)
 }

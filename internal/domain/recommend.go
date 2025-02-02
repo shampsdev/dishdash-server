@@ -23,5 +23,5 @@ type RecommendationOptsClassic struct {
 type RecommendData struct {
 	Location Coordinate
 	PriceAvg int
-	Tags     []string
+	Tags     []int64
 }

@@ -237,16 +237,7 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 		c.Emit(v)
 	}
 
-	c.Emit(event.SettingsUpdate{
-		Location:    r.lobby.Location,
-		PriceMin:    r.lobby.PriceAvg - 300,
-		PriceMax:    r.lobby.PriceAvg + 300,
-		MaxDistance: 4000,
-		Tags: algo.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
-			return t.ID
-		}),
-		RecommendationOpts: r.recommendationOpts,
-	})
+	c.Emit(event.SettingsUpdate(r.lobby.Settings))
 
 	return nil
 }
@@ -319,17 +310,12 @@ func (r *Room) OnSettingsUpdate(c *state.Context[*Room], ev event.SettingsUpdate
 
 	err := r.updateLobbySettings(
 		c.Ctx,
-		ev.Location,
-		(ev.PriceMax+ev.PriceMin)/2,
-		ev.Tags,
-		nil,
-		ev.RecommendationOpts,
+		domain.LobbySettings(ev),
 	)
 	if err != nil {
 		return fmt.Errorf("error while updating lobby settings: %w", err)
 	}
 
-	ev.UserID = c.User.ID
 	c.Broadcast(ev)
 
 	return nil
@@ -337,25 +323,14 @@ func (r *Room) OnSettingsUpdate(c *state.Context[*Room], ev event.SettingsUpdate
 
 func (r *Room) updateLobbySettings(
 	ctx context.Context,
-	location domain.Coordinate,
-	priceAvg int,
-	tagIDs, placeIDs []int64,
-	recommendationOpts *domain.RecommendationOpts,
+	settings domain.LobbySettings,
 ) error {
-	r.recommendationOpts = recommendationOpts
-	lobby, err := r.lobbyUseCase.SetLobbySettings(ctx, UpdateLobbySettingsInput{
-		ID:       r.lobby.ID,
-		PriceAvg: priceAvg,
-		Location: location,
-		Tags:     tagIDs,
-		Places:   placeIDs,
-	})
+	r.recommendationOpts = settings.ClassicPlaces.Recommendation
+	err := r.lobbyUseCase.SetLobbySettings(ctx, r.lobby.ID, settings)
 	if err != nil {
 		return err
 	}
-	r.lobby.PriceAvg = lobby.PriceAvg
-	r.lobby.Tags = lobby.Tags
-	r.lobby.Places = lobby.Places
+	r.lobby.Settings = settings
 	return nil
 }
 
@@ -365,24 +340,9 @@ func (r *Room) OnStartSwipes(c *state.Context[*Room], ev event.StartSwipes) erro
 
 	c.Log.Debug("Request started: Action 'StartSwipes' initiated")
 
-	if len(r.lobby.Tags) == 0 {
-		c.Log.Warn("Action 'StartSwipes' encountered an issue. Reason: 'No tags found, using default tags'")
-		err := r.updateLobbySettings(c.Ctx, r.lobby.Location, 500, []int64{3}, nil, r.recommendationOpts)
-		if err != nil {
-			c.Log.WithError(err).Error("Action 'UpdateLobby' failed")
-			return err
-		}
-		c.Log.Debug("Request successful: Action 'UpdateLobby' completed with default tags")
-	}
-
 	var err error
 	r.places, err = r.placeRecommender.RecommendPlaces(c.Ctx,
-		r.recommendationOpts,
-		domain.RecommendData{
-			Location: r.lobby.Location,
-			PriceAvg: r.lobby.PriceAvg,
-			Tags:     r.lobby.TagNames(),
-		},
+		r.lobby.Settings,
 	)
 	if err != nil {
 		c.Log.WithError(err).Error("Action 'GetPlacesForLobby' failed")
@@ -390,15 +350,7 @@ func (r *Room) OnStartSwipes(c *state.Context[*Room], ev event.StartSwipes) erro
 	}
 	c.Log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
 
-	err = r.updateLobbySettings(c.Ctx, r.lobby.Location, r.lobby.PriceAvg,
-		algo.Map(r.lobby.Tags, func(t *domain.Tag) int64 {
-			return t.ID
-		}),
-		algo.Map(r.places, func(p *domain.Place) int64 {
-			return p.ID
-		}),
-		r.recommendationOpts,
-	)
+	err = r.updateLobbySettings(c.Ctx, r.lobby.Settings)
 	if err != nil {
 		return fmt.Errorf("error while updating lobby settings: %w", err)
 	}
