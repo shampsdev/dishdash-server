@@ -29,6 +29,8 @@ type Framework struct {
 func MustInit() *Framework {
 	fw := &Framework{}
 
+	fw.Session = session.New()
+
 	fw.Log = logrus.New()
 	fw.Log.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true,
@@ -37,20 +39,24 @@ func MustInit() *Framework {
 	})
 	fw.Log.SetLevel(logrus.DebugLevel)
 
+	if !isE2ETesting() {
+		return fw
+	}
+
 	config.Load("../e2e.env")
 	fw.Cfg = config.C
+	fw.Log.Info("Loaded config")
 
 	var err error
 	fw.DB, err = pgxpool.NewWithConfig(context.Background(), fw.Cfg.PGXConfig())
 	if err != nil {
 		panic(err)
 	}
+	fw.Log.Info("Connected to database")
 
 	fw.HttpCli = &http.Client{Timeout: 10 * time.Second}
 	fw.ApiHost = "http://localhost:8001/api/v1"
 	fw.SIOHost = "http://localhost:8001"
-
-	fw.Session = session.New()
 
 	return fw
 }

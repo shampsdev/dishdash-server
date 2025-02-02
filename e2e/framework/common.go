@@ -28,8 +28,16 @@ var allEvents = map[string]struct{}{
 	event.VoteResultEvent:   {},
 }
 
+func isE2ETesting() bool {
+	t, err := strconv.ParseBool(os.Getenv("E2E_TESTING"))
+	if err != nil {
+		return false
+	}
+	return t
+}
+
 func (fw *Framework) TestMain(m *testing.M) {
-	if t, err := strconv.ParseBool(os.Getenv("E2E_TESTING")); err != nil || !t {
+	if !isE2ETesting() {
 		fw.Log.Debugf("Skipping, because E2E_TESTING is not set to true")
 		return
 	}
