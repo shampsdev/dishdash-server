@@ -88,7 +88,7 @@ func (fw *Framework) NewClient(user *domain.User) (*Client, error) {
 	c.Log = fw.Log.WithFields(logrus.Fields{
 		"user": user.ID,
 	})
-	c.Setup(allEvents)
+	c.setup(allEvents)
 
 	err = c.cli.Connect()
 	if err != nil {
@@ -102,6 +102,10 @@ func (fw *Framework) RecordEvents(events ...string) {
 	fw.Session.SetRecordEvents(events...)
 }
 
+// Step
+// 1. Adds a new step to the session
+// 2. Runs the function
+// 3. Locks until the number of responses to be recorded is reached
 func (fw *Framework) Step(name string, f func(), waitNResponses uint32) {
 	fw.Log.Infof("Step: %s", name)
 	fw.Session.NewStep(name)

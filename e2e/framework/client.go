@@ -36,7 +36,7 @@ func (c *Client) On(event string, f HandlerFunc) {
 	})
 }
 
-func (c *Client) Setup(toRecord map[string]struct{}) {
+func (c *Client) setup(toRecord map[string]struct{}) {
 	c.cli.OnConnect(func(_ socketio.Conn) error {
 		c.Log.Debug("Connected")
 		return nil

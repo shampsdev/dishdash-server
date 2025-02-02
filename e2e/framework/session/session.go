@@ -44,6 +44,8 @@ func (s *Session) NewStep(name string) {
 	s.Steps = append(s.Steps, step)
 }
 
+// RecordEvent records an event for the current step
+// Even if the event should not be recorded, the counter will increase
 func (s *Session) RecordEvent(user *domain.User, event string, data interface{}) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -69,6 +71,7 @@ func (s *Session) SetRecordEvents(events ...string) {
 	}
 }
 
+// WaitNResponses waits for n responses to be recorded with [Session.RecordEvent]
 func (s *Session) WaitNResponses(n uint32) {
 	timeout := time.NewTimer(time.Second * 10).C
 	ticker := time.NewTicker(time.Millisecond * 200)
