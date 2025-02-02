@@ -106,6 +106,8 @@ func (fw *Framework) RecordEvents(events ...string) {
 // 1. Adds a new step to the session
 // 2. Runs the function
 // 3. Locks until the number of responses to be recorded is reached
+//
+// It is important that all incoming events are counted and not just recorded ones.
 func (fw *Framework) Step(name string, f func(), waitNResponses uint32) {
 	fw.Log.Infof("Step: %s", name)
 	fw.Session.NewStep(name)
