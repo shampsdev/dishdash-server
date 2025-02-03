@@ -46,7 +46,7 @@ func (l LobbyUseCase) CreateLobby(ctx context.Context, settings domain.LobbySett
 
 	id, err := l.lRepo.SaveLobby(ctx, lobby)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to save lobby: %w", err)
 	}
 	lobby.ID = id
 

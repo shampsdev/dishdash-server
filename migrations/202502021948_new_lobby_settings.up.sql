@@ -23,4 +23,4 @@ ALTER TABLE "lobby" ADD COLUMN "type" VARCHAR(255) DEFAULT 'classicPlaces';
 
 ALTER TABLE "lobby" DROP COLUMN "price_avg";
 ALTER TABLE "lobby" DROP COLUMN "location";
--- DROP TABLE "lobby_tag";
+DROP TABLE "lobby_tag";

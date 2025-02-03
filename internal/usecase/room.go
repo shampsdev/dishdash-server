@@ -20,8 +20,6 @@ type Room struct {
 
 	lobby *domain.Lobby
 
-	recommendationOpts *domain.RecommendationOpts
-
 	state          domain.LobbyState
 	usersMap       map[string]*domain.User
 	connectedUsers map[string]*domain.User
@@ -325,7 +323,6 @@ func (r *Room) updateLobbySettings(
 	ctx context.Context,
 	settings domain.LobbySettings,
 ) error {
-	r.recommendationOpts = settings.ClassicPlaces.Recommendation
 	err := r.lobbyUseCase.SetLobbySettings(ctx, r.lobby.ID, settings)
 	if err != nil {
 		return err
