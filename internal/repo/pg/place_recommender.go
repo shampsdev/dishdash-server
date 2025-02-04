@@ -19,10 +19,9 @@ func NewPlaceRecommenderRepo(db *pgxpool.Pool) *PlaceRecommender {
 	return &PlaceRecommender{db: db}
 }
 
-func (pr *PlaceRecommender) RecommendClassic(
+func (pr *PlaceRecommender) RecommendClassicPlaces(
 	ctx context.Context,
-	opts domain.RecommendationOptsClassic,
-	data domain.RecommendData,
+	s domain.ClassicPlacesSettings,
 ) ([]*domain.Place, error) {
 	query := `
 	WITH filtered_places AS (
@@ -30,7 +29,7 @@ func (pr *PlaceRecommender) RecommendClassic(
 		FROM place p
 		JOIN place_tag pt ON p.id = pt.place_id
 		JOIN tag t ON pt.tag_id = t.id
-		WHERE t.name = ANY ($1)
+		WHERE t.id = ANY ($1)
 		AND p.price_avg BETWEEN $2 AND $3
 		AND ST_Distance(p.location, ST_GeogFromWkb($4)) <= $5
 	)
@@ -67,12 +66,14 @@ func (pr *PlaceRecommender) RecommendClassic(
 		$9 * (ABS(p.price_avg - $10) ^ $11)
 	`
 
+	rec := s.Recommendation.Classic
+
 	return pr.queryPlaces(ctx, query,
-		data.Tags,
-		data.PriceAvg-opts.PriceBound, data.PriceAvg+opts.PriceBound,
-		data.Location.ToPostgis(), opts.DistBound,
-		opts.DistCoeff, data.Location.ToPostgis(), opts.DistPower,
-		opts.PriceCoeff, data.PriceAvg, opts.PricePower,
+		s.Tags,
+		s.PriceAvg-rec.PriceBound, s.PriceAvg+rec.PriceBound,
+		s.Location.ToPostgis(), rec.DistBound,
+		rec.DistCoeff, s.Location.ToPostgis(), rec.DistPower,
+		rec.PriceCoeff, s.PriceAvg, rec.PricePower,
 	)
 }
 

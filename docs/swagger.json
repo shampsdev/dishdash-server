@@ -9,7 +9,7 @@
     "paths": {
         "/lobbies": {
             "post": {
-                "description": "Create a new lobby in the database",
+                "description": "Create a new lobby in the database with given settings",
                 "consumes": [
                     "application/json"
                 ],
@@ -19,15 +19,15 @@
                 "tags": [
                     "lobbies"
                 ],
-                "summary": "Create a lobby",
+                "summary": "Create a lobby with given settings",
                 "parameters": [
                     {
-                        "description": "lobby data",
+                        "description": "lobby settings",
                         "name": "lobby",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usecase.SaveLobbyInput"
+                            "$ref": "#/definitions/domain.LobbySettings"
                         }
                     }
                 ],
@@ -35,93 +35,7 @@
                     "200": {
                         "description": "Saved lobby",
                         "schema": {
-                            "$ref": "#/definitions/usecase.LobbyOutput"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/lobbies/find": {
-            "post": {
-                "description": "shortcut for find nearest + create if not close enough",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lobbies"
-                ],
-                "summary": "find lobby",
-                "parameters": [
-                    {
-                        "description": "Location + Distance (in metres)",
-                        "name": "location",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecase.FindLobbyInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/usecase.LobbyOutput"
-                        }
-                    },
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/usecase.LobbyOutput"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/lobbies/nearest": {
-            "post": {
-                "description": "find nearest lobby in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lobbies"
-                ],
-                "summary": "find nearest lobby",
-                "parameters": [
-                    {
-                        "description": "Location",
-                        "name": "location",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.Coordinate"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Nearest lobby + Distance (in metres)",
-                        "schema": {
-                            "$ref": "#/definitions/lobby.nearestLobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -159,7 +73,7 @@
                     "200": {
                         "description": "lobby data",
                         "schema": {
-                            "$ref": "#/definitions/usecase.LobbyOutput"
+                            "$ref": "#/definitions/domain.Lobby"
                         }
                     },
                     "400": {
@@ -747,6 +661,37 @@
         }
     },
     "definitions": {
+        "domain.ClassicPlacesSettings": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                },
+                "priceAvg": {
+                    "type": "integer"
+                },
+                "recommendation": {
+                    "$ref": "#/definitions/domain.RecommendationOpts"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "domain.CollectionPlacesSettings": {
+            "type": "object",
+            "properties": {
+                "collectionId": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/domain.Coordinate"
+                }
+            }
+        },
         "domain.Coordinate": {
             "type": "object",
             "properties": {
@@ -755,6 +700,58 @@
                 },
                 "lon": {
                     "type": "number"
+                }
+            }
+        },
+        "domain.Lobby": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "places": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Place"
+                    }
+                },
+                "settings": {
+                    "$ref": "#/definitions/domain.LobbySettings"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "swipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Swipe"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.User"
+                    }
+                }
+            }
+        },
+        "domain.LobbySettings": {
+            "type": "object",
+            "properties": {
+                "classicPlaces": {
+                    "$ref": "#/definitions/domain.ClassicPlacesSettings"
+                },
+                "collectionPlaces": {
+                    "$ref": "#/definitions/domain.CollectionPlacesSettings"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
@@ -811,6 +808,69 @@
                 }
             }
         },
+        "domain.RecommendationOpts": {
+            "type": "object",
+            "properties": {
+                "classic": {
+                    "$ref": "#/definitions/domain.RecommendationOptsClassic"
+                },
+                "type": {
+                    "$ref": "#/definitions/domain.RecommendationType"
+                }
+            }
+        },
+        "domain.RecommendationOptsClassic": {
+            "type": "object",
+            "properties": {
+                "distBound": {
+                    "type": "integer"
+                },
+                "distCoeff": {
+                    "type": "number"
+                },
+                "distPower": {
+                    "type": "number"
+                },
+                "priceBound": {
+                    "type": "integer"
+                },
+                "priceCoeff": {
+                    "type": "number"
+                },
+                "pricePower": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.RecommendationType": {
+            "type": "string",
+            "enum": [
+                "classic"
+            ],
+            "x-enum-varnames": [
+                "RecommendationTypeClassic"
+            ]
+        },
+        "domain.Swipe": {
+            "type": "object",
+            "properties": {
+                "cardID": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lobbyID": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.Tag": {
             "type": "object",
             "properties": {
@@ -851,71 +911,6 @@
                 },
                 "updatedAt": {
                     "type": "string"
-                }
-            }
-        },
-        "lobby.nearestLobbyOutput": {
-            "type": "object",
-            "properties": {
-                "distance": {
-                    "type": "number"
-                },
-                "lobby": {
-                    "$ref": "#/definitions/usecase.LobbyOutput"
-                }
-            }
-        },
-        "usecase.FindLobbyInput": {
-            "type": "object",
-            "properties": {
-                "dist": {
-                    "type": "number"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                }
-            }
-        },
-        "usecase.LobbyOutput": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "priceAvg": {
-                    "type": "integer"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Tag"
-                    }
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.User"
-                    }
-                }
-            }
-        },
-        "usecase.SaveLobbyInput": {
-            "type": "object",
-            "properties": {
-                "location": {
-                    "$ref": "#/definitions/domain.Coordinate"
-                },
-                "priceAvg": {
-                    "type": "integer"
                 }
             }
         },

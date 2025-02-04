@@ -31,16 +31,29 @@
         {
           "Event": "settingsUpdate",
           "Data": {
-            "location": {
-              "lat": 59.956363,
-              "lon": 30.310011
+            "classicPlaces": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "priceAvg": 300,
+              "recommendation": {
+                "classic": {
+                  "distBound": 1000000,
+                  "distCoeff": 1,
+                  "distPower": 1,
+                  "priceBound": 1000000,
+                  "priceCoeff": 1,
+                  "pricePower": 1
+                },
+                "type": "classic"
+              },
+              "tags": [
+                4
+              ]
             },
-            "maxDistance": 4000,
-            "priceMax": 1500,
-            "priceMin": 900,
-            "recommendation": null,
-            "tags": [],
-            "userId": ""
+            "collectionPlaces": null,
+            "type": "classicPlaces"
           }
         }
       ]
@@ -53,18 +66,19 @@
         {
           "Event": "settingsUpdate",
           "Data": {
-            "location": {
-              "lat": 59.956363,
-              "lon": 30.310011
+            "classicPlaces": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "priceAvg": 300,
+              "recommendation": null,
+              "tags": [
+                4
+              ]
             },
-            "maxDistance": 4000,
-            "priceMax": 300,
-            "priceMin": 300,
-            "recommendation": null,
-            "tags": [
-              4
-            ],
-            "userId": "id1"
+            "collectionPlaces": null,
+            "type": "classicPlaces"
           }
         }
       ]
@@ -120,18 +134,19 @@
         {
           "Event": "settingsUpdate",
           "Data": {
-            "location": {
-              "lat": 59.956363,
-              "lon": 30.310011
+            "classicPlaces": {
+              "location": {
+                "lat": 59.956363,
+                "lon": 30.310011
+              },
+              "priceAvg": 300,
+              "recommendation": null,
+              "tags": [
+                4
+              ]
             },
-            "maxDistance": 4000,
-            "priceMax": 600,
-            "priceMin": 0,
-            "recommendation": null,
-            "tags": [
-              4
-            ],
-            "userId": ""
+            "collectionPlaces": null,
+            "type": "classicPlaces"
           }
         }
       ]
@@ -181,7 +196,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 5
@@ -229,7 +244,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 5
@@ -278,7 +293,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 1
@@ -322,7 +337,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 1
@@ -336,59 +351,6 @@
     "Events": {
       "user1": [
         {
-          "Event": "voteAnnounce",
-          "Data": {
-            "card": {
-              "address": "Сытнинская ул., 4П, Санкт-Петербург",
-              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-              "id": 1,
-              "images": [
-                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-              ],
-              "location": {
-                "lat": 59.9505,
-                "lon": 30.2956
-              },
-              "priceAvg": 450,
-              "reviewCount": 1000,
-              "reviewRating": 4.5,
-              "shortDescription": "Ресторан узбекской кухни",
-              "source": "manual",
-              "tags": [
-                {
-                  "icon": "cafe.png",
-                  "id": 2,
-                  "name": "cafe",
-                  "order": 0,
-                  "visible": true
-                },
-                {
-                  "icon": "food.png",
-                  "id": 4,
-                  "name": "food",
-                  "order": 0,
-                  "visible": true
-                }
-              ],
-              "title": "Пловная",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
-              "url": null
-            },
-            "id": 1,
-            "options": [
-              {
-                "description": "Like",
-                "id": 0
-              },
-              {
-                "description": "Dislike",
-                "id": 1
-              }
-            ],
-            "type": "match"
-          }
-        },
-        {
           "Event": "card",
           "Data": {
             "card": {
@@ -431,15 +393,121 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 2
+          }
+        },
+        {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
+              "url": null
+            },
+            "id": 1,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
           }
         }
       ],
       "user2": [
         {
+          "Event": "voteAnnounce",
+          "Data": {
+            "card": {
+              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+              "id": 1,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+              ],
+              "location": {
+                "lat": 59.9505,
+                "lon": 30.2956
+              },
+              "priceAvg": 450,
+              "reviewCount": 1000,
+              "reviewRating": 4.5,
+              "shortDescription": "Ресторан узбекской кухни",
+              "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
+              "title": "Пловная",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
+              "url": null
+            },
+            "id": 1,
+            "options": [
+              {
+                "description": "Like",
+                "id": 0
+              },
+              {
+                "description": "Dislike",
+                "id": 1
+              }
+            ],
+            "type": "match"
+          }
+        },
+        {
           "Event": "card",
           "Data": {
             "card": {
@@ -482,63 +550,10 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
+              "updatedAt": "2025-02-02T23:24:58.146953Z",
               "url": null
             },
             "id": 2
-          }
-        },
-        {
-          "Event": "voteAnnounce",
-          "Data": {
-            "card": {
-              "address": "Сытнинская ул., 4П, Санкт-Петербург",
-              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-              "id": 1,
-              "images": [
-                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-              ],
-              "location": {
-                "lat": 59.9505,
-                "lon": 30.2956
-              },
-              "priceAvg": 450,
-              "reviewCount": 1000,
-              "reviewRating": 4.5,
-              "shortDescription": "Ресторан узбекской кухни",
-              "source": "manual",
-              "tags": [
-                {
-                  "icon": "cafe.png",
-                  "id": 2,
-                  "name": "cafe",
-                  "order": 0,
-                  "visible": true
-                },
-                {
-                  "icon": "food.png",
-                  "id": 4,
-                  "name": "food",
-                  "order": 0,
-                  "visible": true
-                }
-              ],
-              "title": "Пловная",
-              "updatedAt": "2025-02-01T22:50:28.36641Z",
-              "url": null
-            },
-            "id": 1,
-            "options": [
-              {
-                "description": "Like",
-                "id": 0
-              },
-              {
-                "description": "Dislike",
-                "id": 1
-              }
-            ],
-            "type": "match"
           }
         }
       ]

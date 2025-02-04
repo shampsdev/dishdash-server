@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 func Test(t *testing.T) {
 	cli1 := fw.MustNewClient(&domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	cli2 := fw.MustNewClient(&domain.User{ID: "id2", Name: "user2", Avatar: "avatar2"})
-	lobby := fw.MustFindLobby()
+	lobby := fw.MustCreateLobby()
 	fw.Step("Joining lobby", func() {
 		cli1.JoinLobby(lobby)
 		cli2.JoinLobby(lobby)

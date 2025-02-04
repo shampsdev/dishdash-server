@@ -33,11 +33,10 @@ type Place interface {
 	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
 	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 	GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
-	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
 }
 
 type PlaceRecommender interface {
-	RecommendClassic(ctx context.Context, opts domain.RecommendationOptsClassic, data domain.RecommendData) ([]*domain.Place, error)
+	RecommendClassicPlaces(ctx context.Context, s domain.ClassicPlacesSettings) ([]*domain.Place, error)
 }
 
 type User interface {
@@ -58,10 +57,8 @@ type Lobby interface {
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
 
-	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
+	SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
-
-	NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error)
 }
 
 type Swipe interface {
