@@ -18,9 +18,13 @@ func TestMain(m *testing.M) {
 		event.ErrorEvent,
 		event.UserJoinedEvent,
 		event.SettingsUpdateEvent,
-		event.VoteAnnounceEvent,
-		event.PlaceEvent,
+		event.StartSwipesEvent,
+		event.CardsEvent,
+		event.ResultsEvent,
+		event.MatchEvent,
 	)
+	fw.UseShortener(event.CardsEvent, framework.CardsShortener)
+	fw.UseShortener(event.ResultsEvent, framework.ResultsShortener)
 	fw.TestMain(m)
 }
 
@@ -30,7 +34,7 @@ func Test(t *testing.T) {
 
 	fw.Step("Joining lobby", func() {
 		cli1.JoinLobby(lobby)
-	}, 3)
+	}, 2)
 
 	fw.Step("Settings update", func() {
 		cli1.Emit(event.SettingsUpdate{
@@ -53,16 +57,17 @@ func Test(t *testing.T) {
 
 	fw.Step("Swipe like", func() {
 		cli1.Emit(event.Swipe{SwipeType: domain.LIKE})
-	}, 2)
+	}, 3)
 
 	cli1.Emit(event.LeaveLobby{})
+	time.Sleep(1 * time.Second)
 	assert.NoError(t, cli1.Close())
 	time.Sleep(2 * time.Second)
 
 	cli1 = fw.MustNewClient(&domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	fw.Step("Rejoin", func() {
 		cli1.JoinLobby(lobby)
-	}, 5)
+	}, 4)
 
 	assert.NoError(t, cli1.Close())
 

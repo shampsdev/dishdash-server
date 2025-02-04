@@ -19,13 +19,10 @@ var allEvents = map[string]struct{}{
 	event.UserLeftEvent:       {},
 	event.SettingsUpdateEvent: {},
 	event.StartSwipesEvent:    {},
-	event.PlaceEvent:          {},
-	event.FinishEvent:         {},
-
-	event.VoteAnnounceEvent: {},
-	event.VoteEvent:         {},
-	event.VotedEvent:        {},
-	event.VoteResultEvent:   {},
+	event.CardsEvent:          {},
+	event.MatchEvent:          {},
+	event.SwipeEvent:          {},
+	event.ResultsEvent:        {},
 }
 
 func isE2ETesting() bool {
@@ -53,12 +50,14 @@ func (fw *Framework) TestMain(m *testing.M) {
 func (fw *Framework) AssertSession(t *testing.T) {
 	if update, err := strconv.ParseBool(os.Getenv("E2E_UPDATE_GOLDEN")); err == nil && update {
 		assert.NoError(t, fw.Session.SaveToFile("golden.json"))
+		assert.NoError(t, fw.Session.SaveToFileShortened("golden.short.json"))
 	} else {
 		exp, err := session.LoadFromFile("golden.json")
 		assert.NoError(t, err)
-		session.AssertEqual(t, fw.Session, exp)
+		session.AssertEqual(t, exp, fw.Session)
 		if t.Failed() {
 			assert.NoError(t, fw.Session.SaveToFile("ERROR_golden.json"))
+			assert.NoError(t, fw.Session.SaveToFileShortened("ERROR_golden.short.json"))
 		}
 	}
 }

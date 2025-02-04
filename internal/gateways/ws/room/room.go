@@ -16,8 +16,6 @@ func SetupHandlers(sio *socketio.Server, cases usecase.Cases) {
 		(*usecase.Room).OnSwipe))
 	s.On(event.SettingsUpdateEvent, state.WrapHMethod(
 		(*usecase.Room).OnSettingsUpdate))
-	s.On(event.VoteEvent, state.WrapHMethod(
-		(*usecase.Room).OnVote))
 	s.On(event.LeaveLobbyEvent, state.WrapHMethod(
 		(*usecase.Room).OnLeaveLobby))
 }

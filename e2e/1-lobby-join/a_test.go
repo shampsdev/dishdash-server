@@ -27,7 +27,7 @@ func Test(t *testing.T) {
 	fw.Step("Joining lobby", func() {
 		cli1.JoinLobby(lobby)
 		cli2.JoinLobby(lobby)
-	}, 8)
+	}, 6)
 
 	assert.NoError(t, cli1.Close())
 	assert.NoError(t, cli2.Close())

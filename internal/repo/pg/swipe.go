@@ -25,7 +25,7 @@ func (sr *SwipeRepo) SaveSwipe(ctx context.Context, swipe *domain.Swipe) error {
 
 	_, err := sr.db.Exec(ctx, saveSwipeQuery,
 		swipe.LobbyID,
-		swipe.PlaceID,
+		swipe.CardID,
 		swipe.UserID,
 		swipe.Type,
 	)
@@ -66,7 +66,7 @@ func (sr *SwipeRepo) GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]
 		var swipe domain.Swipe
 		err := rows.Scan(
 			&swipe.LobbyID,
-			&swipe.PlaceID,
+			&swipe.CardID,
 			&swipe.UserID,
 			&swipe.Type,
 		)
