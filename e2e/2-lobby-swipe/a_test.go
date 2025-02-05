@@ -18,9 +18,12 @@ func TestMain(m *testing.M) {
 		event.UserJoinedEvent,
 		event.SettingsUpdateEvent,
 		event.StartSwipesEvent,
-		event.PlaceEvent,
-		event.VoteAnnounceEvent,
+		event.CardsEvent,
+		event.ResultsEvent,
+		event.MatchEvent,
 	)
+	fw.UseShortener(event.CardsEvent, framework.CardsShortener)
+	fw.UseShortener(event.ResultsEvent, framework.ResultsShortener)
 	fw.TestMain(m)
 }
 
@@ -31,7 +34,7 @@ func Test(t *testing.T) {
 
 	fw.Step("User1 join lobby", func() {
 		cli1.JoinLobby(lobby)
-	}, 3)
+	}, 2)
 
 	fw.Step("Settings update", func() {
 		cli1.Emit(event.SettingsUpdate{
@@ -46,21 +49,27 @@ func Test(t *testing.T) {
 
 	fw.Step("User2 join lobby", func() {
 		cli2.JoinLobby(lobby)
-	}, 5)
+	}, 4)
 
 	fw.Step("Start swipes", func() {
 		cli1.Emit(event.StartSwipes{})
 	}, 4)
 
-	fw.Step("Swipe like and dislike", func() {
+	fw.Step("User1 swipe like (1)", func() {
 		cli1.Emit(event.Swipe{SwipeType: domain.LIKE})
-		cli2.Emit(event.Swipe{SwipeType: domain.DISLIKE})
-	}, 2)
+	}, 3)
 
-	fw.Step("Swipe both likes", func() {
+	fw.Step("User2 swipe dislike (1)", func() {
+		cli2.Emit(event.Swipe{SwipeType: domain.DISLIKE})
+	}, 1)
+
+	fw.Step("User1 swipe like (2)", func() {
 		cli1.Emit(event.Swipe{SwipeType: domain.LIKE})
+	}, 3)
+
+	fw.Step("User2 swipe like (2)", func() {
 		cli2.Emit(event.Swipe{SwipeType: domain.LIKE})
-	}, 4)
+	}, 5)
 
 	assert.NoError(t, cli1.Close())
 	assert.NoError(t, cli2.Close())

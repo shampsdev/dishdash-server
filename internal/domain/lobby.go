@@ -20,9 +20,8 @@ type Lobby struct {
 type LobbyState string
 
 var (
-	InLobby  LobbyState = "lobby"
-	Swiping  LobbyState = "swiping"
-	Finished LobbyState = "finished"
+	InLobby LobbyState = "lobby"
+	Swiping LobbyState = "swiping"
 )
 
 type LobbyType string
