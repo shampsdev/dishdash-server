@@ -8,16 +8,17 @@ SET "settings" = jsonb_build_object(
             'lon', ST_X(l."location"::geometry)::float,
             'lat', ST_Y(l."location"::geometry)::float
         ),
-        'tags', (
+        'tags', COALESCE((
             SELECT jsonb_agg(lt."tag_id")
             FROM "lobby_tag" lt
             WHERE lt."lobby_id" = l."id"
-        ),
+        ), '[]'::jsonb),
         'priceAvg', l."price_avg",
         'recommendation', null
     )
-)
-WHERE EXISTS (SELECT 1 FROM "lobby_tag" lt WHERE lt."lobby_id" = l."id");
+);
+
+ALTER TABLE "lobby" ALTER COLUMN "settings" SET NOT NULL;
 
 ALTER TABLE "lobby" ADD COLUMN "type" VARCHAR(255) DEFAULT 'classicPlaces';
 
