@@ -184,11 +184,10 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 	defer r.lock.Unlock()
 
 	r.connectedUsers[c.User.ID] = c.User
+	c.Log.Debug("user joined lobby")
 	switch r.lobby.State {
 	case domain.InLobby:
-		c.Log.Debug("user joined lobby")
 		r.usersMap[c.User.ID] = c.User
-
 		err := r.syncUsersWithBd(c.Ctx)
 		if err != nil {
 			return fmt.Errorf("failed to sync users with db: %w", err)
@@ -197,12 +196,12 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 	case domain.Swiping:
 		_, has := r.usersMap[c.User.ID]
 		if !has {
-			return fmt.Errorf("user %s is not in lobby", c.User.ID)
+			r.usersMap[c.User.ID] = c.User
 		}
-		c.Log.Debug("user rejoined lobby")
 		r.emitCardsForUser(c, c.User.ID)
 		c.Emit(r.results)
 	}
+	c.Log.Debug("user joined lobby")
 
 	c.BroadcastToOthers(event.UserJoined{
 		ID:     c.User.ID,
@@ -227,7 +226,7 @@ func (r *Room) emitCardsForUser(c *state.Context[*Room], id string) {
 	seen := r.userCardsSeen[id]
 
 	cards := make([]*domain.Place, 0)
-	for seen < swiped+2 && seen < len(r.cards) {
+	for seen < swiped+3 && seen < len(r.cards) {
 		cards = append(cards, r.cards[seen])
 		seen++
 	}

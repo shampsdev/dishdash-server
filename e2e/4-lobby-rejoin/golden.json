@@ -112,7 +112,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-02-04T21:40:38.166938Z",
+                "updatedAt": "2025-02-07T19:03:30.869535Z",
                 "url": null
               },
               {
@@ -148,23 +148,9 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-02-04T21:40:38.166938Z",
+                "updatedAt": "2025-02-07T19:03:30.869535Z",
                 "url": null
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  {
-    "Name": "Swipe dislike",
-    "Events": {
-      "user1": [
-        {
-          "Event": "cards",
-          "Data": {
-            "cards": [
+              },
               {
                 "address": "Сытнинская ул., 4П, Санкт-Петербург",
                 "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
@@ -205,7 +191,64 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-02-04T21:40:38.166938Z",
+                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "url": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Swipe dislike",
+    "Events": {
+      "user1": [
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": [
+              {
+                "address": "Саблинская ул., 12, Санкт-Петербург",
+                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                "id": 3,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9556,
+                  "lon": 30.2658
+                },
+                "priceAvg": 300,
+                "reviewCount": 1000,
+                "reviewRating": 4.7,
+                "shortDescription": "Пекарня, Кондитерская",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
+                "title": "ЛюдиЛюбят",
+                "updatedAt": "2025-02-07T19:03:30.869535Z",
                 "url": null
               }
             ]
@@ -254,7 +297,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-02-04T21:40:38.166938Z",
+              "updatedAt": "2025-02-07T19:03:30.869535Z",
               "url": null
             }
           }
@@ -297,7 +340,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-02-04T21:40:38.166938Z",
+                  "updatedAt": "2025-02-07T19:03:30.869535Z",
                   "url": null
                 },
                 "likes": [
@@ -307,7 +350,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-02-04T21:40:38.179813Z"
+                    "updatedAt": "2025-02-07T19:03:30.883751Z"
                   }
                 ]
               }
@@ -319,33 +362,33 @@
           "Data": {
             "cards": [
               {
-                "address": "Саблинская ул., 12, Санкт-Петербург",
-                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
-                "id": 3,
+                "address": "ул. Кропоткина, 19/8, Санкт-Петербург",
+                "description": "Красиво, вкусно и недорого",
+                "id": 4,
                 "images": [
-                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  "https://avatars.mds.yandex.net/get-altay/922263/2a00000185bf82020b53f168abfbae5e3e17/XXXL"
                 ],
                 "location": {
-                  "lat": 59.9556,
-                  "lon": 30.2658
+                  "lat": 59.9522,
+                  "lon": 30.2555
                 },
-                "priceAvg": 300,
+                "priceAvg": 320,
                 "reviewCount": 1000,
-                "reviewRating": 4.7,
-                "shortDescription": "Пекарня, Кондитерская",
+                "reviewRating": 4.8,
+                "shortDescription": "Лучшая шаверма у ИТМО",
                 "source": "manual",
                 "tags": [
                   {
-                    "icon": "cafe.png",
-                    "id": 2,
-                    "name": "cafe",
+                    "icon": "bar.png",
+                    "id": 1,
+                    "name": "bar",
                     "order": 0,
                     "visible": true
                   },
                   {
-                    "icon": "coffee.png",
-                    "id": 3,
-                    "name": "coffee",
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
                     "order": 0,
                     "visible": true
                   },
@@ -357,8 +400,8 @@
                     "visible": true
                   }
                 ],
-                "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-02-04T21:40:38.166938Z",
+                "title": "Cous-Cous",
+                "updatedAt": "2025-02-07T19:03:30.869535Z",
                 "url": null
               }
             ]
@@ -415,7 +458,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-02-04T21:40:38.166938Z",
+                  "updatedAt": "2025-02-07T19:03:30.869535Z",
                   "url": null
                 },
                 "likes": [
@@ -425,7 +468,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-02-04T21:40:38.179813Z"
+                    "updatedAt": "2025-02-07T19:03:30.883751Z"
                   }
                 ]
               }

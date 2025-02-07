@@ -86,6 +86,10 @@
               {
                 "id": 1,
                 "title": "Пловная"
+              },
+              {
+                "id": 2,
+                "title": "Zoomer Coffee"
               }
             ]
           }
@@ -133,7 +137,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-02-04T21:32:45.707803Z",
+              "updatedAt": "2025-02-07T19:01:01.249703Z",
               "url": null
             }
           }
@@ -162,8 +166,8 @@
           "Data": {
             "cards": [
               {
-                "id": 2,
-                "title": "Zoomer Coffee"
+                "id": 3,
+                "title": "ЛюдиЛюбят"
               }
             ]
           }
@@ -173,8 +177,8 @@
           "Data": {
             "cards": [
               {
-                "id": 3,
-                "title": "ЛюдиЛюбят"
+                "id": 4,
+                "title": "Cous-Cous"
               }
             ]
           }
@@ -222,7 +226,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-04T21:32:45.707803Z",
+              "updatedAt": "2025-02-07T19:01:01.249703Z",
               "url": null
             }
           }
@@ -261,12 +265,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 4,
-                "title": "Cous-Cous"
-              }
-            ]
+            "cards": []
           }
         }
       ]
@@ -280,6 +279,56 @@
     "Name": "User2 join lobby",
     "Events": {
       "user2": [
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": [
+              {
+                "id": 5,
+                "title": "Шавафель"
+              },
+              {
+                "id": 1,
+                "title": "Пловная"
+              },
+              {
+                "id": 2,
+                "title": "Zoomer Coffee"
+              }
+            ]
+          }
+        },
+        {
+          "Event": "results",
+          "Data": {
+            "results": [
+              {
+                "card": {
+                  "id": 2,
+                  "title": "Zoomer Coffee"
+                },
+                "likes": [
+                  {
+                    "id": "id1",
+                    "name": "user1"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "id": 5,
+                  "title": "Шавафель"
+                },
+                "likes": [
+                  {
+                    "id": "id1",
+                    "name": "user1"
+                  }
+                ]
+              }
+            ]
+          }
+        },
         {
           "Event": "userJoined",
           "Data": {
@@ -336,16 +385,8 @@
           "Data": {
             "cards": [
               {
-                "id": 5,
-                "title": "Шавафель"
-              },
-              {
-                "id": 1,
-                "title": "Пловная"
-              },
-              {
-                "id": 2,
-                "title": "Zoomer Coffee"
+                "id": 3,
+                "title": "ЛюдиЛюбят"
               }
             ]
           }
@@ -398,8 +439,8 @@
           "Data": {
             "cards": [
               {
-                "id": 3,
-                "title": "ЛюдиЛюбят"
+                "id": 4,
+                "title": "Cous-Cous"
               }
             ]
           }
@@ -447,7 +488,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-04T21:32:45.707803Z",
+              "updatedAt": "2025-02-07T19:01:01.249703Z",
               "url": null
             }
           }
@@ -502,12 +543,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 4,
-                "title": "Cous-Cous"
-              }
-            ]
+            "cards": []
           }
         }
       ]
