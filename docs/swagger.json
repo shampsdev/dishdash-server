@@ -764,6 +764,12 @@
                 "address": {
                     "type": "string"
                 },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -925,6 +931,12 @@
                 "address": {
                     "type": "string"
                 },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -971,6 +983,12 @@
             "properties": {
                 "address": {
                     "type": "string"
+                },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
                 },
                 "description": {
                     "type": "string"
