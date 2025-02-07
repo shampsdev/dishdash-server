@@ -16,8 +16,7 @@ SET
     "location" = ST_SetSRID(ST_MakePoint(
         ("settings"->'classicPlaces'->'location'->>'lon')::float,
         ("settings"->'classicPlaces'->'location'->>'lat')::float
-    ), 4326)
-WHERE "settings" IS NOT NULL;
+    ), 4326);
 
 INSERT INTO "lobby_tag" ("lobby_id", "tag_id")
 SELECT l.id, jsonb_array_elements_text(l."settings"->'classicPlaces'->'tags')::int
