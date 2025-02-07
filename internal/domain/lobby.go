@@ -5,16 +5,16 @@ import (
 )
 
 type Lobby struct {
-	ID        string
-	State     LobbyState
-	CreatedAt time.Time
+	ID        string     `json:"id"`
+	State     LobbyState `json:"state"`
+	CreatedAt time.Time  `json:"createdAt"`
 
-	Type     LobbyType
-	Settings LobbySettings
+	Type     LobbyType     `json:"type"`
+	Settings LobbySettings `json:"settings"`
 
-	Swipes []*Swipe
-	Users  []*User
-	Places []*Place
+	Swipes []*Swipe `json:"swipes"`
+	Users  []*User  `json:"users"`
+	Places []*Place `json:"places"`
 }
 
 type LobbyState string
