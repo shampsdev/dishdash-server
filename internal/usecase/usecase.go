@@ -44,6 +44,8 @@ type SavePlaceInput struct {
 	ReviewCount      int               `json:"reviewCount"`
 	Source           string            `json:"source"`
 	Url              *string           `json:"url"`
+	Boost            *float64          `json:"boost"`
+	BoostRadius      *float64          `json:"boostRadius"`
 	Images           []string          `json:"images"`
 	Tags             []int64           `json:"tags"`
 }

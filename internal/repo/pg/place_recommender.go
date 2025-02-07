@@ -48,6 +48,8 @@ func (pr *PlaceRecommender) RecommendClassic(
 		p.updated_at,
 		p.source,
 		p.url,
+		p.boost,
+		p.boost_radius,
 		JSON_AGG(
 			JSON_BUILD_OBJECT(
 				'id', t.id,
@@ -62,9 +64,16 @@ func (pr *PlaceRecommender) RecommendClassic(
 	JOIN place_tag pt ON p.id = pt.place_id
 	JOIN tag t ON pt.tag_id = t.id
 	GROUP BY p.id
-	ORDER BY
+	ORDER BY (
 		$6 * (ST_Distance(p.location, ST_GeogFromWkb($7)) ^ $8) +
 		$9 * (ABS(p.price_avg - $10) ^ $11)
+	) / 
+	CASE WHEN p.boost IS NOT NULL AND p.boost_radius IS NOT NULL AND 
+		ST_Distance(p.location, ST_GeogFromWkb($7)) <= p.boost_radius THEN
+			p.boost
+		ELSE
+			1
+		END;
 	`
 
 	return pr.queryPlaces(ctx, query,
@@ -96,7 +105,7 @@ func (pr *PlaceRecommender) queryPlaces(ctx context.Context, query string, param
 			&place.Description, &imagesStr, &loc,
 			&place.Address, &place.PriceAvg, &place.ReviewRating,
 			&place.ReviewCount, &place.UpdatedAt, &place.Source,
-			&place.Url, &tagsJSON,
+			&place.Url, &place.Boost, &place.BoostRadius, &tagsJSON,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)

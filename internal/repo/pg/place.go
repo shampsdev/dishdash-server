@@ -47,8 +47,10 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		"review_count",
 		"updated_at",
 	    "source",
-		"url"
-	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9, $10, $11, $12)
+		"url",
+		"boost",
+		"boost_radius"
+	) VALUES ($1, $2, $3, $4, GeomFromEWKB($5), $6, $7, $8, $9, $10, $11, $12, $13, $14)
 	RETURNING "id"
 `
 
@@ -66,6 +68,8 @@ func (pr *PlaceRepo) SavePlace(ctx context.Context, place *domain.Place) (int64,
 		place.UpdatedAt,
 		place.Source,
 		place.Url,
+		place.Boost,
+		place.BoostRadius,
 	)
 
 	var id int64
@@ -91,7 +95,9 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 	  "updated_at" = $10,
 	  "source" = $11,
 	  "url" = $12
-	WHERE "id" = $13
+	  "boost" = $13,
+	  "boost_radius" = $14
+	WHERE "id" = $15
   `
 	place.UpdatedAt = time.Now().UTC()
 	_, err := pr.db.Exec(ctx, updateQuery,
@@ -107,6 +113,8 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 		place.UpdatedAt,
 		place.Source,
 		place.Url,
+		place.Boost,
+		place.BoostRadius,
 		place.ID,
 	)
 	if err != nil {
@@ -144,6 +152,8 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 		p.updated_at, 
 		p.source,
 		p.url,
+		p.boost,
+		p.boost_radius,
 		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
 	FROM "place" AS p
 	JOIN "place_tag" AS pt ON p.id = pt.place_id 
@@ -175,6 +185,8 @@ func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Pla
 		p.updated_at, 
 		p.source,
 		p.url,
+		p.boost,
+		p.boost_radius,
 		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
 	FROM "place" AS p
 	JOIN "place_tag" AS pt ON p.id = pt.place_id 
@@ -210,6 +222,8 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 		p.updated_at, 
 		p.source,
 		p.url,
+		p.boost,
+		p.boost_radius,
 		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
 	FROM "place" AS p
 	JOIN "place_tag" AS pt ON p.id = pt.place_id 
@@ -283,6 +297,8 @@ func (pr *PlaceRepo) GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]
 		p.updated_at,
 		p.source,
 		p.url,
+		p.boost,
+		p.boost_radius,
 		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
 	FROM "place" AS p
 	JOIN "place_tag" AS pt ON p.id = pt.place_id 
@@ -345,6 +361,8 @@ func (pr *PlaceRepo) GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby)
 			p.updated_at,
 			p.source,
 			p.url,
+			p.boost,
+			p.boost_radius,
 			JSON_AGG(
 				JSON_BUILD_OBJECT(
 					'id', t.id,
@@ -429,6 +447,8 @@ func scanPlace(s Scanner) (*domain.Place, error) {
 		&p.UpdatedAt,
 		&p.Source,
 		&p.Url,
+		&p.Boost,
+		&p.BoostRadius,
 		&tagsJSON,
 	)
 	if err != nil {

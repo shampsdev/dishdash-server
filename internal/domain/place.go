@@ -19,6 +19,9 @@ type Place struct {
 	UpdatedAt        time.Time  `json:"updatedAt"`
 	Source           string     `json:"source"`
 	Url              *string    `json:"url"`
+
+	Boost       *float64 `json:"boost"`
+	BoostRadius *float64 `json:"boostRadius"`
 }
 
 func (place Place) Equals(other *Place) bool {

@@ -772,6 +772,12 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -933,6 +939,12 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -979,6 +991,12 @@ const docTemplate = `{
             "properties": {
                 "address": {
                     "type": "string"
+                },
+                "boost": {
+                    "type": "number"
+                },
+                "boostRadius": {
+                    "type": "number"
                 },
                 "description": {
                     "type": "string"
