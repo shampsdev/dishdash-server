@@ -70,6 +70,7 @@ type Lobby interface {
 	SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
 	SetLobbyUsers(ctx context.Context, lobbyID string, userIDs []string) ([]*domain.User, error)
+	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 }
 
 type Swipe interface {

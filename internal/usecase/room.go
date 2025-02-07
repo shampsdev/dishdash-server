@@ -321,7 +321,7 @@ func (r *Room) OnStartSwipes(c *state.Context[*Room], ev event.StartSwipes) erro
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
-	c.Log.Debug("Request started: Action 'StartSwipes' initiated")
+	c.Log.Debug("Starting swipes")
 
 	var err error
 	r.cards, err = r.placeRecommender.RecommendPlaces(c.Ctx,
@@ -331,13 +331,21 @@ func (r *Room) OnStartSwipes(c *state.Context[*Room], ev event.StartSwipes) erro
 		c.Log.WithError(err).Error("Action 'GetPlacesForLobby' failed")
 		return err
 	}
-	c.Log.Debug("Request successful: Action 'GetPlacesForLobby' completed")
+	c.Log.Debugf("Get %d places from recommender", len(r.cards))
+
+	err = r.lobbyUseCase.AttachPlacesToLobby(c.Ctx,
+		algo.Map(r.cards, func(p *domain.Place) int64 { return p.ID }),
+		r.lobby.ID,
+	)
+	if err != nil {
+		return fmt.Errorf("error while attaching places to lobby: %w", err)
+	}
+	c.Log.Debugf("Attached %d places to lobby", len(r.cards))
 
 	err = r.updateLobbySettings(c.Ctx, r.lobby.Settings)
 	if err != nil {
 		return fmt.Errorf("error while updating lobby settings: %w", err)
 	}
-	c.Log.Debug("Request successful: Action 'UpdateLobby' completed")
 
 	log.Info("Swipes successfully started")
 	err = r.setState(domain.Swiping)
