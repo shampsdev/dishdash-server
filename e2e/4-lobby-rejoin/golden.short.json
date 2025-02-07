@@ -155,7 +155,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-02-07T19:03:30.869535Z",
+              "updatedAt": "2025-02-07T20:07:05.992138Z",
               "url": null
             }
           }
@@ -200,7 +200,20 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": []
+            "cards": [
+              {
+                "id": 2,
+                "title": "Zoomer Coffee"
+              },
+              {
+                "id": 3,
+                "title": "ЛюдиЛюбят"
+              },
+              {
+                "id": 4,
+                "title": "Cous-Cous"
+              }
+            ]
           }
         },
         {

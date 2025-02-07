@@ -197,7 +197,10 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 		_, has := r.usersMap[c.User.ID]
 		if !has {
 			r.usersMap[c.User.ID] = c.User
+			r.userCardsSeen[c.User.ID] = 0
+			r.userSwiped[c.User.ID] = 0
 		}
+		r.userCardsSeen[c.User.ID] = r.userSwiped[c.User.ID]
 		r.emitCardsForUser(c, c.User.ID)
 		c.Emit(r.results)
 	}

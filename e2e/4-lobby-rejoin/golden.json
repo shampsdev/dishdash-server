@@ -112,7 +112,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
                 "url": null
               },
               {
@@ -148,7 +148,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
                 "url": null
               },
               {
@@ -191,7 +191,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
                 "url": null
               }
             ]
@@ -248,7 +248,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
                 "url": null
               }
             ]
@@ -297,7 +297,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-02-07T19:03:30.869535Z",
+              "updatedAt": "2025-02-07T20:07:05.992138Z",
               "url": null
             }
           }
@@ -340,7 +340,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-02-07T19:03:30.869535Z",
+                  "updatedAt": "2025-02-07T20:07:05.992138Z",
                   "url": null
                 },
                 "likes": [
@@ -350,7 +350,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-02-07T19:03:30.883751Z"
+                    "updatedAt": "2025-02-07T20:07:06.008994Z"
                   }
                 ]
               }
@@ -401,7 +401,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-02-07T19:03:30.869535Z",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
                 "url": null
               }
             ]
@@ -417,7 +417,137 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": []
+            "cards": [
+              {
+                "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
+                "id": 2,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/777564/2a0000018789d73e0d0447c04671d4f00971/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9606,
+                  "lon": 30.2871
+                },
+                "priceAvg": 120,
+                "reviewCount": 1000,
+                "reviewRating": 4.6,
+                "shortDescription": "Лучший кофе у ИТМО",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
+                "title": "Zoomer Coffee",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
+                "url": null
+              },
+              {
+                "address": "Саблинская ул., 12, Санкт-Петербург",
+                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                "id": 3,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9556,
+                  "lon": 30.2658
+                },
+                "priceAvg": 300,
+                "reviewCount": 1000,
+                "reviewRating": 4.7,
+                "shortDescription": "Пекарня, Кондитерская",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
+                "title": "ЛюдиЛюбят",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
+                "url": null
+              },
+              {
+                "address": "ул. Кропоткина, 19/8, Санкт-Петербург",
+                "description": "Красиво, вкусно и недорого",
+                "id": 4,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/922263/2a00000185bf82020b53f168abfbae5e3e17/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9522,
+                  "lon": 30.2555
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.8,
+                "shortDescription": "Лучшая шаверма у ИТМО",
+                "source": "manual",
+                "tags": [
+                  {
+                    "icon": "bar.png",
+                    "id": 1,
+                    "name": "bar",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
+                "title": "Cous-Cous",
+                "updatedAt": "2025-02-07T20:07:05.992138Z",
+                "url": null
+              }
+            ]
           }
         },
         {
@@ -458,7 +588,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-02-07T19:03:30.869535Z",
+                  "updatedAt": "2025-02-07T20:07:05.992138Z",
                   "url": null
                 },
                 "likes": [
@@ -468,7 +598,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-02-07T19:03:30.883751Z"
+                    "updatedAt": "2025-02-07T20:07:06.008994Z"
                   }
                 ]
               }
