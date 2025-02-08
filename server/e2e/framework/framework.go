@@ -8,7 +8,7 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/e2e/framework/session"
-	"dishdash.ru/internal/domain"
+	"dishdash.ru/pkg/domain"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"

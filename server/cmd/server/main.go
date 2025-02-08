@@ -8,13 +8,13 @@ import (
 	"os"
 	"os/signal"
 
-	"dishdash.ru/internal/repo/pg"
-	"dishdash.ru/internal/usecase"
+	"dishdash.ru/pkg/repo/pg"
+	"dishdash.ru/pkg/usecase"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"dishdash.ru/cmd/server/config"
-	server "dishdash.ru/internal/gateways"
+	server "dishdash.ru/pkg/gateways"
 	log "github.com/sirupsen/logrus"
 )
 

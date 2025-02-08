@@ -1,8 +1,8 @@
 package framework
 
 import (
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase/event"
+	"dishdash.ru/pkg/domain"
+	"dishdash.ru/pkg/usecase/event"
 	socketio "github.com/googollee/go-socket.io"
 	log "github.com/sirupsen/logrus"
 )

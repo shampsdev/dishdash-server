@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase"
+	"dishdash.ru/pkg/domain"
+	"dishdash.ru/pkg/usecase"
 )
 
 func (fw *Framework) postUserWithID(user *domain.User) (*domain.User, error) {

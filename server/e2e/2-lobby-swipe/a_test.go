@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"dishdash.ru/e2e/framework"
-	"dishdash.ru/internal/domain"
-	"dishdash.ru/internal/usecase/event"
+	"dishdash.ru/pkg/domain"
+	"dishdash.ru/pkg/usecase/event"
 
 	"github.com/stretchr/testify/assert"
 )

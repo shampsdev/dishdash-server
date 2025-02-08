@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"dishdash.ru/internal/domain"
+	"dishdash.ru/pkg/domain"
 )
 
 type Session struct {

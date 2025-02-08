@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"dishdash.ru/cmd/server/config"
-	"dishdash.ru/internal/repo/pg"
+	"dishdash.ru/pkg/repo/pg"
 )
 
 func (fw *Framework) SetupDB() error {

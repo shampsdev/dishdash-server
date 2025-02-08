@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"dishdash.ru/e2e/framework/session"
-	"dishdash.ru/internal/usecase/event"
+	"dishdash.ru/pkg/usecase/event"
 	"github.com/stretchr/testify/assert"
 )
 
