@@ -31,9 +31,8 @@ type Place interface {
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 
 	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
-	AttachPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
-	GetPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
-	GetPlacesForLobby(ctx context.Context, lobby *domain.Lobby) ([]*domain.Place, error)
+	AttachOrderedPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
+	GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
 }
 
 type PlaceRecommender interface {

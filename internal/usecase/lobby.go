@@ -73,7 +73,7 @@ func (l LobbyUseCase) SetLobbySettings(ctx context.Context, lobbyInput UpdateLob
 		return nil, err
 	}
 
-	err = l.pRepo.AttachPlacesToLobby(ctx, lobbyInput.Places, lobby.ID)
+	err = l.pRepo.AttachOrderedPlacesToLobby(ctx, lobbyInput.Places, lobby.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func (l LobbyUseCase) GetLobbyByID(ctx context.Context, id string) (*domain.Lobb
 		return nil, err
 	}
 
-	lobby.Places, err = l.pRepo.GetPlacesByLobbyID(ctx, id)
+	lobby.Places, err = l.pRepo.GetOrderedPlacesByLobbyID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
