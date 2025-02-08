@@ -18,7 +18,7 @@ import (
 // @Param telegram path string true "Telegram number"
 // @Success 200 {object} domain.User "User data"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /users/telegram/{telegram} [get]
 func GetUserByTelegram(userUseCase usecase.User) gin.HandlerFunc {
 	return func(c *gin.Context) {

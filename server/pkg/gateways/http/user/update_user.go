@@ -19,7 +19,7 @@ import (
 // @Param user body domain.User true "User data"
 // @Success 200 {object} domain.User "Updated user"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /users [put]
 func UpdateUser(userUseCase usecase.User) gin.HandlerFunc {
 	return func(c *gin.Context) {

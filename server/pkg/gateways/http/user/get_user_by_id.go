@@ -17,7 +17,7 @@ import (
 // @Param id path string true "User ID"
 // @Success 200 {object} domain.User "User data"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /users/{id} [get]
 func GetUserByID(userUseCase usecase.User) gin.HandlerFunc {
 	return func(c *gin.Context) {

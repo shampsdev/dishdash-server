@@ -17,7 +17,7 @@ import (
 // @Param id path string true "lobby id"
 // @Success 200
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
 // @Router /lobbies/{id} [delete]
 func DeleteLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {

@@ -19,7 +19,7 @@ import (
 // @Param url query string true "place url"
 // @Success 200 {object} usecase.Place "place data"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
 // @Router /place/by_url [get]
 func GetPlaceByURL(placeUseCase usecase.Place) gin.HandlerFunc {

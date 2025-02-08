@@ -18,7 +18,7 @@ import (
 // @Param tag body domain.Tag true "Tag data"
 // @Success 200 {object} domain.Tag "Updated tag"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /places/tag [put]
 // @Security ApiKeyAuth
 func UpdateTag(tagUseCase usecase.Tag) gin.HandlerFunc {

@@ -17,7 +17,7 @@ import (
 // @Param lobby body usecase.SaveLobbyInput true "lobby data"
 // @Success 200 {object} usecase.LobbyOutput "Saved lobby"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /lobbies [post]
 func SaveLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {

@@ -18,7 +18,7 @@ import (
 // @Param location body domain.Coordinate true "Location"
 // @Success 200 {object} nearestLobbyOutput "Nearest lobby + Distance (in metres)"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /lobbies/nearest [post]
 func NearestLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {

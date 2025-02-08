@@ -19,7 +19,7 @@ import (
 // @Param tag body domain.Tag true "Tag data"
 // @Success 200 {object} domain.Tag "Saved tag"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
 // @Router /places/tag [post]
 func CreateTag(tagUseCase usecase.Tag) gin.HandlerFunc {

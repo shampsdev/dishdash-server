@@ -17,7 +17,7 @@ import (
 // @Param place body usecase.UpdatePlaceInput true "Place data"
 // @Success 200 {object} domain.Place "Updated place"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
 // @Router /places [put]
 func UpdatePlace(placeUseCase usecase.Place) gin.HandlerFunc {

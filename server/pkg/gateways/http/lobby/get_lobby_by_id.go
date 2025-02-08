@@ -17,7 +17,7 @@ import (
 // @Param id path string true "lobby ID"
 // @Success 200 {object} usecase.LobbyOutput "lobby data"
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Router /lobbies/{id} [get]
 func GetLobbyByID(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
 	return func(c *gin.Context) {

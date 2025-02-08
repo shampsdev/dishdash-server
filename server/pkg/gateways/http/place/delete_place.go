@@ -18,7 +18,7 @@ import (
 // @Param id path string true "Place ID"
 // @Success 200
 // @Failure 400 "Bad Request"
-// @Failure 500 "pkg Server Error"
+// @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
 // @Router /places/{id} [delete]
 func DeletePlace(placeUseCase usecase.Place) gin.HandlerFunc {
