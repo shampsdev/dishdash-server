@@ -2,9 +2,9 @@ package framework
 
 import (
 	"dishdash.ru/e2e/framework/session"
+	"dishdash.ru/pkg/algo"
 	"dishdash.ru/pkg/domain"
 	"dishdash.ru/pkg/usecase/event"
-	"dishdash.ru/pkg/algo"
 )
 
 type H = map[string]any
