@@ -1,0 +1,26 @@
+package http
+
+import (
+	"dashboard.dishdash.ru/docs"
+	"dashboard.dishdash.ru/pkg/gateways/http/middlewares"
+	"dashboard.dishdash.ru/pkg/gateways/http/photo"
+	"dashboard.dishdash.ru/pkg/gateways/http/place"
+	"dishdash.ru/pkg/usecase"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
+
+func setupRouter(s *Server, useCases usecase.Cases) {
+	s.Router.HandleMethodNotAllowed = true
+	s.Router.Use(middlewares.AllowOriginMiddleware())
+
+	v1 := s.Router.Group("/api/v1")
+	v1.Use(middlewares.Logger())
+	{
+		place.SetupHandlers(v1, useCases)
+		photo.SetupHandlers(v1)
+	}
+
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+}
