@@ -70,8 +70,8 @@ jobs:
         id: push
         uses: docker/build-push-action@v5
         with:
-          context: ./${{ inputs.build_path }}
-          file: ./${{ inputs.build_path }}/Dockerfile
+          context: ./${{ inputs.context_path }}
+          file: ./${{ inputs.dockerfile_path }}/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ env.VERSION_TAG }}
