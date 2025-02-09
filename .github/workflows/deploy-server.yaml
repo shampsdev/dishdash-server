@@ -22,7 +22,8 @@ jobs:
       attestations: write
       id-token: write
     with:
-      build_path: 'server'
+      dockerfile_path: 'server'
+      context_path: 'server'
       image_name: 'dishdash-backend'
       environment: ${{ github.event.inputs.environment }}
     secrets: inherit
