@@ -18,7 +18,7 @@ jobs:
       attestations: write
       id-token: write
     with:
-      dockerfile_path: 'dasboard'
+      dockerfile_path: 'dashboard'
       context_path: '.'
       image_name: 'dishdash-dashboard-backend'
       environment: ${{ github.event.inputs.environment }}
