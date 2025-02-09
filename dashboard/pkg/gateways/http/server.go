@@ -11,6 +11,7 @@ import (
 	"dishdash.ru/pkg/usecase"
 
 	"github.com/gin-gonic/gin"
+	"github.com/penglongli/gin-metrics/ginmetrics"
 	"github.com/tj/go-spin"
 
 	"golang.org/x/sync/errgroup"
@@ -26,6 +27,10 @@ type Server struct {
 func NewServer(useCases usecase.Cases) *Server {
 	r := gin.New()
 	r.Use(gin.Recovery())
+
+	m := ginmetrics.GetMonitor()
+	m.SetMetricPath("/metrics")
+	m.Use(r)
 
 	s := &Server{
 		Router: r,
