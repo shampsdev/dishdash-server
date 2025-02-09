@@ -106,6 +106,8 @@
           "Data": {
             "card": {
               "address": "Кронверкский проспект, 27",
+              "boost": null,
+              "boostRadius": null,
               "description": "Вкусная сырная шаверма и не только",
               "id": 5,
               "images": [
@@ -137,7 +139,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-02-07T19:01:01.249703Z",
+              "updatedAt": "2025-02-09T21:35:49.407399Z",
               "url": null
             }
           }
@@ -188,6 +190,8 @@
           "Data": {
             "card": {
               "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "boost": null,
+              "boostRadius": null,
               "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
               "id": 2,
               "images": [
@@ -226,7 +230,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-07T19:01:01.249703Z",
+              "updatedAt": "2025-02-09T21:35:49.407399Z",
               "url": null
             }
           }
@@ -450,6 +454,8 @@
           "Data": {
             "card": {
               "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "boost": null,
+              "boostRadius": null,
               "description": "Лучший кофе у ИТМО от Стаса. Вкусные зумер-сендвичи и зумер-доги.",
               "id": 2,
               "images": [
@@ -488,7 +494,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-02-07T19:01:01.249703Z",
+              "updatedAt": "2025-02-09T21:35:49.407399Z",
               "url": null
             }
           }
