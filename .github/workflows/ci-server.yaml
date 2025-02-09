@@ -1,0 +1,47 @@
+name: ci-server
+
+
+on: 
+  workflow_call:
+  push:
+    paths:
+      - 'server/**'
+  pull_request:
+    paths:
+      - 'server/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Build
+        run: |
+          go mod tidy
+          go build -v ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: v1.60.3
+          working-directory: ./server
+      
+      - name: Unit test
+        run: |
+          go mod tidy
+          go test -v ./...
+
+      - name: E2E Test
+        run: |
+          go mod tidy
+          cd e2e && make e2e
