@@ -1,0 +1,23 @@
+name: deploy-server
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: Deploy to DEV/PROD (should be DEV or PROD)
+        type: choice
+        options: [DEV, PROD]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-server.yaml
+
+  deploy:
+    uses: ./.github/workflows/deploy.yaml
+    needs: [ci]
+    with:
+      build_path: 'server'
+      image_name: 'dishdash-backend'
+      environment: ${{ github.event.inputs.environment }}
+    secrets: inherit

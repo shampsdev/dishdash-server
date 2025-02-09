@@ -1,14 +1,30 @@
-name: CD Dev
+name: deploy
 
-on: [workflow_dispatch]
+on:
+  workflow_call:
+    inputs:
+      build_path:
+        required: true
+        type: string
+        description: path to subfolder to build (server/dashboard/etc)
+        default: "server"
+      image_name:
+        required: true
+        type: string
+        description: name of docker image
+      environment:
+        required: true
+        description: Pushing to DEV/PROD (should be DEV or PROD)
+        type: string
+        default: "DEV"
+    secrets:
+      SERVICE_HASH:
+        required: true
+        description: name of service hash
 
 jobs:
-  ci:
-    uses: ./.github/workflows/ci.yaml
-
   push_to_registry:
     name: Push Docker image to Docker Hub
-    needs: [ci]
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -16,6 +32,12 @@ jobs:
       attestations: write
       id-token: write
     steps:
+      - name: Fail if not on main branch or release tag
+        if: inputs.environment == 'PROD' && github.ref != 'refs/heads/main'
+        run: |
+          echo "This workflow should only run on the 'main' branch."
+          exit 1
+
       - name: Check out the repo
         uses: actions/checkout@v4
 
@@ -31,27 +53,34 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Define Docker tags
+        run: |
+          if [ "${{ inputs.environment }}" == "DEV" ]; then
+              echo "VERSION_TAG=dev" >> $GITHUB_ENV
+          elif [ "${{ inputs.environment }}" == "PROD" ]; then
+              echo "VERSION_TAG=latest" >> $GITHUB_ENV
+          fi
+
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./${{ inputs.build_path }}
+          file: ./${{ inputs.build_path }}/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:dev
-            ${{ secrets.DOCKER_USERNAME }}/dishdash-backend:${{ env.COMMIT_SHORT_SHA }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ env.VERSION_TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ env.COMMIT_SHORT_SHA }}
 
       - name: Docker hub push notification
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "[DEV] Docker image sent: ${{ env.COMMIT_SHORT_SHA }}"
+          title: "[${{ inputs.environment }}] Docker image pushed: ${{ inputs.image_name }}:${{ env.COMMIT_SHORT_SHA }}"
           message: |
             ✅ Docker image for commit: ${{ github.sha }} has been successfully built and pushed to Docker Hub.  
-            Branches/tags: dev, ${{ env.COMMIT_SHORT_SHA }}.
-            
-            Repository: ${{ github.repository }}
+            Branches/tags: ${{ env.VERSION_TAG }}, ${{ env.COMMIT_SHORT_SHA }}.
+
             Commit url: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             
             Triggering portainer webhook...
@@ -61,7 +90,7 @@ jobs:
         shell: bash
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH_DEV }}?tag=dev")
+            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH }}?tag=${{ env.VERSION_TAG }}")
 
           if [ "$response" -ne 204 ]; then
             echo "Error: expected 204, but got $response"
@@ -73,22 +102,23 @@ jobs:
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Deployment of ${{ env.COMMIT_SHORT_SHA }} has been successfully started"
+          title: "[${{ inputs.environment }}]  Deployment of ${{ inputs.image_name }}:${{ env.COMMIT_SHORT_SHA }}has been successfully started"
           message: |
             ✅ Container has been successfully updated via Portainer.  
-            Commit: ${{ github.sha }}
-            Repository: ${{ github.repository }}
-            
+
             Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Shoutrrr - fail
         if: ${{ failure() }}
         uses: containrrr/shoutrrr-action@v1
         with:
           url: telegram://${{ secrets.ALERTS_TELEGRAM_HTTP_API_TOKEN }}@telegram/?channels=${{ secrets.ALERTS_CHAT_ID }}
-          title: "Deployment failed"
+          title: "[${{ inputs.environment }}] Deployment failed"
           message: |
-            ❌ An error occurred during deployment for commit ${{ github.sha }}.
-            Repository: ${{ github.repository }}
+            ❌ An error occurred during deployment for ${{ inputs.image_name }}:${{ env.COMMIT_SHORT_SHA }}.
+            
+            Link to commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
             Check the pipeline logs for details.

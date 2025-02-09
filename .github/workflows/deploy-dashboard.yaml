@@ -1,0 +1,19 @@
+name: deploy-dashboard
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: Deploy to DEV/PROD (should be DEV or PROD)
+        type: choice
+        options: [DEV, PROD]
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      build_path: 'dashboard'
+      image_name: 'dishdash-dashboard'
+      environment: ${{ github.event.inputs.environment }}
+    secrets: inherit
