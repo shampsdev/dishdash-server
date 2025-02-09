@@ -1,10 +1,10 @@
-name: CD Dev old
+name: CD Dev
 
 on: [workflow_dispatch]
 
 jobs:
   ci:
-    uses: ./.github/workflows/ci-old.yaml
+    uses: ./.github/workflows/ci.yaml
 
   push_to_registry:
     name: Push Docker image to Docker Hub
