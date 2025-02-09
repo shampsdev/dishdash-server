@@ -5,6 +5,7 @@ import (
 
 	"dishdash.ru/pkg/usecase"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 // GetAllPlaces godoc
@@ -22,6 +23,7 @@ func GetAllPlaces(placeUseCase usecase.Place) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		places, err := placeUseCase.GetAllPlaces(c)
 		if err != nil {
+			log.WithError(err).Error("failed to get places")
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
