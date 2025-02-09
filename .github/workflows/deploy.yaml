@@ -22,10 +22,10 @@ on:
         description: Pushing to DEV/PROD (should be DEV or PROD)
         type: string
         default: "DEV"
-    secrets:
-      SERVICE_HASH:
+      secret-service-hash:
         required: true
-        description: name of service hash
+        description: name of secret value
+        type: string
 
 jobs:
   push_to_registry:
@@ -95,7 +95,7 @@ jobs:
         shell: bash
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets.SERVICE_HASH }}?tag=${{ env.VERSION_TAG }}")
+            -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}/${{ secrets[inputs.secret-service-hash] }}?tag=${{ env.VERSION_TAG }}")
 
           if [ "$response" -ne 204 ]; then
             echo "Error: expected 204, but got $response"

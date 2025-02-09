@@ -21,9 +21,10 @@ jobs:
       contents: read
       attestations: write
       id-token: write
+    secrets: inherit
     with:
       dockerfile_path: 'server'
       context_path: 'server'
       image_name: 'dishdash-backend'
       environment: ${{ github.event.inputs.environment }}
-    secrets: inherit
+      secret-service-hash: ${{ github.event.inputs.environment == 'PROD' && 'SERVER_SERVICE_HASH' || 'SERVER_SERVICE_HASH_DEV' }}
