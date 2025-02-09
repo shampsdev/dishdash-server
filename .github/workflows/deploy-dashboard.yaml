@@ -19,6 +19,6 @@ jobs:
       id-token: write
     with:
       build_path: 'dashboard'
-      image_name: 'dishdash-dashboard'
+      image_name: 'dishdash-dashboard-backend'
       environment: ${{ github.event.inputs.environment }}
     secrets: inherit
