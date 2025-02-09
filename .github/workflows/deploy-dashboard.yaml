@@ -1,0 +1,26 @@
+name: deploy-dashboard
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: Deploy to DEV/PROD (should be DEV or PROD)
+        type: choice
+        options: [DEV, PROD]
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yaml
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    secrets: inherit
+    with:
+      dockerfile_path: 'dashboard'
+      context_path: '.'
+      image_name: 'dishdash-dashboard-backend'
+      environment: ${{ github.event.inputs.environment }}
+      secret-service-hash: ${{ github.event.inputs.environment == 'PROD' && 'DASHBOARD_SERVICE_HASH' || 'DASHBOARD_SERVICE_HASH_DEV' }}
