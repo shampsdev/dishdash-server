@@ -12,6 +12,11 @@ on:
 jobs:
   deploy:
     uses: ./.github/workflows/deploy.yaml
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
     with:
       build_path: 'dashboard'
       image_name: 'dishdash-dashboard'

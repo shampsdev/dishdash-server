@@ -16,6 +16,11 @@ jobs:
   deploy:
     uses: ./.github/workflows/deploy.yaml
     needs: [ci]
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
     with:
       build_path: 'server'
       image_name: 'dishdash-backend'
