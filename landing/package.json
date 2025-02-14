@@ -19,6 +19,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
+    "vue-confetti-explosion": "^1.0.2",
     "vue3-touch-events": "^4.1.8"
   },
   "devDependencies": {

@@ -1,22 +1,21 @@
 <template>
   <div ref="animatedDiv" class="w-full h-screen flex flex-col justify-center text-white fade-in">
     <div class="-translate-y-10 flex h-4/5 flex-col justify-around items-center text-center">
-      <div class="space-y-4">
-        <h1 class="text-5xl text-white">DishDash</h1>
-        <p>Сервис быстрого поиска места<br /> для встречи с друзьями</p>
-      </div>
-      <img src="./assets/radar.png" class="h-64 md:h-96" />
-      <p>Заполните форму,<br /> чтобы протестировать бета-версию</p>
-      <a href="https://forms.gle/S2JPfT3kVrbNDGqNA">
-        <Button class="rounded-3xl" size="lg" variant="secondary">Оставить заявку</Button>
+      <ConfettiExplosion :particleCount="500" :force="0.9"/>
+      <img src="./assets/man.png"  />
+      <p>Переходите в бота</p>
+      <a href="https://t.me/dishdash_bot?start=landing">
+        <Button class="rounded-3xl" size="lg" variant="secondary">В БОТА</Button>
       </a>
     </div>
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
+import ConfettiExplosion from "vue-confetti-explosion";
 
 const animatedDiv = ref(null);
 
