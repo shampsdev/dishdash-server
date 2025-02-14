@@ -3,24 +3,40 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Person from '@/entitites/person.vue';
 import { Card } from '@/components/ui/card'
 import { IPerson } from '@/entitites/person.interface';
-import mike from './assets/mike.jpg'
-import mityaiii from './assets/mityaiii.jpg'
-import vika from './assets/vika.jpg'
-import sasha from './assets/sasha.jpg'
-import ivan from './assets/vanya.jpg'
+import danya from './assets/danya.png'
+import mike from './assets/mike.png'
+import nastya from './assets/nastya.png'
+import sasha from './assets/sasha.png'
+import timur from './assets/timur.png'
+import ivan from './assets/vanya.png'
+import vika from './assets/vika.png'
 
 const people: IPerson[] = [{
   name: "Мишель",
   surname: "де Джефрой",
   image: mike,
   telegram: "https://t.me/mikedegeofroy",
-  role: "Frontend"
+  role: "CEO/Frontend"
 },
 {
   name: "Александр",
   surname: "Дьяконов",
   image: sasha,
   telegram: "https://t.me/keine_salz",
+  role: "CEO/DevOps"
+},
+{
+  name: "Анастасия",
+  surname: "Богданова",
+  image: nastya,
+  telegram: "https://t.me/learn_how_to_use_a_cart",
+  role: "PM"
+},
+{
+  name: "Иван",
+  surname: "Тарасов",
+  image: ivan,
+  telegram: "https://t.me/vaniog",
   role: "Backend"
 },
 {
@@ -31,18 +47,18 @@ const people: IPerson[] = [{
     role: "Design"
 },
 {
-  name: "Дмитрий",
-  surname: "Мамченко",
-  image: mityaiii,
-  telegram: "https://t.me/aliasmityai",
-  role: "Frontend"
+  name: "Данил",
+  surname: "Зиндуль",
+  image: danya,
+  telegram: "https://t.me/dzindul",
+  role: "PR"
 },
 {
-  name: "Иван",
-  surname: "Тарасов",
-  image: ivan,
-  telegram: "https://t.me/vaniog",
-  role: "Backend"
+  name: "Тимур",
+  surname: "Валеев",
+  image: timur,
+  telegram: "https://t.me/Priest_Faria",
+  role: "Frontend"
 }
 ]
 </script>
