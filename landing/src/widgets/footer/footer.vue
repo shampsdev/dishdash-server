@@ -1,22 +1,31 @@
 <template>
-  <footer class="max-w-[600px] w-[90%] mx-auto">
-    <div class="flex text-center text-white space-y-4 flex-col items-center py-10 md:py-20">
-      <img class="w-40" src="./assets/dishdash-footer.png" />
+  <footer class="max-w-[600px] w-[90%] mx-auto bg-black py-2 md:py-10 rounded-lg shadow-lg">
+    <div class="flex text-center text-white flex-col items-center">
+      <img class="w-48 md:w-72 mb-10" src="./assets/dishdash-footer.png" alt="Логотип DishDash" />
 
-      <p>
-        Заполните форму, чтобы<br />
-        протестировать бета-версию
-      </p>
+      <h2 class="text-xl font-semibold mb-2">Контакты:</h2>
 
-      <p>
-        Наш телеграм канал:<br />
-        <a href="https://t.me/shampiniony">@shampiniony</a><br />
-      </p>
+      <div class="space-y-2">
+        <p class="text-gray-300">
+          Напишите в бота: 
+          <a href="https://t.me/dishdash_bot?start=landing" class="text-blue-400">@dishdash_bot</a>
+        </p>
 
-      <p>
-        Наши контакты:<br />
-        <a href="https://t.me/shampiniony">@officialshampiniony</a><br />
-      </p>
+        <p class="text-gray-300">
+          Присоединяйтесь к нашему каналу: 
+          <a href="https://t.me/shampsdev" class="text-blue-400">@shampsdev</a>
+        </p>
+
+        <p class="text-gray-300">
+          Узнайте о нас больше: 
+          <a href="https://shamps.dev" class="text-blue-400">Наш сайт</a>
+        </p>
+
+        <p class="text-gray-300">
+          Напишите нам на почту: 
+          <a href="mailto:team@shamps.dev" class="text-blue-400">team@shamps.dev</a>
+        </p>
+      </div>
     </div>
   </footer>
 </template>
