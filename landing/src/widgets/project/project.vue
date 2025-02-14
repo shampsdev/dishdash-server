@@ -2,7 +2,6 @@
   <div class="min-h-screen w-full rounded-3xl bg-white py-10 md:py-20 -translate-y-4">
     <div class="flex gap-y-8 flex-col max-w-[600px] w-[90%] mx-auto items-center">
       <div ref="aboutProject" class="fade-in"><AboutProject/></div>
-      <AboutPossibilities/>
       <div ref="aboutCommand" class="fade-in"><AboutCommand/></div>
     </div>
   </div>
@@ -11,7 +10,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import AboutCommand from '@/features/about-command/about-command.vue';
-import AboutPossibilities from '@/features/about-posibilities/about-possibilities.vue';
 import AboutProject from '@/features/about-project/about-project.vue';
 
 const aboutProject = ref(null);
