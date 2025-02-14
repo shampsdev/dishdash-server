@@ -5,9 +5,9 @@ on:
     inputs:
       environment:
         required: true
-        description: Deploy to DEV/PROD
+        description: Deploy only to PROD
         type: choice
-        options: [DEV, PROD]
+        options: [PROD, PROD]
 
 jobs:
   deploy:
@@ -19,8 +19,8 @@ jobs:
       id-token: write
     secrets: inherit
     with:
-      dockerfile_path: 'dashboard'
+      dockerfile_path: 'landing'
       context_path: '.'
-      image_name: 'dishdash-dashboard-backend'
+      image_name: 'dishdash-landing'
       environment: ${{ github.event.inputs.environment }}
-      secret-service-hash: ${{ github.event.inputs.environment == 'PROD' && 'DASHBOARD_SERVICE_HASH' || 'DASHBOARD_SERVICE_HASH_DEV' }}
+      secret-service-hash: ${{ github.event.inputs.environment == 'PROD' && 'LANDING_SERVICE_HASH' || 'LANDING_SERVICE_HASH_DEV' }}

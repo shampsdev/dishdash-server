@@ -5,7 +5,7 @@ on:
     inputs:
       environment:
         required: true
-        description: Deploy to DEV/PROD (should be DEV or PROD)
+        description: Deploy to DEV/PROD
         type: choice
         options: [DEV, PROD]
 
