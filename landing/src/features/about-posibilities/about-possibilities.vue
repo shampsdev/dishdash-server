@@ -15,14 +15,12 @@ import createLink from './assets/create-link.jpg';
 import inviteFriends from './assets/invite-friends.jpg';
 import setupFilters from './assets/setup-filters.jpg';
 import swipes from './assets/swipes.jpg';
-import chooseVariant from './assets/choose-variant.png';
 
 const imagesList = [
   { src: createLink, alt: 'create-link' },
   { src: inviteFriends, alt: 'invite-friends' },
   { src: setupFilters, alt: 'setup-filters' },
   { src: swipes, alt: 'swipes' },
-  { src: chooseVariant, alt: 'choose-variant' }
 ];
 
 const imageRefs = ref<any[]>([]);
