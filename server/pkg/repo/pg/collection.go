@@ -2,9 +2,14 @@ package pg
 
 import (
 	"context"
-	"dishdash.ru/pkg/domain"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
+
+	"dishdash.ru/pkg/domain"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -23,7 +28,11 @@ func (cr *CollectionRepo) SaveCollection(ctx context.Context, collection *domain
 	if err != nil {
 		return 0, fmt.Errorf("failed to start transaction: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		if err := tx.Rollback(ctx); err != nil && !errors.Is(err, sql.ErrTxDone) {
+			log.Printf("rollback failed: %v", err)
+		}
+	}()
 
 	var collectionID int64
 	err = tx.QueryRow(ctx, insertCollectionQuery, collection.Name, collection.Description).Scan(&collectionID)
@@ -181,7 +190,11 @@ func (cr *CollectionRepo) AttachPlacesToCollection(ctx context.Context, placeIDs
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		if err := tx.Rollback(ctx); err != nil && !errors.Is(err, sql.ErrTxDone) {
+			log.Printf("rollback failed: %v", err)
+		}
+	}()
 
 	for _, placeID := range placeIDs {
 		_, err := tx.Exec(ctx, insertQuery, collectionID, placeID)
@@ -197,7 +210,7 @@ func (cr *CollectionRepo) AttachPlacesToCollection(ctx context.Context, placeIDs
 	return nil
 }
 
-func (cr *CollectionRepo) DetachPlaceFromCollection(ctx context.Context, placeID int64, collectionID int64) error {
+func (cr *CollectionRepo) DetachPlaceFromCollection(ctx context.Context, placeID, collectionID int64) error {
 	const deleteQuery = `
 		DELETE FROM "collection_places"
 		WHERE collection_id = $1 AND place_id = $2;

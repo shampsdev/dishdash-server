@@ -80,3 +80,5 @@ type Swipe interface {
 	GetCount(ctx context.Context) (int, error)
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
 }
+
+type Collection interface{}
