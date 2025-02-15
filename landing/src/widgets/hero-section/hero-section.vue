@@ -1,12 +1,18 @@
 <template>
-  <div ref="animatedDiv" class="w-full h-screen flex flex-col justify-center text-white fade-in overflow-hidden">
-    <div class="-translate-y-10 flex h-4/5 flex-col justify-around items-center text-center relative">
+  <div ref="animatedDiv" class="w-full items-center h-screen flex flex-col justify-center text-white overflow-hidden">
+
+    <div class="-translate-y-20 h-100 flex flex-col justify-around items-center text-center relative">
       <div class="confetti-wrapper">
-        <ConfettiExplosion :particleCount="particleCount" :force="1" :stageHeight="1000" :duration="5000" />
+        <ConfettiExplosion v-if="showConfetti" :particleCount="particleCount" :force="1" :stageHeight="1000"
+          :duration="5000" />
       </div>
       <img src="./assets/man.png" />
-      <a href="https://t.me/dishdash_bot?start=landing">
-        <Button class="rounded-3xl" size="lg" variant="secondary">В БОТА</Button>
+
+      <a href="https://t.me/dishdash_bot?start=landing" class="translate-y-10">
+        <CoolButton class="rounded-3xl" size="lg" variant="secondary">
+          Заходи!
+          <img src="./assets/telegram-svgrepo-com.svg" color="black" class="ms-2" width="16px" />
+        </CoolButton>
       </a>
     </div>
   </div>
@@ -14,12 +20,14 @@
 
 
 <script setup lang="ts">
+
 import { onMounted, ref } from 'vue';
-import Button from '@/components/ui/button/Button.vue';
 import ConfettiExplosion from "vue-confetti-explosion";
+import CoolButton from '@/components/ui/button/CoolButton.vue';
 
 const animatedDiv = ref(null);
 const particleCount = ref(100);
+const showConfetti = ref(false);
 
 onMounted(() => {
   const options = {
@@ -28,6 +36,7 @@ onMounted(() => {
   };
 
   particleCount.value = isMobile() ? 100 : 300;
+  showConfetti.value = true;
 
   const callback = (entries: IntersectionObserverEntry[]) => {
     entries.forEach(entry => {

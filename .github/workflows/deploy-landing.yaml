@@ -1,4 +1,4 @@
-name: deploy-dashboard
+name: deploy-landing
 
 on: 
   workflow_dispatch:
