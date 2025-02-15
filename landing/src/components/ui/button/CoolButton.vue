@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div class="button-wrapper">
-    <Primitive :as="as" :as-child="asChild" :class="cn(buttonVariants({ variant, size }), props.class, 'button')">
+    <Primitive :as="props.as" :class="cn(buttonVariants({ variant, size }), props.class, 'button')">
       <slot />
     </Primitive>
   </div>
@@ -39,14 +39,14 @@ const props = withDefaults(defineProps<Props>(), {
   cursor: pointer;
   font-weight: bold;
   z-index: 1;
-  transform: translateY(-4px);
-  transition: transform 0.2s;
+  animation: press-animation 1.5s infinite ease-in-out;
+  transition: background-color 0.2s;
 }
 
 .button-wrapper::before {
   content: '';
   position: absolute;
-  top: 4px;
+  top: 10px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -56,13 +56,19 @@ const props = withDefaults(defineProps<Props>(), {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Убираем изменение цвета на hover */
 .button:hover {
-    background-color: #2EA5FF;
+  background-color: #2EA5FF;
 }
 
-.button:active {
-  transform: translateY(0);
+@keyframes press-animation {
+  0% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
 }
-
 </style>
