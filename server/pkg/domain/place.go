@@ -15,7 +15,7 @@ type Place struct {
 	PriceAvg         int        `json:"priceAvg"`
 	ReviewRating     float64    `json:"reviewRating"`
 	ReviewCount      int        `json:"reviewCount"`
-	Tags             []*Tag     `json:"tags"`
+	Tags             []*Tag     `json:"tags,omitempty"`
 	UpdatedAt        time.Time  `json:"updatedAt"`
 	Source           string     `json:"source"`
 	Url              *string    `json:"url"`
