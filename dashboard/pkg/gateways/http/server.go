@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"dashboard.dishdash.ru/cmd/config"
+	"dashboard.dishdash.ru/pkg/repo"
 	"dishdash.ru/pkg/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,7 @@ type Server struct {
 	Router     *gin.Engine
 }
 
-func NewServer(useCases usecase.Cases) *Server {
+func NewServer(useCases usecase.Cases, taskRepo repo.Task) *Server {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
@@ -40,7 +41,7 @@ func NewServer(useCases usecase.Cases) *Server {
 		},
 	}
 
-	setupRouter(s, useCases)
+	setupRouter(s, useCases, taskRepo)
 
 	return s
 }
