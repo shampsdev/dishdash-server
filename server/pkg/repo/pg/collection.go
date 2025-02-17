@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/jackc/pgx/v5"
 	"log"
 
 	"dishdash.ru/pkg/domain"
@@ -68,6 +69,11 @@ func (cr *CollectionRepo) GetCollectionByID(ctx context.Context, collectionID in
     c.id,
     c.name,
     c.description,
+	c.created_at,
+	c.updated_at,
+	c.avatar,
+	c.visible,
+	c.order,
     COALESCE(
         JSON_AGG(
             JSON_BUILD_OBJECT(
@@ -86,10 +92,8 @@ func (cr *CollectionRepo) GetCollectionByID(ctx context.Context, collectionID in
                 'url', p.url,
                 'boost', p.boost,
                 'boostRadius', p.boost_radius,
-                'tags', NULL 
             )
-        ) FILTER (WHERE p.id IS NOT NULL),
-        '[]'::json
+        ) FILTER (WHERE p.id IS NOT NULL)
     ) AS places
 FROM "collection" AS c
 LEFT JOIN "collection_place" AS cp ON c.id = cp.collection_id 
@@ -113,6 +117,11 @@ func (cr *CollectionRepo) GetAllCollections(ctx context.Context) ([]*domain.Coll
 	    c.id,
 	    c.name,
 	    c.description,
+	    c.created_at,
+		c.updated_at,
+		c.avatar,
+		c.visible,
+		c.order,
 	    COALESCE(
 	        JSON_AGG(
 	            JSON_BUILD_OBJECT(
@@ -132,8 +141,7 @@ func (cr *CollectionRepo) GetAllCollections(ctx context.Context) ([]*domain.Coll
 	                'boost', p.boost,
 	                'boostRadius', p.boost_radius
 	            )
-	        ) FILTER (WHERE p.id IS NOT NULL),
-	        '[]'::json
+	        ) FILTER (WHERE p.id IS NOT NULL)
 	    ) AS places
 	FROM "collection" AS c
 	LEFT JOIN "collection_place" AS cp ON c.id = cp.collection_id 
@@ -177,36 +185,25 @@ func (cr *CollectionRepo) DeleteCollectionByID(ctx context.Context, collectionID
 
 func (cr *CollectionRepo) AttachPlacesToCollection(ctx context.Context, placeIDs []int64, collectionID int64) error {
 	if len(placeIDs) == 0 {
-		return nil // Нечего добавлять
+		return nil
 	}
-
-	const insertQuery = `
+	batch := &pgx.Batch{}
+	const query = `
 		INSERT INTO "collection_places" (collection_id, place_id)
 		VALUES ($1, $2)
 		ON CONFLICT DO NOTHING;
-	`
-
-	tx, err := cr.db.Begin(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to start transaction: %w", err)
-	}
-	defer func() {
-		if err := tx.Rollback(ctx); err != nil && !errors.Is(err, sql.ErrTxDone) {
-			log.Printf("rollback failed: %v", err)
-		}
-	}()
-
+`
 	for _, placeID := range placeIDs {
-		_, err := tx.Exec(ctx, insertQuery, collectionID, placeID)
-		if err != nil {
-			return fmt.Errorf("failed to attach place %d to collection %d: %w", placeID, collectionID, err)
-		}
+		batch.Queue(query, collectionID, placeID)
 	}
 
-	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("failed to commit transaction: %w", err)
-	}
+	br := cr.db.SendBatch(ctx, batch)
+	defer br.Close()
 
+	_, err := br.Exec()
+	if err != nil {
+		return fmt.Errorf("could not attach places to collection: %w", err)
+	}
 	return nil
 }
 
@@ -232,6 +229,11 @@ func scanCollection(s Scanner) (*domain.Collection, error) {
 		&collection.ID,
 		&collection.Name,
 		&collection.Description,
+		&collection.CreatedAt,
+		&collection.UpdatedAt,
+		&collection.Avatar,
+		&collection.Visible,
+		&collection.Order,
 		&placesJSON,
 	)
 	if err != nil {

@@ -3,7 +3,12 @@ CREATE TABLE "collection"
     "id"          serial       NOT NULL,
     "name"        varchar(255) NOT NULL,
     "description" TEXT         NOT NULL,
-    PRIMARY KEY ("id")
+    "avatar"      varchar(255) NOT NULL,
+    "created_at"  timestamp    NOT NULL DEFAULT NOW(),
+    "updated_at"  timestamp    NOT NULL DEFAULT NOW(),
+    "visible"     boolean      NOT NULL DEFAULT true,
+    "order"       int          NOT NULL DEFAULT 0;
+PRIMARY KEY ("id")
 
 );
 
