@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/jackc/pgx/v5"
 	"log"
+
+	"github.com/jackc/pgx/v5"
 
 	"dishdash.ru/pkg/domain"
 
@@ -250,5 +251,14 @@ func scanCollection(s Scanner) (*domain.Collection, error) {
 		collection.Places[i] = &places[i]
 	}
 
+	return collection, nil
+}
+
+func (cr *CollectionRepo) UpdateCollection(ctx context.Context, collection *domain.Collection) (*domain.Collection, error) {
+	query := `UPDATE "collection" SET "name" = $1, "description" = $2, "avatar" = $3, "visible" = $4, "order" = $5, "updated_at" = NOW() WHERE id = $6;`
+	_, err := cr.db.Exec(ctx, query, collection.Name, collection.Description, collection.Avatar, collection.Visible, collection.Order, collection.ID)	
+	if err != nil {
+		return nil, fmt.Errorf("could not update collection: %w", err)
+    }
 	return collection, nil
 }

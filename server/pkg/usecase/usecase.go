@@ -81,4 +81,9 @@ type Swipe interface {
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
 }
 
-type Collection interface{}
+type Collection interface {
+	SaveCollection(ctx context.Context, collection *domain.Collection) (*domain.Collection, error)
+	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
+	DeleteCollection(ctx context.Context, collectionID int64) error
+	UpdateCollection(ctx context.Context, tag *domain.Tag) (*domain.Collection, error)
+}
