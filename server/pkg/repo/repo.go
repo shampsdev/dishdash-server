@@ -73,6 +73,6 @@ type Collection interface {
 	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
 	DeleteCollectionByID(ctx context.Context, collectionID int64) error
 	AttachPlacesToCollection(ctx context.Context, placeIDs []int64, collectionID int64) error
-	DetachPlaceFromCollection(ctx context.Context, placeID, collectionID int64) error
-	UpdateCollection(ctx context.Context, collection *domain.Collection) (*domain.Collection, error)
+	DetachPlacesFromCollection(ctx context.Context, collectionID int64) error
+	UpdateCollection(ctx context.Context, collection *domain.Collection)  error
 }

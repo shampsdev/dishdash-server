@@ -208,18 +208,15 @@ func (cr *CollectionRepo) AttachPlacesToCollection(ctx context.Context, placeIDs
 	return nil
 }
 
-func (cr *CollectionRepo) DetachPlaceFromCollection(ctx context.Context, placeID, collectionID int64) error {
-	const deleteQuery = `
-		DELETE FROM "collection_places"
-		WHERE collection_id = $1 AND place_id = $2;
-	`
+func (cr *CollectionRepo) DetachPlacesFromCollection(ctx context.Context, collectionID int64) error {
+	const detachQuery = `DELETE FROM "collection_places" WHERE collection_id = $1;`
 
-	_, err := cr.db.Exec(ctx, deleteQuery, collectionID, placeID)
-	if err != nil {
-		return fmt.Errorf("failed to detach place %d from collection %d: %w", placeID, collectionID, err)
-	}
+    _, err := cr.db.Exec(ctx, detachQuery, collectionID)
+    if err != nil {
+        return fmt.Errorf("failed to detach places from collection %d: %w", collectionID, err)
+    }
 
-	return nil
+    return nil
 }
 
 func scanCollection(s Scanner) (*domain.Collection, error) {
@@ -254,11 +251,11 @@ func scanCollection(s Scanner) (*domain.Collection, error) {
 	return collection, nil
 }
 
-func (cr *CollectionRepo) UpdateCollection(ctx context.Context, collection *domain.Collection) (*domain.Collection, error) {
+func (cr *CollectionRepo) UpdateCollection(ctx context.Context, collection *domain.Collection)  error {
 	query := `UPDATE "collection" SET "name" = $1, "description" = $2, "avatar" = $3, "visible" = $4, "order" = $5, "updated_at" = NOW() WHERE id = $6;`
 	_, err := cr.db.Exec(ctx, query, collection.Name, collection.Description, collection.Avatar, collection.Visible, collection.Order, collection.ID)	
 	if err != nil {
-		return nil, fmt.Errorf("could not update collection: %w", err)
+		return fmt.Errorf("could not update collection: %w", err)
     }
-	return collection, nil
+	return nil 
 }
