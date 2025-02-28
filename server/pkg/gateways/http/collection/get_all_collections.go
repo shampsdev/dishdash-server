@@ -21,13 +21,13 @@ import (
 // @Router /collections [get]
 func GetAllCollections(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
-        collections, err := collectionUseCase.GetAllCollectionsWithPlaces(c)
-        if err != nil {
-            log.WithError(err).Error("failed to get collections")
-            c.AbortWithStatus(http.StatusInternalServerError)
-            return
-        }
+		collections, err := collectionUseCase.GetAllCollectionsWithPlaces(c)
+		if err != nil {
+			log.WithError(err).Error("failed to get collections")
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
 
-        c.JSON(http.StatusOK, collections)
-    }
+		c.JSON(http.StatusOK, collections)
+	}
 }

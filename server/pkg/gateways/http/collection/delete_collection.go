@@ -24,12 +24,12 @@ func DeleteCollection(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 
-        err := collectionUseCase.DeleteCollection(c, id)
-        if err != nil {
-            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-            return
-        }
+		err := collectionUseCase.DeleteCollection(c, id)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 
-        c.Status(http.StatusOK)
-    }
+		c.Status(http.StatusOK)
+	}
 }
