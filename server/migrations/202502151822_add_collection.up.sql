@@ -1,4 +1,4 @@
-CREATE TABLE "collection"
+CREATE TABLE IF NOT EXISTS  "collection" 
 (
     "id"          varchar(255) NOT NULL,
     "name"        varchar(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE "collection"
 PRIMARY KEY ("id")
 );
 
-CREATE TABLE "collection_place"
+CREATE TABLE IF NOT EXISTS "collection_place" 
 (
     "collection_id" varchar(255) NOT NULL,
     "place_id"      int NOT NULL,
