@@ -68,11 +68,13 @@ type Swipe interface {
 }
 
 type Collection interface {
-	SaveCollection(ctx context.Context, collection *domain.Collection) (int64, error)
-	GetCollectionByID(ctx context.Context, collectionID int64) (*domain.Collection, error)
+	SaveCollection(ctx context.Context, collection *domain.Collection) (string, error)
+	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
-	DeleteCollectionByID(ctx context.Context, collectionID int64) error
-	AttachPlacesToCollection(ctx context.Context, placeIDs []int64, collectionID int64) error
-	DetachPlacesFromCollection(ctx context.Context, collectionID int64) error
-	UpdateCollection(ctx context.Context, collection *domain.Collection)  error
+	DeleteCollectionByID(ctx context.Context, collectionID string) error
+	AttachPlacesToCollection(ctx context.Context, placeIDs []int64, collectionID string) error
+	DetachPlacesFromCollection(ctx context.Context, collectionID string) error
+	UpdateCollection(ctx context.Context, collection *domain.Collection) error
+	GetPlacesByCollectionID(ctx context.Context, collectionID string) ([]*domain.Place, error)
+	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
 }

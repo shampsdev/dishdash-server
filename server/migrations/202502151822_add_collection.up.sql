@@ -1,20 +1,19 @@
 CREATE TABLE "collection"
 (
-    "id"          serial       NOT NULL,
+    "id"          varchar(255) NOT NULL,
     "name"        varchar(255) NOT NULL,
     "description" TEXT         NOT NULL,
     "avatar"      varchar(255) NOT NULL,
     "created_at"  timestamp    NOT NULL DEFAULT NOW(),
     "updated_at"  timestamp    NOT NULL DEFAULT NOW(),
     "visible"     boolean      NOT NULL DEFAULT true,
-    "order"       int          NOT NULL DEFAULT 0;
+    "order"       int          NOT NULL DEFAULT 0,
 PRIMARY KEY ("id")
-
 );
 
 CREATE TABLE "collection_place"
 (
-    "collection_id" int NOT NULL,
+    "collection_id" varchar(255) NOT NULL,
     "place_id"      int NOT NULL,
 
     FOREIGN KEY ("collection_id") REFERENCES "collection" ("id") ON DELETE CASCADE,

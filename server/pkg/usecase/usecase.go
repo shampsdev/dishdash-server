@@ -7,12 +7,12 @@ import (
 )
 
 type Cases struct {
-	Tag      Tag
-	User     User
-	Place    Place
-	Swipe    Swipe
-	Lobby    Lobby
-	RoomRepo RoomRepo
+	Tag        Tag
+	User       User
+	Place      Place
+	Swipe      Swipe
+	Lobby      Lobby
+	RoomRepo   RoomRepo
 	Collection Collection
 }
 
@@ -83,23 +83,23 @@ type Swipe interface {
 }
 
 type SaveCollectionInput struct {
-	Name string           `json:"name"`
-	Description string       `json:"description"`
-	Avatar string           `json:"avatar"`
-	Visible bool             `json:"visible"`
-	Order int64            `json:"order"`
-	Places []int64         `json:"places"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Avatar      string  `json:"avatar"`
+	Visible     bool    `json:"visible"`
+	Order       int64   `json:"order"`
+	Places      []int64 `json:"places"`
 }
 
 type UpdateCollectionInput struct {
-	ID int64
+	ID string
 	SaveCollectionInput
-
 }
 
 type Collection interface {
 	SaveCollection(ctx context.Context, saveCollectionInput SaveCollectionInput) (*domain.Collection, error)
 	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
-	DeleteCollection(ctx context.Context, collectionID int64) error
+	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
+	DeleteCollection(ctx context.Context, collectionID string) error
 	UpdateCollection(ctx context.Context, updateCollectionInput UpdateCollectionInput) (*domain.Collection, error)
 }
