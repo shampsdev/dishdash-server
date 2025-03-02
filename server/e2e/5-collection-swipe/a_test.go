@@ -41,7 +41,7 @@ func Test(t *testing.T) {
 			Type: domain.CollectionPlacesLobbyType,
 			CollectionPlaces: &domain.CollectionPlacesSettings{
 				Location:     &lobby.Settings.ClassicPlaces.Location,
-                CollectionID: "test-collection-1",
+				CollectionID: "test-collection-1",
 			},
 		})
 	}, 1)
