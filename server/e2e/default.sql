@@ -103,3 +103,15 @@ INSERT INTO "place_tag" (place_id, tag_id) VALUES
 INSERT INTO "place_tag" (place_id, tag_id) VALUES
 ((SELECT id FROM place WHERE title = 'Шавафель'), (SELECT id FROM tag WHERE name = 'cafe')),
 ((SELECT id FROM place WHERE title = 'Шавафель'), (SELECT id FROM tag WHERE name = 'food'));
+
+
+INSERT INTO "collection" ("id", "name", "description", "avatar", "created_at", "updated_at", "visible", "order")
+VALUES 
+('test-collection-1', 'test collection', 'test description', 'https://example.com/avatar.jpg', NOW(), NOW(), true, 1);
+
+-- Связываем подборку с местами (примерные place_id)
+INSERT INTO "collection_place" ("collection_id", "place_id")
+VALUES 
+('test-collection-1', (SELECT id FROM place WHERE title = 'Cous-Cous')),
+('test-collection-1', (SELECT id FROM place WHERE title = 'Шавафель')),
+('test-collection-1', (SELECT id FROM place WHERE title = 'ЛюдиЛюбят'));
