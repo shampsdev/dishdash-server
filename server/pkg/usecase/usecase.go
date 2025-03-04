@@ -7,12 +7,13 @@ import (
 )
 
 type Cases struct {
-	Tag      Tag
-	User     User
-	Place    Place
-	Swipe    Swipe
-	Lobby    Lobby
-	RoomRepo RoomRepo
+	Tag        Tag
+	User       User
+	Place      Place
+	Swipe      Swipe
+	Lobby      Lobby
+	RoomRepo   RoomRepo
+	Collection Collection
 }
 
 type Tag interface {
@@ -79,4 +80,29 @@ type Swipe interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
 	GetCount(ctx context.Context) (int, error)
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
+}
+
+type SaveCollectionInput struct {
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Avatar      string  `json:"avatar"`
+	Visible     bool    `json:"visible"`
+	Order       int64   `json:"order"`
+	Places      []int64 `json:"places"`
+}
+
+type UpdateCollectionInput struct {
+	ID string
+	SaveCollectionInput
+}
+
+type Collection interface {
+	SaveCollection(ctx context.Context, saveCollectionInput SaveCollectionInput) (*domain.Collection, error)
+	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
+	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
+	DeleteCollection(ctx context.Context, collectionID string) error
+	UpdateCollection(ctx context.Context, updateCollectionInput UpdateCollectionInput) (*domain.Collection, error)
+	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
+	GetAllCollectionsPreviews(ctx context.Context) ([]*domain.Collection, error)
+	GetCollectionPreviewByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 }

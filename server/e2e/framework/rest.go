@@ -63,3 +63,39 @@ func (fw *Framework) CreateLobby() (*domain.Lobby, error) {
 	}
 	return lobby, nil
 }
+
+func (fw *Framework) CreateLobbyWithCollection() (*domain.Lobby, error) {
+	settings := domain.LobbySettings{
+		Type: domain.ClassicPlacesLobbyType,
+		CollectionPlaces: &domain.CollectionPlacesSettings{
+			Location:     &domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
+			CollectionID: "test-collection-1",
+		},
+		ClassicPlaces: &domain.ClassicPlacesSettings{},
+	}
+
+	b, err := json.Marshal(settings)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal find lobby input: %w", err)
+	}
+
+	resp, err := fw.HttpCli.Post(fmt.Sprintf("%s/lobbies", fw.ApiHost), "application/json", bytes.NewReader(b))
+	if err != nil {
+		return nil, fmt.Errorf("failed to post find lobby: %w", err)
+	}
+
+	lobby := &domain.Lobby{}
+	err = json.NewDecoder(resp.Body).Decode(lobby)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode lobby: %w", err)
+	}
+	return lobby, nil
+}
+
+func (fw *Framework) MustCreateLobbyWithCollection() *domain.Lobby {
+	lobby, err := fw.CreateLobbyWithCollection()
+	if err != nil {
+		panic(err)
+	}
+	return lobby
+}

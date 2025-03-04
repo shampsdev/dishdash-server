@@ -2,6 +2,7 @@ package http
 
 import (
 	"dishdash.ru/docs"
+	"dishdash.ru/pkg/gateways/http/collection"
 	"dishdash.ru/pkg/gateways/http/lobby"
 	"dishdash.ru/pkg/gateways/http/metric"
 	"dishdash.ru/pkg/gateways/http/middlewares"
@@ -25,6 +26,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 		lobby.SetupHandlers(v1, useCases)
 		user.SetupHandlers(v1, useCases)
 		tag.SetupHandlers(v1, useCases)
+		collection.SetupHandlers(v1, useCases)
 	}
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
