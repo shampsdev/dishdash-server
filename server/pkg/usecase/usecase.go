@@ -102,4 +102,7 @@ type Collection interface {
 	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
 	DeleteCollection(ctx context.Context, collectionID string) error
 	UpdateCollection(ctx context.Context, updateCollectionInput UpdateCollectionInput) (*domain.Collection, error)
+	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
+	GetAllCollectionsPreviews(ctx context.Context) ([]*domain.Collection, error)
+	GetCollectionPreviewByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 }

@@ -109,7 +109,6 @@ INSERT INTO "collection" ("id", "name", "description", "avatar", "created_at", "
 VALUES 
 ('test-collection-1', 'test collection', 'test description', 'https://example.com/avatar.jpg', NOW(), NOW(), true, 1);
 
--- Связываем подборку с местами (примерные place_id)
 INSERT INTO "collection_place" ("collection_id", "place_id")
 VALUES 
 ('test-collection-1', (SELECT id FROM place WHERE title = 'Cous-Cous')),

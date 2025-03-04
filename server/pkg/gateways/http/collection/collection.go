@@ -11,8 +11,13 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	collectionGroup.Use(middlewares.ApiTokenAuth())
 
 	collectionGroup.GET("", GetAllCollections(cases.Collection))
+	collectionGroup.GET(":id", GetCollectionByID(cases.Collection))
 
 	collectionGroup.POST("", SaveCollection(cases.Collection))
 	collectionGroup.PUT("", UpdateCollection(cases.Collection))
 	collectionGroup.DELETE(":id", DeleteCollection(cases.Collection))
+
+
+	collectionGroup.GET("/preview", GetAllCollectionsPreview(cases.Collection))
+	collectionGroup.GET("/preview/:id", GetCollectionPreviewByID(cases.Collection))
 }

@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"log"
 	"testing"
 
 	"dishdash.ru/e2e/framework"
@@ -16,7 +17,6 @@ func TestMain(m *testing.M) {
 	fw.RecordEvents(
 		event.ErrorEvent,
 		event.UserJoinedEvent,
-		event.SettingsUpdateEvent,
 		event.StartSwipesEvent,
 		event.CardsEvent,
 		event.ResultsEvent,
@@ -30,8 +30,8 @@ func TestMain(m *testing.M) {
 func Test(t *testing.T) {
 	cli1 := fw.MustNewClient(&domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	cli2 := fw.MustNewClient(&domain.User{ID: "id2", Name: "user2", Avatar: "avatar2"})
-	lobby := fw.MustCreateLobby()
-
+	lobby := fw.MustCreateLobbyWithCollection()
+	log.Println(lobby.ID)
 	fw.Step("User1 join lobby", func() {
 		cli1.JoinLobby(lobby)
 	}, 2)
@@ -40,9 +40,10 @@ func Test(t *testing.T) {
 		cli1.Emit(event.SettingsUpdate{
 			Type: domain.CollectionPlacesLobbyType,
 			CollectionPlaces: &domain.CollectionPlacesSettings{
-				Location:     &lobby.Settings.ClassicPlaces.Location,
+				Location:     &domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
 				CollectionID: "test-collection-1",
 			},
+			ClassicPlaces: &domain.ClassicPlacesSettings{},
 		})
 	}, 1)
 

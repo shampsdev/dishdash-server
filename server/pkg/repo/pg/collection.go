@@ -2,7 +2,6 @@ package pg
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"math/rand/v2"
 	"strings"
@@ -60,24 +59,31 @@ func (cr *CollectionRepo) SaveCollection(ctx context.Context, collection *domain
 
 func (cr *CollectionRepo) GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error) {
 	const getCollectionQuery = `
-        SELECT 
-            c.id,
-            c.name,
-            c.description,
-            c.avatar,
-            c.visible,
-            c.updated_at,
-            c.created_at,
-            JSON_AGG(JSON_BUILD_OBJECT('id', p.id, 'title', p.title, 'shortDescription', p.short_description, 'description', p.description, 'images', p.images, 'location', p.location, 'address', p.address, 'priceAvg', p.price_avg, 'reviewRating', p.review_rating, 'reviewCount', p.review_count, 'source', p.source, 'url', p.url, 'boost', p.boost, 'boost_radius', p.boost_radius)) AS places
-            FROM "collection" AS c
-			LEFT JOIN "collection_place" AS pc ON c.id = pc.collection_id
-			LEFT JOIN "place" AS p ON pc.place_id = p.id
-			WHERE c.id = $1
-			GROUP BY c.id;
-			`
+	SELECT 
+		id,
+		name,
+		description,
+		avatar,
+		visible,
+		updated_at,
+		created_at,
+		"order"
+	FROM "collection"
+	WHERE id = $1;
+`
 
 	row := cr.db.QueryRow(ctx, getCollectionQuery, collectionID)
-	collection, err := scanCollection(row)
+	collection := new(domain.Collection)
+	err := row.Scan(
+		&collection.ID,
+		&collection.Name,
+		&collection.Description,
+		&collection.Avatar,
+		&collection.Visible,
+		&collection.UpdatedAt,
+		&collection.CreatedAt,
+		&collection.Order,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("can't fetch collection: %w", err)
 	}
@@ -213,6 +219,21 @@ func (cr *CollectionRepo) GetAllCollectionsWithPlaces(ctx context.Context) ([]*d
 	return collections, nil
 }
 
+func (cr *CollectionRepo) GetCollectionWithPlacesByID(ctx context.Context, collectionID string) (*domain.Collection, error) {
+	collection, err := cr.GetCollectionByID(ctx, collectionID)
+	if err != nil {
+		return nil, fmt.Errorf("can't get collection: %w", err)
+	}
+
+	places, err := cr.GetPlacesByCollectionID(ctx, collectionID)
+	if err != nil {
+		return nil, fmt.Errorf("can't get places for collection %s: %w", collectionID, err)
+	}
+	collection.Places = places
+
+	return collection, nil
+}
+
 func (cr *CollectionRepo) DeleteCollectionByID(ctx context.Context, collectionID string) error {
 	const deleteQuery = `
         DELETE FROM "collection" WHERE id = $1;
@@ -278,81 +299,4 @@ func (cr *CollectionRepo) generateID() string {
 		b[i] = letterRunes[cr.rand.IntN(len(letterRunes))]
 	}
 	return string(b)
-}
-
-func scanCollection(s Scanner) (*domain.Collection, error) {
-	collection := new(domain.Collection)
-	placesJSON := ""
-
-	err := s.Scan(
-		&collection.ID,
-		&collection.Name,
-		&collection.Description,
-		&collection.Avatar,
-		&collection.Visible,
-		&collection.UpdatedAt,
-		&collection.CreatedAt,
-		&collection.Order,
-		&placesJSON,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	var places []map[string]interface{}
-	if err := json.Unmarshal([]byte(placesJSON), &places); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal places: %w", err)
-	}
-
-	collection.Places = make([]*domain.Place, len(places))
-	for i, placeData := range places {
-		place := &domain.Place{}
-		if title, ok := placeData["title"].(string); ok {
-			place.Title = title
-		}
-		if description, ok := placeData["description"].(string); ok {
-			place.Description = description
-		}
-		if images, ok := placeData["images"].(string); ok {
-			place.Images = strings.Split(images, ",")
-		}
-		if location, ok := placeData["location"].(domain.Coordinate); ok {
-			place.Location = location
-		}
-		if address, ok := placeData["address"].(string); ok {
-			place.Address = address
-		}
-		if priceAvg, ok := placeData["priceAvg"].(int); ok {
-			place.PriceAvg = priceAvg
-		}
-		if reviewRating, ok := placeData["reviewRating"].(float64); ok {
-			place.ReviewRating = reviewRating
-		}
-		if reviewCount, ok := placeData["reviewCount"].(int); ok {
-			place.ReviewCount = reviewCount
-		}
-		if updatedAt, ok := placeData["updatedAt"].(string); ok {
-			parsedTime, err := time.Parse(time.RFC3339, updatedAt)
-			if err != nil {
-				return nil, fmt.Errorf("failed to parse time: %w", err)
-			}
-			place.UpdatedAt = parsedTime
-		}
-		if source, ok := placeData["source"].(string); ok {
-			place.Source = source
-		}
-		if url, ok := placeData["url"].(string); ok {
-			place.Url = &url
-		}
-		if boost, ok := placeData["boost"].(float64); ok {
-			place.Boost = &boost
-		}
-		if boostRadius, ok := placeData["boostRadius"].(float64); ok {
-			place.BoostRadius = &boostRadius
-		}
-
-		collection.Places[i] = place
-	}
-
-	return collection, nil
 }

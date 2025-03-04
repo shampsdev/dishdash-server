@@ -10,62 +10,13 @@
             "id": "id1",
             "name": "user1"
           }
-        },
-        {
-          "Event": "settingsUpdate",
-          "Data": {
-            "classicPlaces": {
-              "location": {
-                "lat": 59.956363,
-                "lon": 30.310011
-              },
-              "priceAvg": 300,
-              "recommendation": {
-                "classic": {
-                  "distBound": 1000000,
-                  "distCoeff": 1,
-                  "distPower": 1,
-                  "priceBound": 1000000,
-                  "priceCoeff": 1,
-                  "pricePower": 1
-                },
-                "type": "classic"
-              },
-              "tags": [
-                4
-              ]
-            },
-            "collectionPlaces": null,
-            "type": "classicPlaces"
-          }
         }
       ]
     }
   },
   {
     "Name": "Settings update",
-    "Events": {
-      "user1": [
-        {
-          "Event": "settingsUpdate",
-          "Data": {
-            "classicPlaces": {
-              "location": {
-                "lat": 59.956363,
-                "lon": 30.310011
-              },
-              "priceAvg": 300,
-              "recommendation": null,
-              "tags": [
-                4
-              ]
-            },
-            "collectionPlaces": null,
-            "type": "classicPlaces"
-          }
-        }
-      ]
-    }
+    "Events": {}
   },
   {
     "Name": "User2 join lobby",
@@ -84,35 +35,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
-          }
-        },
-        {
-          "Event": "userJoined",
-          "Data": {
             "avatar": "avatar2",
             "id": "id2",
             "name": "user2"
           }
         },
         {
-          "Event": "settingsUpdate",
+          "Event": "userJoined",
           "Data": {
-            "classicPlaces": {
-              "location": {
-                "lat": 59.956363,
-                "lon": 30.310011
-              },
-              "priceAvg": 300,
-              "recommendation": null,
-              "tags": [
-                4
-              ]
-            },
-            "collectionPlaces": null,
-            "type": "classicPlaces"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         }
       ]
@@ -135,12 +68,12 @@
                 "title": "Шавафель"
               },
               {
-                "id": 1,
-                "title": "Пловная"
+                "id": 3,
+                "title": "ЛюдиЛюбят"
               },
               {
-                "id": 2,
-                "title": "Zoomer Coffee"
+                "id": 4,
+                "title": "Cous-Cous"
               }
             ]
           }
@@ -160,12 +93,12 @@
                 "title": "Шавафель"
               },
               {
-                "id": 1,
-                "title": "Пловная"
+                "id": 3,
+                "title": "ЛюдиЛюбят"
               },
               {
-                "id": 2,
-                "title": "Zoomer Coffee"
+                "id": 4,
+                "title": "Cous-Cous"
               }
             ]
           }
@@ -199,12 +132,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 3,
-                "title": "ЛюдиЛюбят"
-              }
-            ]
+            "cards": []
           }
         }
       ],
@@ -238,12 +166,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 3,
-                "title": "ЛюдиЛюбят"
-              }
-            ]
+            "cards": []
           }
         }
       ]
@@ -259,8 +182,8 @@
             "results": [
               {
                 "card": {
-                  "id": 1,
-                  "title": "Пловная"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -287,12 +210,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 4,
-                "title": "Cous-Cous"
-              }
-            ]
+            "cards": []
           }
         }
       ],
@@ -303,8 +221,8 @@
             "results": [
               {
                 "card": {
-                  "id": 1,
-                  "title": "Пловная"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -339,41 +257,25 @@
           "Event": "match",
           "Data": {
             "card": {
-              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "address": "Саблинская ул., 12, Санкт-Петербург",
               "boost": null,
               "boostRadius": null,
-              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-              "id": 1,
+              "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+              "id": 3,
               "images": [
-                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
               ],
               "location": {
-                "lat": 59.9505,
-                "lon": 30.2956
+                "lat": 59.9556,
+                "lon": 30.2658
               },
-              "priceAvg": 450,
+              "priceAvg": 300,
               "reviewCount": 1000,
-              "reviewRating": 4.5,
-              "shortDescription": "Ресторан узбекской кухни",
+              "reviewRating": 4.7,
+              "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
-              "tags": [
-                {
-                  "icon": "cafe.png",
-                  "id": 2,
-                  "name": "cafe",
-                  "order": 0,
-                  "visible": true
-                },
-                {
-                  "icon": "food.png",
-                  "id": 4,
-                  "name": "food",
-                  "order": 0,
-                  "visible": true
-                }
-              ],
-              "title": "Пловная",
-              "updatedAt": "2025-03-04T08:54:01.117169Z",
+              "title": "ЛюдиЛюбят",
+              "updatedAt": "2025-03-04T19:54:05.565Z",
               "url": null
             }
           }
@@ -384,8 +286,8 @@
             "results": [
               {
                 "card": {
-                  "id": 1,
-                  "title": "Пловная"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -419,41 +321,25 @@
           "Event": "match",
           "Data": {
             "card": {
-              "address": "Сытнинская ул., 4П, Санкт-Петербург",
+              "address": "Саблинская ул., 12, Санкт-Петербург",
               "boost": null,
               "boostRadius": null,
-              "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-              "id": 1,
+              "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+              "id": 3,
               "images": [
-                "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
               ],
               "location": {
-                "lat": 59.9505,
-                "lon": 30.2956
+                "lat": 59.9556,
+                "lon": 30.2658
               },
-              "priceAvg": 450,
+              "priceAvg": 300,
               "reviewCount": 1000,
-              "reviewRating": 4.5,
-              "shortDescription": "Ресторан узбекской кухни",
+              "reviewRating": 4.7,
+              "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
-              "tags": [
-                {
-                  "icon": "cafe.png",
-                  "id": 2,
-                  "name": "cafe",
-                  "order": 0,
-                  "visible": true
-                },
-                {
-                  "icon": "food.png",
-                  "id": 4,
-                  "name": "food",
-                  "order": 0,
-                  "visible": true
-                }
-              ],
-              "title": "Пловная",
-              "updatedAt": "2025-03-04T08:54:01.117169Z",
+              "title": "ЛюдиЛюбят",
+              "updatedAt": "2025-03-04T19:54:05.565Z",
               "url": null
             }
           }
@@ -464,8 +350,8 @@
             "results": [
               {
                 "card": {
-                  "id": 1,
-                  "title": "Пловная"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -496,12 +382,7 @@
         {
           "Event": "cards",
           "Data": {
-            "cards": [
-              {
-                "id": 4,
-                "title": "Cous-Cous"
-              }
-            ]
+            "cards": []
           }
         }
       ]

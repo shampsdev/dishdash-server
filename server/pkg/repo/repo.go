@@ -77,4 +77,5 @@ type Collection interface {
 	UpdateCollection(ctx context.Context, collection *domain.Collection) error
 	GetPlacesByCollectionID(ctx context.Context, collectionID string) ([]*domain.Place, error)
 	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
+	GetCollectionWithPlacesByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 }

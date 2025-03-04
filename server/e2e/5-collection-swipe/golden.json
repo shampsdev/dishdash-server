@@ -1,0 +1,727 @@
+[
+  {
+    "Name": "User1 join lobby",
+    "Events": {
+      "user1": [
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Settings update",
+    "Events": {}
+  },
+  {
+    "Name": "User2 join lobby",
+    "Events": {
+      "user1": [
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
+          }
+        },
+        {
+          "Event": "userJoined",
+          "Data": {
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "Start swipes",
+    "Events": {
+      "user1": [
+        {
+          "Event": "startSwipes",
+          "Data": {}
+        },
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": [
+              {
+                "address": "Кронверкский проспект, 27",
+                "boost": null,
+                "boostRadius": null,
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "source": "manual",
+                "title": "Шавафель",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              },
+              {
+                "address": "Саблинская ул., 12, Санкт-Петербург",
+                "boost": null,
+                "boostRadius": null,
+                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                "id": 3,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9556,
+                  "lon": 30.2658
+                },
+                "priceAvg": 300,
+                "reviewCount": 1000,
+                "reviewRating": 4.7,
+                "shortDescription": "Пекарня, Кондитерская",
+                "source": "manual",
+                "title": "ЛюдиЛюбят",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              },
+              {
+                "address": "ул. Кропоткина, 19/8, Санкт-Петербург",
+                "boost": null,
+                "boostRadius": null,
+                "description": "Красиво, вкусно и недорого",
+                "id": 4,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/922263/2a00000185bf82020b53f168abfbae5e3e17/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9522,
+                  "lon": 30.2555
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.8,
+                "shortDescription": "Лучшая шаверма у ИТМО",
+                "source": "manual",
+                "title": "Cous-Cous",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              }
+            ]
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "startSwipes",
+          "Data": {}
+        },
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": [
+              {
+                "address": "Кронверкский проспект, 27",
+                "boost": null,
+                "boostRadius": null,
+                "description": "Вкусная сырная шаверма и не только",
+                "id": 5,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9615,
+                  "lon": 30.3124
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.5,
+                "shortDescription": "Вкусная шаверма",
+                "source": "manual",
+                "title": "Шавафель",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              },
+              {
+                "address": "Саблинская ул., 12, Санкт-Петербург",
+                "boost": null,
+                "boostRadius": null,
+                "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                "id": 3,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9556,
+                  "lon": 30.2658
+                },
+                "priceAvg": 300,
+                "reviewCount": 1000,
+                "reviewRating": 4.7,
+                "shortDescription": "Пекарня, Кондитерская",
+                "source": "manual",
+                "title": "ЛюдиЛюбят",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              },
+              {
+                "address": "ул. Кропоткина, 19/8, Санкт-Петербург",
+                "boost": null,
+                "boostRadius": null,
+                "description": "Красиво, вкусно и недорого",
+                "id": 4,
+                "images": [
+                  "https://avatars.mds.yandex.net/get-altay/922263/2a00000185bf82020b53f168abfbae5e3e17/XXXL"
+                ],
+                "location": {
+                  "lat": 59.9522,
+                  "lon": 30.2555
+                },
+                "priceAvg": 320,
+                "reviewCount": 1000,
+                "reviewRating": 4.8,
+                "shortDescription": "Лучшая шаверма у ИТМО",
+                "source": "manual",
+                "title": "Cous-Cous",
+                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "url": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "User1 swipe like (1)",
+    "Events": {
+      "user1": [
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": []
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "User2 swipe dislike (1)",
+    "Events": {
+      "user2": [
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "User1 swipe like (2)",
+    "Events": {
+      "user1": [
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": []
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "Name": "User2 swipe like (2)",
+    "Events": {
+      "user1": [
+        {
+          "Event": "match",
+          "Data": {
+            "card": {
+              "address": "Саблинская ул., 12, Санкт-Петербург",
+              "boost": null,
+              "boostRadius": null,
+              "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+              "id": 3,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+              ],
+              "location": {
+                "lat": 59.9556,
+                "lon": 30.2658
+              },
+              "priceAvg": 300,
+              "reviewCount": 1000,
+              "reviewRating": 4.7,
+              "shortDescription": "Пекарня, Кондитерская",
+              "source": "manual",
+              "title": "ЛюдиЛюбят",
+              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "url": null
+            }
+          }
+        },
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  },
+                  {
+                    "avatar": "avatar2",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id2",
+                    "name": "user2",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.677685Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "user2": [
+        {
+          "Event": "match",
+          "Data": {
+            "card": {
+              "address": "Саблинская ул., 12, Санкт-Петербург",
+              "boost": null,
+              "boostRadius": null,
+              "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+              "id": 3,
+              "images": [
+                "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+              ],
+              "location": {
+                "lat": 59.9556,
+                "lon": 30.2658
+              },
+              "priceAvg": 300,
+              "reviewCount": 1000,
+              "reviewRating": 4.7,
+              "shortDescription": "Пекарня, Кондитерская",
+              "source": "manual",
+              "title": "ЛюдиЛюбят",
+              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "url": null
+            }
+          }
+        },
+        {
+          "Event": "results",
+          "Data": {
+            "top": [
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  },
+                  {
+                    "avatar": "avatar2",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id2",
+                    "name": "user2",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.677685Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Кронверкский проспект, 27",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "Вкусная сырная шаверма и не только",
+                  "id": 5,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9691438/2a0000018bc3142dd6dbd390b6c8ba5736de/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9615,
+                    "lon": 30.3124
+                  },
+                  "priceAvg": 320,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Вкусная шаверма",
+                  "source": "manual",
+                  "title": "Шавафель",
+                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Event": "cards",
+          "Data": {
+            "cards": []
+          }
+        }
+      ]
+    }
+  }
+]

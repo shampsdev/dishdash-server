@@ -75,3 +75,15 @@ func (cu *CollectionUseCase) UpdateCollection(ctx context.Context, updateCollect
 func (cu *CollectionUseCase) GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error) {
 	return cu.cRepo.GetAllCollectionsWithPlaces(ctx)
 }
+
+func (cu *CollectionUseCase) GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error) {
+	return cu.cRepo.GetCollectionWithPlacesByID(ctx, collectionID)
+}
+
+func (cu *CollectionUseCase) GetAllCollectionsPreviews(ctx context.Context) ([]*domain.Collection, error) {
+	return cu.cRepo.GetAllCollections(ctx)
+}
+
+func (cu *CollectionUseCase) GetCollectionPreviewByID(ctx context.Context, collectionID string) (*domain.Collection, error) {
+	return cu.cRepo.GetCollectionByID(ctx, collectionID)
+}

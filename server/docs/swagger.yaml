@@ -42,6 +42,25 @@ definitions:
       location:
         $ref: '#/definitions/domain.Coordinate'
     type: object
+  domain.CollectionPreview:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      updatedAt:
+        type: string
+      visible:
+        type: boolean
+    type: object
   domain.Coordinate:
     properties:
       lat:
@@ -403,6 +422,76 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Delete a collection
+      tags:
+      - collections
+    get:
+      consumes:
+      - application/json
+      description: Get a collection with same id from database
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection
+          schema:
+            $ref: '#/definitions/domain.Collection'
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get a collection
+      tags:
+      - collections
+  /collections/preview:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of collections preveiws from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of collections previews
+          schema:
+            items:
+              $ref: '#/definitions/domain.CollectionPreview'
+            type: array
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get collections previews
+      tags:
+      - collections
+  /collections/preview/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a collection preview with same id from database
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection
+          schema:
+            $ref: '#/definitions/domain.CollectionPreview'
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get a collection preview
       tags:
       - collections
   /lobbies:

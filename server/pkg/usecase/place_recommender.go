@@ -7,8 +7,8 @@ import (
 
 	"dishdash.ru/cmd/server/config"
 	"dishdash.ru/pkg/domain"
+	"dishdash.ru/pkg/geo"
 	"dishdash.ru/pkg/repo"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -66,12 +66,15 @@ func (pr *PlaceRecommender) RecommendPlaces(
 			return nil, errors.New("collection recommendation settings are chosen but not set")
 		}
 
-		collection, err := pr.cRepo.GetCollectionByID(ctx, settings.CollectionPlaces.CollectionID)
+		collection, err := pr.cRepo.GetCollectionWithPlacesByID(ctx, settings.CollectionPlaces.CollectionID)
 		if err != nil {
 			return nil, fmt.Errorf("can't get collection: %w", err)
 		}
+		if settings.CollectionPlaces.Location != nil {
+			geo.SortPlacesByDistance(collection.Places, *settings.CollectionPlaces.Location)
+		}
 
-		dbPlaces := collection.Places
+		dbPlaces = collection.Places
 		log.Debugf("Got %d places from db", len(dbPlaces))
 
 	default:
