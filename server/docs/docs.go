@@ -47,92 +47,6 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Update a collection with same id in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Update a collection",
-                "parameters": [
-                    {
-                        "description": "Collection data",
-                        "name": "collection",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecase.UpdateCollectionInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Updated collection",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Collection"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Create a new collection in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Create a collection",
-                "parameters": [
-                    {
-                        "description": "Collection data",
-                        "name": "collection",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/usecase.SaveCollectionInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Saved collection",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Collection"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
             }
         },
         "/collections/preview": {
@@ -242,44 +156,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.Collection"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete a collection with same id in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Delete a collection",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Collection ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1264,32 +1140,6 @@ const docTemplate = `{
                 }
             }
         },
-        "usecase.SaveCollectionInput": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "order": {
-                    "type": "integer"
-                },
-                "places": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "visible": {
-                    "type": "boolean"
-                }
-            }
-        },
         "usecase.SavePlaceInput": {
             "type": "object",
             "properties": {
@@ -1340,35 +1190,6 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
-                }
-            }
-        },
-        "usecase.UpdateCollectionInput": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "order": {
-                    "type": "integer"
-                },
-                "places": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "visible": {
-                    "type": "boolean"
                 }
             }
         },
