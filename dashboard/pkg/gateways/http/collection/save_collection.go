@@ -22,19 +22,19 @@ import (
 // @Router /collections [post]
 func SaveCollection(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
-        var collectionInput usecase.SaveCollectionInput
-        err := c.BindJSON(&collectionInput)
-        if err != nil {
-            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-            return
-        }
+		var collectionInput usecase.SaveCollectionInput
+		err := c.BindJSON(&collectionInput)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 
-        collection, err := collectionUseCase.SaveCollection(c, collectionInput)
-        if err != nil {
-            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-            return
-        }
+		collection, err := collectionUseCase.SaveCollection(c, collectionInput)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 
-        c.JSON(http.StatusOK, collection)
-    }
+		c.JSON(http.StatusOK, collection)
+	}
 }

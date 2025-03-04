@@ -7,29 +7,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// DeleteCollection godoc
-// @Summary Delete a collection
-// @Description Delete a collection with same id in the database
+// GetCollectionByID godoc
+// @Summary Get a collection
+// @Description Get a collection with same id from database
 // @Tags collections
 // @Accept  json
 // @Produce  json
 // @Schemes http https
 // @Param id path string true "Collection ID"
-// @Success 200
-// @Failure 400 "Bad Request"
-// @Failure 500 "Internal Server Error"
+// @Success 200 {object} domain.Collection "Collection"
+// @Failure 500
 // @Security ApiKeyAuth
-// @Router /collections/{id} [delete]
-func DeleteCollection(collectionUseCase usecase.Collection) gin.HandlerFunc {
+// @Router /collections/{id} [get]
+func GetCollectionByID(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 
-		err := collectionUseCase.DeleteCollection(c, id)
+		collection, err := collectionUseCase.GetCollectionByID(c, id)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.Status(http.StatusOK)
+		c.JSON(http.StatusOK, collection)
 	}
 }
