@@ -217,6 +217,32 @@ paths:
       summary: Get places
       tags:
       - places
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Place data
+        in: body
+        name: place
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.UpdatePlaceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Patched place
+          schema:
+            $ref: '#/definitions/domain.Place'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Patch a place
+      tags:
+      - places
     post:
       consumes:
       - application/json
