@@ -3,7 +3,7 @@ package http
 import (
 	"dashboard.dishdash.ru/docs"
 	"dashboard.dishdash.ru/pkg/gateways/http/middlewares"
-	"dashboard.dishdash.ru/pkg/gateways/http/photo"
+	"dashboard.dishdash.ru/pkg/gateways/http/image"
 	"dashboard.dishdash.ru/pkg/gateways/http/place"
 	"dishdash.ru/pkg/usecase"
 	swaggerfiles "github.com/swaggo/files"
@@ -18,7 +18,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	v1.Use(middlewares.Logger())
 	{
 		place.SetupHandlers(v1, useCases)
-		photo.SetupHandlers(v1)
+		image.SetupHandlers(v1)
 	}
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
