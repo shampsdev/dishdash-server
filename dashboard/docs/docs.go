@@ -287,14 +287,13 @@ const docTemplate = `{
                 }
             }
         },
-        "/photo/upload": {
+        "/images/upload/by_file": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Upload a image by url to s3",
                 "consumes": [
                     "application/json"
                 ],
@@ -302,14 +301,21 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "photo"
+                    "images"
                 ],
-                "summary": "Upload a image by url to s3",
+                "summary": "Upload file to s3",
                 "parameters": [
                     {
+                        "type": "file",
+                        "description": "Image data",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "string",
-                        "description": "Url",
-                        "name": "url",
+                        "description": "Directory in s3 storage",
+                        "name": "dir",
                         "in": "query",
                         "required": true
                     }
@@ -318,7 +324,55 @@ const docTemplate = `{
                     "200": {
                         "description": "A url to the stored image",
                         "schema": {
-                            "$ref": "#/definitions/pkg_gateways_http_photo.UploadResponse"
+                            "$ref": "#/definitions/pkg_gateways_http_image.UploadResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Parsing error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/images/upload/by_url": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "UploadByURL a image by url to s3",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "UploadByURL a image by url to s3",
+                "parameters": [
+                    {
+                        "description": "URL and directory in s3 storage",
+                        "name": "uploadByURLRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pkg_gateways_http_image.uploadByURLRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A url to the stored image",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_gateways_http_image.UploadResponse"
                         }
                     },
                     "400": {
@@ -925,9 +979,20 @@ const docTemplate = `{
                 }
             }
         },
-        "pkg_gateways_http_photo.UploadResponse": {
+        "pkg_gateways_http_image.UploadResponse": {
             "type": "object",
             "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "pkg_gateways_http_image.uploadByURLRequest": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string"
+                },
                 "url": {
                     "type": "string"
                 }
