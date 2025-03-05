@@ -67,7 +67,7 @@ func Test(t *testing.T) {
 
 	fw.Step("User2 join lobby", func() {
 		cli2.JoinLobby(lobby)
-	}, 5)
+	}, 6)
 
 	fw.Step("User2 swipes", func() {
 		cli2.Emit(event.Swipe{SwipeType: domain.DISLIKE})

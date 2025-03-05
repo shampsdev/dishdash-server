@@ -67,7 +67,7 @@ func Test(t *testing.T) {
 	cli1 = fw.MustNewClient(&domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
 	fw.Step("Rejoin", func() {
 		cli1.JoinLobby(lobby)
-	}, 4)
+	}, 5)
 
 	assert.NoError(t, cli1.Close())
 
