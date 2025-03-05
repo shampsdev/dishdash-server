@@ -85,7 +85,7 @@ func (pr *PlaceRepo) UpdatePlace(ctx context.Context, place *domain.Place) error
 	  "review_count" = $9,
 	  "updated_at" = $10,
 	  "source" = $11,
-	  "url" = $12
+	  "url" = $12,
 	  "boost" = $13,
 	  "boost_radius" = $14
 	WHERE "id" = $15

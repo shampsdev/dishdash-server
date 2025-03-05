@@ -33,7 +33,7 @@ jobs:
       - name: Lint
         uses: golangci/golangci-lint-action@v4
         with:
-          version: v1.60.3
+          version: v1.63.4
           working-directory: ./server
       
       - name: Unit test
