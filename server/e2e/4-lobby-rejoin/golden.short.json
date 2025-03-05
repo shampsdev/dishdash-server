@@ -200,6 +200,10 @@
     "Events": {
       "user1": [
         {
+          "Event": "startSwipes",
+          "Data": {}
+        },
+        {
           "Event": "cards",
           "Data": {
             "cards": [
