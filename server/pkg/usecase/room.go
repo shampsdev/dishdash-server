@@ -201,6 +201,7 @@ func (r *Room) OnJoin(c *state.Context[*Room]) error {
 			r.userSwiped[c.User.ID] = 0
 		}
 		r.userCardsSeen[c.User.ID] = r.userSwiped[c.User.ID]
+		c.Emit(event.StartSwipes{})
 		r.emitCardsForUser(c, c.User.ID)
 		c.Emit(r.results)
 	}
