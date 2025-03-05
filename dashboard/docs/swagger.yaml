@@ -58,8 +58,15 @@ definitions:
       visible:
         type: boolean
     type: object
-  pkg_gateways_http_photo.UploadResponse:
+  pkg_gateways_http_image.UploadResponse:
     properties:
+      url:
+        type: string
+    type: object
+  pkg_gateways_http_image.uploadByURLRequest:
+    properties:
+      directory:
+        type: string
       url:
         type: string
     type: object
@@ -141,15 +148,19 @@ info:
   title: DishDash Dashboard
   version: "1.0"
 paths:
-  /photo/upload:
+  /images/upload/by_file:
     post:
       consumes:
       - application/json
-      description: Upload a image by url to s3
       parameters:
-      - description: Url
+      - description: Image data
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Directory in s3 storage
         in: query
-        name: url
+        name: dir
         required: true
         type: string
       produces:
@@ -158,7 +169,7 @@ paths:
         "200":
           description: A url to the stored image
           schema:
-            $ref: '#/definitions/pkg_gateways_http_photo.UploadResponse'
+            $ref: '#/definitions/pkg_gateways_http_image.UploadResponse'
         "400":
           description: Parsing error
         "401":
@@ -167,9 +178,39 @@ paths:
           description: Internal Server Error
       security:
       - ApiKeyAuth: []
-      summary: Upload a image by url to s3
+      summary: Upload file to s3
       tags:
-      - photo
+      - images
+  /images/upload/by_url:
+    post:
+      consumes:
+      - application/json
+      description: UploadByURL a image by url to s3
+      parameters:
+      - description: URL and directory in s3 storage
+        in: body
+        name: uploadByURLRequest
+        required: true
+        schema:
+          $ref: '#/definitions/pkg_gateways_http_image.uploadByURLRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: A url to the stored image
+          schema:
+            $ref: '#/definitions/pkg_gateways_http_image.UploadResponse'
+        "400":
+          description: Parsing error
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: UploadByURL a image by url to s3
+      tags:
+      - images
   /place/by_url:
     get:
       consumes:
