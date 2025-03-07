@@ -1,0 +1,36 @@
+services:
+  database:
+    restart: unless-stopped
+    image: postgres:16.7
+    container_name: database
+    volumes:
+      - ~/.pg/crudoshlep-db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "1000:8080"
+    depends_on:
+      - database
+  server:
+    container_name: server
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      HTTP_PORT: 8000
+      POSTGRES_HOST: database
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
