@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 	"math/rand/v2"
-	"strings"
 	"time"
 
 	"dishdash.ru/pkg/domain"
 
-	"github.com/Vaniog/go-postgis"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -138,25 +136,34 @@ func (cr *CollectionRepo) GetAllCollections(ctx context.Context) ([]*domain.Coll
 
 func (cr *CollectionRepo) GetPlacesByCollectionID(ctx context.Context, collectionID string) ([]*domain.Place, error) {
 	const getPlacesQuery = `
-        SELECT 
-            p.id,
-            p.title,
-            p.short_description,
-            p.description,
-            p.images,
-            p.location,
-            p.address,
-            p.price_avg,
-            p.review_rating,
-            p.review_count,
-            p.source,
-            p.url,
-            p.boost,
-            p.boost_radius,
-            p.updated_at
-        FROM "place" AS p
-        JOIN "collection_place" AS cp ON p.id = cp.place_id
-        WHERE cp.collection_id = $1;
+		SELECT
+			p.id,
+			p.title,
+			p.short_description,
+			p.description,
+			p.images,
+			p.location,
+			p.address,
+			p.price_avg,
+			p.review_rating,
+			p.review_count,
+			p.updated_at, 
+			p.source,
+			p.url,
+			p.boost,
+			p.boost_radius,
+			COALESCE(
+				JSON_AGG(
+					JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+				) FILTER (WHERE t.id IS NOT NULL),
+				'[]'
+			) AS tags
+		FROM "place" AS p
+		LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+		LEFT JOIN "tag" AS t ON pt.tag_id = t.id
+		JOIN "collection_place" AS cp ON p.id = cp.place_id
+		WHERE cp.collection_id = $1
+		GROUP BY p.id;
     `
 
 	rows, err := cr.db.Query(ctx, getPlacesQuery, collectionID)
@@ -167,31 +174,10 @@ func (cr *CollectionRepo) GetPlacesByCollectionID(ctx context.Context, collectio
 
 	places := make([]*domain.Place, 0)
 	for rows.Next() {
-		place := new(domain.Place)
-		loc := postgis.PointS{}
-		var images string
-		err := rows.Scan(
-			&place.ID,
-			&place.Title,
-			&place.ShortDescription,
-			&place.Description,
-			&images,
-			&loc,
-			&place.Address,
-			&place.PriceAvg,
-			&place.ReviewRating,
-			&place.ReviewCount,
-			&place.Source,
-			&place.Url,
-			&place.Boost,
-			&place.BoostRadius,
-			&place.UpdatedAt,
-		)
+		place, err := scanPlace(rows)
 		if err != nil {
-			return nil, fmt.Errorf("can't scan place: %w", err)
+			return nil, fmt.Errorf("could not get places by lobby ID: %w", err)
 		}
-		place.Location = domain.FromPostgis(loc)
-		place.Images = strings.Split(images, ",")
 		places = append(places, place)
 	}
 
