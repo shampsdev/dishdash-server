@@ -43,7 +43,6 @@ func Test(t *testing.T) {
 				Location:     &domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
 				CollectionID: "test-collection-1",
 			},
-			ClassicPlaces: &domain.ClassicPlacesSettings{},
 		})
 	}, 1)
 

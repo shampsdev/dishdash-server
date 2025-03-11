@@ -18,7 +18,7 @@ import (
 // @Success 200 {object} domain.CollectionPreview "Collection"
 // @Failure 500
 // @Security ApiKeyAuth
-// @Router /collections/preview/{id} [get]
+// @Router /collections/preview/id/{id} [get]
 func GetCollectionPreviewByID(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")

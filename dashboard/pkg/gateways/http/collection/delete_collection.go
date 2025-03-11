@@ -19,7 +19,7 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
-// @Router /collections/{id} [delete]
+// @Router /collections/id/{id} [delete]
 func DeleteCollection(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
