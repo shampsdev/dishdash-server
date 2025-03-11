@@ -65,6 +65,11 @@ func (l LobbyUseCase) validateLobbySettings(settings domain.LobbySettings) (doma
 		}
 
 		return settings, nil
+	case domain.CollectionPlacesLobbyType:
+		if settings.CollectionPlaces == nil {
+			return domain.LobbySettings{}, fmt.Errorf("collection places settings are required")
+		}
+		return settings, nil
 	default:
 		return domain.LobbySettings{}, fmt.Errorf("unsupported lobby type: %s", settings.Type)
 	}
