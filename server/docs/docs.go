@@ -17,11 +17,6 @@ const docTemplate = `{
     "paths": {
         "/collections": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get a list of collections from the database",
                 "consumes": [
                     "application/json"
@@ -51,11 +46,6 @@ const docTemplate = `{
         },
         "/collections/preview": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get a list of collections preveiws from the database",
                 "consumes": [
                     "application/json"
@@ -85,11 +75,6 @@ const docTemplate = `{
         },
         "/collections/preview/{id}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get a collection preview with same id from database",
                 "consumes": [
                     "application/json"
@@ -125,11 +110,6 @@ const docTemplate = `{
         },
         "/collections/{id}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get a collection with same id from database",
                 "consumes": [
                     "application/json"
