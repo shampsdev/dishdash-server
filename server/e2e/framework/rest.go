@@ -66,12 +66,11 @@ func (fw *Framework) CreateLobby() (*domain.Lobby, error) {
 
 func (fw *Framework) CreateLobbyWithCollection() (*domain.Lobby, error) {
 	settings := domain.LobbySettings{
-		Type: domain.ClassicPlacesLobbyType,
+		Type: domain.CollectionPlacesLobbyType,
 		CollectionPlaces: &domain.CollectionPlacesSettings{
 			Location:     &domain.Coordinate{Lon: 30.310011, Lat: 59.956363},
 			CollectionID: "test-collection-1",
 		},
-		ClassicPlaces: &domain.ClassicPlacesSettings{},
 	}
 
 	b, err := json.Marshal(settings)
