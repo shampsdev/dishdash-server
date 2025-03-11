@@ -17,7 +17,6 @@ import (
 // @Schemes http https
 // @Success 200 {array} domain.Collection "List of collections"
 // @Failure 500
-// @Security ApiKeyAuth
 // @Router /collections [get]
 func GetAllCollections(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {

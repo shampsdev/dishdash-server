@@ -17,7 +17,6 @@ import (
 // @Param id path string true "Collection ID"
 // @Success 200 {object} domain.Collection "Collection"
 // @Failure 500
-// @Security ApiKeyAuth
 // @Router /collections/{id} [get]
 func GetCollectionByID(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {

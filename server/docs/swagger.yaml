@@ -304,8 +304,6 @@ paths:
             type: array
         "500":
           description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
       summary: Get collections
       tags:
       - collections
@@ -329,8 +327,6 @@ paths:
             $ref: '#/definitions/domain.Collection'
         "500":
           description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
       summary: Get a collection
       tags:
       - collections
@@ -350,8 +346,6 @@ paths:
             type: array
         "500":
           description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
       summary: Get collections previews
       tags:
       - collections
@@ -375,8 +369,6 @@ paths:
             $ref: '#/definitions/domain.CollectionPreview'
         "500":
           description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
       summary: Get a collection preview
       tags:
       - collections
