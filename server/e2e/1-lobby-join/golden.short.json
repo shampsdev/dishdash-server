@@ -6,17 +6,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         }
       ],

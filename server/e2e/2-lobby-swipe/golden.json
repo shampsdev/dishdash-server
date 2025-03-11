@@ -165,7 +165,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               },
               {
@@ -203,7 +203,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               },
               {
@@ -248,7 +248,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]
@@ -299,7 +299,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               },
               {
@@ -337,7 +337,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               },
               {
@@ -382,7 +382,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]
@@ -435,7 +435,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -445,7 +445,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -498,7 +498,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]
@@ -546,7 +546,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -556,7 +556,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -616,7 +616,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]
@@ -633,56 +633,6 @@
           "Event": "results",
           "Data": {
             "top": [
-              {
-                "card": {
-                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                  "boost": null,
-                  "boostRadius": null,
-                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-                  "id": 1,
-                  "images": [
-                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-                  ],
-                  "location": {
-                    "lat": 59.9505,
-                    "lon": 30.2956
-                  },
-                  "priceAvg": 450,
-                  "reviewCount": 1000,
-                  "reviewRating": 4.5,
-                  "shortDescription": "Ресторан узбекской кухни",
-                  "source": "manual",
-                  "tags": [
-                    {
-                      "icon": "cafe.png",
-                      "id": 2,
-                      "name": "cafe",
-                      "order": 0,
-                      "visible": true
-                    },
-                    {
-                      "icon": "food.png",
-                      "id": 4,
-                      "name": "food",
-                      "order": 0,
-                      "visible": true
-                    }
-                  ],
-                  "title": "Пловная",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
-                  "url": null
-                },
-                "likes": [
-                  {
-                    "avatar": "avatar1",
-                    "createdAt": "0001-01-01T00:00:00Z",
-                    "id": "id1",
-                    "name": "user1",
-                    "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
-                  }
-                ]
-              },
               {
                 "card": {
                   "address": "Кронверкский проспект, 27",
@@ -719,7 +669,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -729,7 +679,57 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                  "id": 1,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9505,
+                    "lon": 30.2956
+                  },
+                  "priceAvg": 450,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Ресторан узбекской кухни",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Пловная",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -782,7 +782,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]
@@ -794,56 +794,6 @@
           "Event": "results",
           "Data": {
             "top": [
-              {
-                "card": {
-                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
-                  "boost": null,
-                  "boostRadius": null,
-                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
-                  "id": 1,
-                  "images": [
-                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
-                  ],
-                  "location": {
-                    "lat": 59.9505,
-                    "lon": 30.2956
-                  },
-                  "priceAvg": 450,
-                  "reviewCount": 1000,
-                  "reviewRating": 4.5,
-                  "shortDescription": "Ресторан узбекской кухни",
-                  "source": "manual",
-                  "tags": [
-                    {
-                      "icon": "cafe.png",
-                      "id": 2,
-                      "name": "cafe",
-                      "order": 0,
-                      "visible": true
-                    },
-                    {
-                      "icon": "food.png",
-                      "id": 4,
-                      "name": "food",
-                      "order": 0,
-                      "visible": true
-                    }
-                  ],
-                  "title": "Пловная",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
-                  "url": null
-                },
-                "likes": [
-                  {
-                    "avatar": "avatar1",
-                    "createdAt": "0001-01-01T00:00:00Z",
-                    "id": "id1",
-                    "name": "user1",
-                    "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
-                  }
-                ]
-              },
               {
                 "card": {
                   "address": "Кронверкский проспект, 27",
@@ -880,7 +830,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -890,7 +840,57 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Сытнинская ул., 4П, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "«Пловная» — это ресторан узбекской кухни, расположенный недалеко от Сытного рынка на Петроградской стороне. По словам посетителей, это одно из лучших мест в городе для тех, кто хочет попробовать настоящий узбекский плов.",
+                  "id": 1,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/10814540/2a0000018b5c49e5aa64362e66f0e493e1a9/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9505,
+                    "lon": 30.2956
+                  },
+                  "priceAvg": 450,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.5,
+                  "shortDescription": "Ресторан узбекской кухни",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "Пловная",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -942,7 +942,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-04T08:54:01.117169Z",
+              "updatedAt": "2025-03-11T19:01:09.919964Z",
               "url": null
             }
           }
@@ -987,7 +987,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -997,7 +997,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -1005,7 +1005,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.18179Z"
+                    "updatedAt": "2025-03-11T19:01:09.9427Z"
                   }
                 ]
               },
@@ -1045,7 +1045,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -1055,7 +1055,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -1102,7 +1102,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-04T08:54:01.117169Z",
+              "updatedAt": "2025-03-11T19:01:09.919964Z",
               "url": null
             }
           }
@@ -1147,7 +1147,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -1157,7 +1157,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -1165,7 +1165,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.18179Z"
+                    "updatedAt": "2025-03-11T19:01:09.9427Z"
                   }
                 ]
               },
@@ -1205,7 +1205,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T08:54:01.117169Z",
+                  "updatedAt": "2025-03-11T19:01:09.919964Z",
                   "url": null
                 },
                 "likes": [
@@ -1215,7 +1215,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T08:54:01.178156Z"
+                    "updatedAt": "2025-03-11T19:01:09.940384Z"
                   }
                 ]
               }
@@ -1268,7 +1268,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-04T08:54:01.117169Z",
+                "updatedAt": "2025-03-11T19:01:09.919964Z",
                 "url": null
               }
             ]

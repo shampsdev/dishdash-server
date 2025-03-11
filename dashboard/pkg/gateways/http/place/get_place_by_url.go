@@ -21,7 +21,7 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
-// @Router /place/by_url [get]
+// @Router /places/by_url [get]
 func GetPlaceByURL(placeUseCase usecase.Place) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		place, err := placeUseCase.GetPlaceByUrl(c, c.Query("url"))

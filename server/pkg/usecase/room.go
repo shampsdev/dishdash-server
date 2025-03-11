@@ -164,7 +164,7 @@ func (r *Room) evalResults() (event.Results, error) {
 		if len(b.Likes) != len(a.Likes) {
 			return len(b.Likes) - len(a.Likes)
 		}
-		return card2Position[b.Card.ID] - card2Position[a.Card.ID]
+		return card2Position[a.Card.ID] - card2Position[b.Card.ID]
 	})
 
 	return event.Results{Top: top}, nil
