@@ -127,81 +127,7 @@
                 }
             }
         },
-        "/collections/preview": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get a list of collections preveiws from the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Get collections previews",
-                "responses": {
-                    "200": {
-                        "description": "List of collections previews",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.CollectionPreview"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/collections/preview/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get a collection preview with same id from database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Get a collection preview",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Collection ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Collection",
-                        "schema": {
-                            "$ref": "#/definitions/domain.CollectionPreview"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/collections/{id}": {
+        "/collections/id/{id}": {
             "get": {
                 "security": [
                     {
@@ -272,6 +198,80 @@
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/collections/preview": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a list of collections preveiws from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "collections"
+                ],
+                "summary": "Get collections previews",
+                "responses": {
+                    "200": {
+                        "description": "List of collections previews",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.CollectionPreview"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/collections/preview/id/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a collection preview with same id from database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "collections"
+                ],
+                "summary": "Get a collection preview",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Collection ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Collection",
+                        "schema": {
+                            "$ref": "#/definitions/domain.CollectionPreview"
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -486,7 +486,46 @@
                 }
             }
         },
-        "/places/{id}": {
+        "/places/id/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a place from the database by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Get place by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Place ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "place data",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
