@@ -544,6 +544,102 @@ paths:
       summary: Get place by url
       tags:
       - places
+  /places/tag:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of tags from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tags
+          schema:
+            items:
+              $ref: '#/definitions/domain.Tag'
+            type: array
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get tags
+      tags:
+      - tags
+    post:
+      consumes:
+      - application/json
+      description: Create a new tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Create a tag
+      tags:
+      - tags
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Update a tag
+      tags:
+      - tags
+  /places/tag/id/{id}:
+    delete:
+      description: Delete an existing tag from the database
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tag deleted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a tag
+      tags:
+      - tags
 securityDefinitions:
   ApiKeyAuth:
     in: header
