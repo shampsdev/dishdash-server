@@ -35,17 +35,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         }
       ]
@@ -182,8 +182,8 @@
             "results": [
               {
                 "card": {
-                  "id": 3,
-                  "title": "ЛюдиЛюбят"
+                  "id": 5,
+                  "title": "Шавафель"
                 },
                 "likes": [
                   {
@@ -194,8 +194,8 @@
               },
               {
                 "card": {
-                  "id": 5,
-                  "title": "Шавафель"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -221,8 +221,8 @@
             "results": [
               {
                 "card": {
-                  "id": 3,
-                  "title": "ЛюдиЛюбят"
+                  "id": 5,
+                  "title": "Шавафель"
                 },
                 "likes": [
                   {
@@ -233,8 +233,8 @@
               },
               {
                 "card": {
-                  "id": 5,
-                  "title": "Шавафель"
+                  "id": 3,
+                  "title": "ЛюдиЛюбят"
                 },
                 "likes": [
                   {
@@ -274,8 +274,31 @@
               "reviewRating": 4.7,
               "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "coffee.png",
+                  "id": 3,
+                  "name": "coffee",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "updatedAt": "2025-03-11T19:01:21.402947Z",
               "url": null
             }
           }
@@ -338,8 +361,31 @@
               "reviewRating": 4.7,
               "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "coffee.png",
+                  "id": 3,
+                  "name": "coffee",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "updatedAt": "2025-03-11T19:01:21.402947Z",
               "url": null
             }
           }

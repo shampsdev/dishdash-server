@@ -139,7 +139,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-03-02T16:39:02.814121Z",
+              "updatedAt": "2025-03-11T19:01:12.301146Z",
               "url": null
             }
           }
@@ -230,7 +230,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-03-02T16:39:02.814121Z",
+              "updatedAt": "2025-03-11T19:01:12.301146Z",
               "url": null
             }
           }
@@ -241,8 +241,8 @@
             "results": [
               {
                 "card": {
-                  "id": 2,
-                  "title": "Zoomer Coffee"
+                  "id": 5,
+                  "title": "Шавафель"
                 },
                 "likes": [
                   {
@@ -253,8 +253,8 @@
               },
               {
                 "card": {
-                  "id": 5,
-                  "title": "Шавафель"
+                  "id": 2,
+                  "title": "Zoomer Coffee"
                 },
                 "likes": [
                   {
@@ -312,8 +312,8 @@
             "results": [
               {
                 "card": {
-                  "id": 2,
-                  "title": "Zoomer Coffee"
+                  "id": 5,
+                  "title": "Шавафель"
                 },
                 "likes": [
                   {
@@ -324,8 +324,8 @@
               },
               {
                 "card": {
-                  "id": 5,
-                  "title": "Шавафель"
+                  "id": 2,
+                  "title": "Zoomer Coffee"
                 },
                 "likes": [
                   {
@@ -340,17 +340,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         },
         {
@@ -405,8 +405,8 @@
             "results": [
               {
                 "card": {
-                  "id": 2,
-                  "title": "Zoomer Coffee"
+                  "id": 5,
+                  "title": "Шавафель"
                 },
                 "likes": [
                   {
@@ -429,8 +429,8 @@
               },
               {
                 "card": {
-                  "id": 5,
-                  "title": "Шавафель"
+                  "id": 2,
+                  "title": "Zoomer Coffee"
                 },
                 "likes": [
                   {
@@ -498,7 +498,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-03-02T16:39:02.814121Z",
+              "updatedAt": "2025-03-11T19:01:12.301146Z",
               "url": null
             }
           }
@@ -525,18 +525,6 @@
               },
               {
                 "card": {
-                  "id": 1,
-                  "title": "Пловная"
-                },
-                "likes": [
-                  {
-                    "id": "id2",
-                    "name": "user2"
-                  }
-                ]
-              },
-              {
-                "card": {
                   "id": 5,
                   "title": "Шавафель"
                 },
@@ -544,6 +532,18 @@
                   {
                     "id": "id1",
                     "name": "user1"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "id": 1,
+                  "title": "Пловная"
+                },
+                "likes": [
+                  {
+                    "id": "id2",
+                    "name": "user2"
                   }
                 ]
               }

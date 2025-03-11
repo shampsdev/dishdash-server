@@ -35,17 +35,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         }
       ]
@@ -81,8 +81,24 @@
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               },
               {
@@ -103,8 +119,31 @@
                 "reviewRating": 4.7,
                 "shortDescription": "Пекарня, Кондитерская",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               },
               {
@@ -125,8 +164,31 @@
                 "reviewRating": 4.8,
                 "shortDescription": "Лучшая шаверма у ИТМО",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "bar.png",
+                    "id": 1,
+                    "name": "bar",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               }
             ]
@@ -160,8 +222,24 @@
                 "reviewRating": 4.5,
                 "shortDescription": "Вкусная шаверма",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               },
               {
@@ -182,8 +260,31 @@
                 "reviewRating": 4.7,
                 "shortDescription": "Пекарня, Кондитерская",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "coffee.png",
+                    "id": 3,
+                    "name": "coffee",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               },
               {
@@ -204,8 +305,31 @@
                 "reviewRating": 4.8,
                 "shortDescription": "Лучшая шаверма у ИТМО",
                 "source": "manual",
+                "tags": [
+                  {
+                    "icon": "bar.png",
+                    "id": 1,
+                    "name": "bar",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "cafe.png",
+                    "id": 2,
+                    "name": "cafe",
+                    "order": 0,
+                    "visible": true
+                  },
+                  {
+                    "icon": "food.png",
+                    "id": 4,
+                    "name": "food",
+                    "order": 0,
+                    "visible": true
+                  }
+                ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-04T19:54:05.565Z",
+                "updatedAt": "2025-03-11T19:01:21.402947Z",
                 "url": null
               }
             ]
@@ -241,8 +365,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -252,7 +392,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
@@ -290,8 +430,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -301,7 +457,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
@@ -334,40 +490,6 @@
             "top": [
               {
                 "card": {
-                  "address": "Саблинская ул., 12, Санкт-Петербург",
-                  "boost": null,
-                  "boostRadius": null,
-                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
-                  "id": 3,
-                  "images": [
-                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
-                  ],
-                  "location": {
-                    "lat": 59.9556,
-                    "lon": 30.2658
-                  },
-                  "priceAvg": 300,
-                  "reviewCount": 1000,
-                  "reviewRating": 4.7,
-                  "shortDescription": "Пекарня, Кондитерская",
-                  "source": "manual",
-                  "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
-                  "url": null
-                },
-                "likes": [
-                  {
-                    "avatar": "avatar1",
-                    "createdAt": "0001-01-01T00:00:00Z",
-                    "id": "id1",
-                    "name": "user1",
-                    "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
-                  }
-                ]
-              },
-              {
-                "card": {
                   "address": "Кронверкский проспект, 27",
                   "boost": null,
                   "boostRadius": null,
@@ -385,8 +507,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -396,7 +534,64 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "coffee.png",
+                      "id": 3,
+                      "name": "coffee",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
@@ -417,40 +612,6 @@
             "top": [
               {
                 "card": {
-                  "address": "Саблинская ул., 12, Санкт-Петербург",
-                  "boost": null,
-                  "boostRadius": null,
-                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
-                  "id": 3,
-                  "images": [
-                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
-                  ],
-                  "location": {
-                    "lat": 59.9556,
-                    "lon": 30.2658
-                  },
-                  "priceAvg": 300,
-                  "reviewCount": 1000,
-                  "reviewRating": 4.7,
-                  "shortDescription": "Пекарня, Кондитерская",
-                  "source": "manual",
-                  "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
-                  "url": null
-                },
-                "likes": [
-                  {
-                    "avatar": "avatar1",
-                    "createdAt": "0001-01-01T00:00:00Z",
-                    "id": "id1",
-                    "name": "user1",
-                    "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
-                  }
-                ]
-              },
-              {
-                "card": {
                   "address": "Кронверкский проспект, 27",
                   "boost": null,
                   "boostRadius": null,
@@ -468,8 +629,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -479,7 +656,64 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                  }
+                ]
+              },
+              {
+                "card": {
+                  "address": "Саблинская ул., 12, Санкт-Петербург",
+                  "boost": null,
+                  "boostRadius": null,
+                  "description": "ЛюдиЛюбят - отличная пекарня с классными комбо на обед.",
+                  "id": 3,
+                  "images": [
+                    "https://avatars.mds.yandex.net/get-altay/9753788/2a0000018a2cf1ef9ad2f7880c260e4379ef/XXXL"
+                  ],
+                  "location": {
+                    "lat": 59.9556,
+                    "lon": 30.2658
+                  },
+                  "priceAvg": 300,
+                  "reviewCount": 1000,
+                  "reviewRating": 4.7,
+                  "shortDescription": "Пекарня, Кондитерская",
+                  "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "coffee.png",
+                      "id": 3,
+                      "name": "coffee",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
+                  "title": "ЛюдиЛюбят",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "url": null
+                },
+                "likes": [
+                  {
+                    "avatar": "avatar1",
+                    "createdAt": "0001-01-01T00:00:00Z",
+                    "id": "id1",
+                    "name": "user1",
+                    "telegram": null,
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
@@ -514,8 +748,31 @@
               "reviewRating": 4.7,
               "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "coffee.png",
+                  "id": 3,
+                  "name": "coffee",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "updatedAt": "2025-03-11T19:01:21.402947Z",
               "url": null
             }
           }
@@ -543,8 +800,31 @@
                   "reviewRating": 4.7,
                   "shortDescription": "Пекарня, Кондитерская",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "coffee.png",
+                      "id": 3,
+                      "name": "coffee",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -554,7 +834,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -562,7 +842,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.677685Z"
+                    "updatedAt": "2025-03-11T19:01:21.417158Z"
                   }
                 ]
               },
@@ -585,8 +865,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -596,7 +892,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
@@ -626,8 +922,31 @@
               "reviewRating": 4.7,
               "shortDescription": "Пекарня, Кондитерская",
               "source": "manual",
+              "tags": [
+                {
+                  "icon": "cafe.png",
+                  "id": 2,
+                  "name": "cafe",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "coffee.png",
+                  "id": 3,
+                  "name": "coffee",
+                  "order": 0,
+                  "visible": true
+                },
+                {
+                  "icon": "food.png",
+                  "id": 4,
+                  "name": "food",
+                  "order": 0,
+                  "visible": true
+                }
+              ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-04T19:54:05.565Z",
+              "updatedAt": "2025-03-11T19:01:21.402947Z",
               "url": null
             }
           }
@@ -655,8 +974,31 @@
                   "reviewRating": 4.7,
                   "shortDescription": "Пекарня, Кондитерская",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "coffee.png",
+                      "id": 3,
+                      "name": "coffee",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -666,7 +1008,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -674,7 +1016,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.677685Z"
+                    "updatedAt": "2025-03-11T19:01:21.417158Z"
                   }
                 ]
               },
@@ -697,8 +1039,24 @@
                   "reviewRating": 4.5,
                   "shortDescription": "Вкусная шаверма",
                   "source": "manual",
+                  "tags": [
+                    {
+                      "icon": "cafe.png",
+                      "id": 2,
+                      "name": "cafe",
+                      "order": 0,
+                      "visible": true
+                    },
+                    {
+                      "icon": "food.png",
+                      "id": 4,
+                      "name": "food",
+                      "order": 0,
+                      "visible": true
+                    }
+                  ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-04T19:54:05.565Z",
+                  "updatedAt": "2025-03-11T19:01:21.402947Z",
                   "url": null
                 },
                 "likes": [
@@ -708,7 +1066,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-04T19:54:05.627963Z"
+                    "updatedAt": "2025-03-11T19:01:21.415582Z"
                   }
                 ]
               }
