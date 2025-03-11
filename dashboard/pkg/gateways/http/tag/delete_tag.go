@@ -11,13 +11,13 @@ import (
 // DeleteTag godoc
 // @Summary Delete a tag
 // @Description Delete an existing tag from the database
-// @Tags places
+// @Tags tags
 // @Param id path int true "Tag ID"
 // @Success 200 "Tag deleted"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
-// @Router /places/tag/{id} [delete]
+// @Router /places/tag/id/{id} [delete]
 func DeleteTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
