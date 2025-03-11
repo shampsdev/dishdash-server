@@ -6,6 +6,7 @@ import (
 	"dashboard.dishdash.ru/pkg/gateways/http/middlewares"
 	"dashboard.dishdash.ru/pkg/gateways/http/photo"
 	"dashboard.dishdash.ru/pkg/gateways/http/place"
+	"dashboard.dishdash.ru/pkg/gateways/http/tag"
 	"dishdash.ru/pkg/usecase"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -19,6 +20,7 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	v1.Use(middlewares.Logger())
 	{
 		place.SetupHandlers(v1, useCases)
+		tag.SetupHandlers(v1, useCases)
 		photo.SetupHandlers(v1)
 		collection.SetupHandlers(v1, useCases)
 	}

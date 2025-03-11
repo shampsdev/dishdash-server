@@ -1,39 +1,41 @@
-package place
+package tag
 
 import (
 	"net/http"
-	"strconv"
 
+	"dishdash.ru/pkg/domain"
 	"dishdash.ru/pkg/usecase"
 	"github.com/gin-gonic/gin"
 )
 
-// DeletePlace godoc
-// @Summary Delete a place
-// @Description Delete a place with same id in the database
-// @Tags places
+// UpdateTag godoc
+// @Summary Update a tag
+// @Description Update an existing tag in the database
+// @Tags tags
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param id path string true "Place ID"
-// @Success 200
+// @Param tag body domain.Tag true "Tag data"
+// @Success 200 {object} domain.Tag "Updated tag"
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
+// @Router /places/tag [put]
 // @Security ApiKeyAuth
-// @Router /places/{id} [delete]
-func DeletePlace(placeUseCase usecase.Place) gin.HandlerFunc {
+func UpdateTag(tagUseCase usecase.Tag) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		err = placeUseCase.DeletePlace(c, id)
+		tag := new(domain.Tag)
+		err := c.BindJSON(&tag)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.Status(http.StatusOK)
+		tag, err = tagUseCase.UpdateTag(c, tag)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, tag)
 	}
 }

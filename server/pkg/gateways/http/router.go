@@ -6,7 +6,6 @@ import (
 	"dishdash.ru/pkg/gateways/http/lobby"
 	"dishdash.ru/pkg/gateways/http/metric"
 	"dishdash.ru/pkg/gateways/http/middlewares"
-	"dishdash.ru/pkg/gateways/http/place"
 	"dishdash.ru/pkg/gateways/http/tag"
 	"dishdash.ru/pkg/gateways/http/user"
 	"dishdash.ru/pkg/usecase"
@@ -22,7 +21,6 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	metric.AddBasicMetrics(v1)
 	v1.Use(middlewares.Logger())
 	{
-		place.SetupHandlers(v1, useCases)
 		lobby.SetupHandlers(v1, useCases)
 		user.SetupHandlers(v1, useCases)
 		tag.SetupHandlers(v1, useCases)
