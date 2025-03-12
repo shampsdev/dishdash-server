@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	algo "dishdash.ru/pkg/algo"
 	"dishdash.ru/pkg/domain"
 )
 
@@ -105,4 +106,26 @@ type Collection interface {
 	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 	GetAllCollectionsPreviews(ctx context.Context) ([]*domain.Collection, error)
 	GetCollectionPreviewByID(ctx context.Context, collectionID string) (*domain.Collection, error)
+}
+
+func UpdatePlaceInputFromDomain(place *domain.Place) UpdatePlaceInput {
+	return UpdatePlaceInput{
+		ID: place.ID,
+		SavePlaceInput: SavePlaceInput{
+			Title:            place.Title,
+			ShortDescription: place.ShortDescription,
+			Description:      place.Description,
+			Location:         place.Location,
+			Address:          place.Address,
+			PriceAvg:         place.PriceAvg,
+			ReviewRating:     place.ReviewRating,
+			ReviewCount:      place.ReviewCount,
+			Source:           place.Source,
+			Url:              place.Url,
+			Boost:            place.Boost,
+			BoostRadius:      place.BoostRadius,
+			Images:           place.Images,
+			Tags:             algo.Map(place.Tags, func(t *domain.Tag) int64 { return t.ID }),
+		},
+	}
 }

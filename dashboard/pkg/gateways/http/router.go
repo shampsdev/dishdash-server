@@ -3,8 +3,8 @@ package http
 import (
 	"dashboard.dishdash.ru/docs"
 	"dashboard.dishdash.ru/pkg/gateways/http/collection"
+	"dashboard.dishdash.ru/pkg/gateways/http/image"
 	"dashboard.dishdash.ru/pkg/gateways/http/middlewares"
-	"dashboard.dishdash.ru/pkg/gateways/http/photo"
 	"dashboard.dishdash.ru/pkg/gateways/http/place"
 	"dashboard.dishdash.ru/pkg/gateways/http/tag"
 	"dishdash.ru/pkg/usecase"
@@ -21,8 +21,8 @@ func setupRouter(s *Server, useCases usecase.Cases) {
 	{
 		place.SetupHandlers(v1, useCases)
 		tag.SetupHandlers(v1, useCases)
-		photo.SetupHandlers(v1)
 		collection.SetupHandlers(v1, useCases)
+		image.SetupHandlers(v1)
 	}
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
