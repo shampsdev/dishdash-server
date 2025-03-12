@@ -1,0 +1,43 @@
+definitions:
+  github_com_shampsdev_dishdash-server_crudoshlep_pkg_usecase.SaveEventInput:
+    properties:
+      data:
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Save analytics events
+  title: Crudoshlep server
+  version: "1.0"
+paths:
+  /events:
+    post:
+      consumes:
+      - application/json
+      description: Save event, you can type any valid json in data field
+      parameters:
+      - description: Event data
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_shampsdev_dishdash-server_crudoshlep_pkg_usecase.SaveEventInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Save event
+      tags:
+      - events
+swagger: "2.0"
