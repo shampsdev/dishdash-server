@@ -20,7 +20,7 @@ import (
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
-// @Router /places/{id} [delete]
+// @Router /places/id/{id} [delete]
 func DeletePlace(placeUseCase usecase.Place) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)

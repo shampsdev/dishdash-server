@@ -14,6 +14,7 @@ import (
 type Session struct {
 	lock         sync.Mutex
 	recordEvents map[string]struct{}
+	shorteners   map[string]Shortener
 
 	Steps []*Step
 }
@@ -30,7 +31,10 @@ type EventData struct {
 }
 
 func New() *Session {
-	return &Session{}
+	return &Session{
+		recordEvents: make(map[string]struct{}),
+		shorteners:   make(map[string]Shortener),
+	}
 }
 
 func (s *Session) NewStep(name string) {
@@ -71,6 +75,10 @@ func (s *Session) SetRecordEvents(events ...string) {
 	}
 }
 
+func (s *Session) UseShortener(event string, sh Shortener) {
+	s.shorteners[event] = sh
+}
+
 // WaitNResponses waits for n responses to be recorded with [Session.RecordEvent]
 func (s *Session) WaitNResponses(n uint32) {
 	timeout := time.NewTimer(time.Second * 10).C
@@ -94,6 +102,36 @@ func (s *Session) SaveToFile(file string) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
+	return s.saveStepsToFile(s.Steps, file)
+}
+
+func (s *Session) SaveToFileShortened(file string) error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
+	stepsShortened := make([]*Step, len(s.Steps))
+	for i, step := range s.Steps {
+		stepsShortened[i] = &Step{
+			Name:   step.Name,
+			Events: make(map[string][]EventData),
+		}
+		for user, events := range step.Events {
+			for _, event := range events {
+				data := event.Data
+				if sh, ok := s.shorteners[event.Event]; ok {
+					data = sh(data)
+				}
+				stepsShortened[i].Events[user] = append(stepsShortened[i].Events[user], EventData{
+					Event: event.Event,
+					Data:  data,
+				})
+			}
+		}
+	}
+	return s.saveStepsToFile(stepsShortened, file)
+}
+
+func (s *Session) saveStepsToFile(steps []*Step, file string) error {
 	f, err := os.Create(file)
 	if err != nil {
 		return fmt.Errorf("failed to create file: %w", err)
@@ -102,7 +140,7 @@ func (s *Session) SaveToFile(file string) error {
 
 	encoder := json.NewEncoder(f)
 	encoder.SetIndent("", "  ")
-	err = encoder.Encode(s.Steps)
+	err = encoder.Encode(steps)
 	if err != nil {
 		return err
 	}

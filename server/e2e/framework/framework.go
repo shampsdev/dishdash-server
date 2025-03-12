@@ -102,6 +102,10 @@ func (fw *Framework) RecordEvents(events ...string) {
 	fw.Session.SetRecordEvents(events...)
 }
 
+func (fw *Framework) UseShortener(event string, sh session.Shortener) {
+	fw.Session.UseShortener(event, sh)
+}
+
 // Step
 // 1. Adds a new step to the session
 // 2. Runs the function

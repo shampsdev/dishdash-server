@@ -15,6 +15,7 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	placeGroup.GET("", GetAllPlaces(cases.Place))
 	placeGroup.POST("", SavePlace(cases.Place))
 	placeGroup.PUT("", UpdatePlace(cases.Place))
+	placeGroup.GET("id/:id", GetPlaceByID(cases.Place))
+	placeGroup.DELETE("id/:id", DeletePlace(cases.Place))
 	placeGroup.PATCH("", PatchPlace(cases.Place))
-	placeGroup.DELETE(":id", DeletePlace(cases.Place))
 }

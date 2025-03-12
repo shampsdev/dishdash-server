@@ -6,19 +6,16 @@ const (
 	ErrorEvent = "error"
 
 	JoinLobbyEvent      = "joinLobby"
-	LeaveLobbyEvent     = "leaveLobby"
 	UserJoinedEvent     = "userJoined"
+	LeaveLobbyEvent     = "leaveLobby"
 	UserLeftEvent       = "userLeft"
 	SettingsUpdateEvent = "settingsUpdate"
 	StartSwipesEvent    = "startSwipes"
-	PlaceEvent          = "card"
+	CardsEvent          = "cards"
 	SwipeEvent          = "swipe"
-	FinishEvent         = "finish"
+	MatchEvent          = "match"
 
-	VoteAnnounceEvent = "voteAnnounce"
-	VoteEvent         = "vote"
-	VotedEvent        = "voted"
-	VoteResultEvent   = "voteResult"
+	ResultsEvent = "results"
 )
 
 type Error struct {
@@ -54,15 +51,7 @@ type UserLeft struct {
 
 func (e UserLeft) Event() string { return UserLeftEvent }
 
-type SettingsUpdate struct {
-	Location           domain.Coordinate          `json:"location"`
-	UserID             string                     `json:"userId"`
-	PriceMin           int                        `json:"priceMin"`
-	PriceMax           int                        `json:"priceMax"`
-	MaxDistance        int                        `json:"maxDistance"`
-	Tags               []int64                    `json:"tags"`
-	RecommendationOpts *domain.RecommendationOpts `json:"recommendation"`
-}
+type SettingsUpdate domain.LobbySettings
 
 func (e SettingsUpdate) Event() string { return SettingsUpdateEvent }
 
@@ -70,12 +59,11 @@ type StartSwipes struct{}
 
 func (e StartSwipes) Event() string { return StartSwipesEvent }
 
-type Place struct {
-	ID   int64         `json:"id"`
-	Card *domain.Place `json:"card"`
+type Cards struct {
+	Cards []*domain.Place `json:"cards"`
 }
 
-func (e Place) Event() string { return PlaceEvent }
+func (e Cards) Event() string { return CardsEvent }
 
 type Swipe struct {
 	SwipeType domain.SwipeType `json:"swipeType"`
@@ -83,86 +71,19 @@ type Swipe struct {
 
 func (e Swipe) Event() string { return SwipeEvent }
 
-type VoteType string
-
-const (
-	VoteTypeMatch  VoteType = "match"
-	VoteTypeFinish VoteType = "finish"
-)
-
-type OptionID int64
-
-type VoteOption struct {
-	ID   OptionID `json:"id"`
-	Desc string   `json:"description"`
-}
-
-const (
-	OptionIDLike OptionID = iota
-	OptionIDDislike
-
-	OptionIDFinish
-	OptionIDContinue
-)
-
 type Match struct {
-	ID    int           `json:"id"`
-	Place *domain.Place `json:"card"`
+	Card *domain.Place `json:"card"`
 }
 
-type BaseVote struct {
-	ID      int64               `json:"id"`
-	Options []VoteOption        `json:"options"`
-	Type    VoteType            `json:"type"`
-	Votes   map[string]OptionID `json:"-"`
+func (e Match) Event() string { return MatchEvent }
+
+type Results struct {
+	Top []TopPosition `json:"top"`
 }
 
-type VoteAnnounce interface {
-	Event() string
-	isVoteAnnounce()
+type TopPosition struct {
+	Card  *domain.Place  `json:"card"`
+	Likes []*domain.User `json:"likes"`
 }
 
-type FinishVote struct {
-	BaseVote
-}
-
-func (v FinishVote) Event() string   { return VoteAnnounceEvent }
-func (v FinishVote) isVoteAnnounce() {}
-
-type MatchVote struct {
-	BaseVote
-	Place *domain.Place `json:"card"`
-}
-
-func (v MatchVote) Event() string   { return VoteAnnounceEvent }
-func (v MatchVote) isVoteAnnounce() {}
-
-type VoteResult struct {
-	Type     VoteType `json:"-"`
-	VoteID   int64    `json:"voteId"`
-	OptionID OptionID `json:"optionId"`
-}
-
-func (v VoteResult) Event() string { return VoteResultEvent }
-
-type Vote struct {
-	VoteID   int64    `json:"voteId"`
-	OptionID OptionID `json:"optionId"`
-}
-
-func (v Vote) Event() string { return VoteEvent }
-
-type Voted struct {
-	VoteID   int64      `json:"voteId"`
-	OptionID OptionID   `json:"optionId"`
-	User     UserJoined `json:"user"`
-}
-
-func (v Voted) Event() string { return VotedEvent }
-
-type Finish struct {
-	Result  *domain.Place `json:"result"`
-	Matches []*Match      `json:"matches"`
-}
-
-func (v Finish) Event() string { return FinishEvent }
+func (e Results) Event() string { return ResultsEvent }

@@ -1,4 +1,46 @@
 definitions:
+  domain.Collection:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      places:
+        items:
+          $ref: '#/definitions/domain.Place'
+        type: array
+      updatedAt:
+        type: string
+      visible:
+        type: boolean
+    type: object
+  domain.CollectionPreview:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      updatedAt:
+        type: string
+      visible:
+        type: boolean
+    type: object
   domain.Coordinate:
     properties:
       lat:
@@ -70,6 +112,23 @@ definitions:
       url:
         type: string
     type: object
+  usecase.SaveCollectionInput:
+    properties:
+      avatar:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      places:
+        items:
+          type: integer
+        type: array
+      visible:
+        type: boolean
+    type: object
   usecase.SavePlaceInput:
     properties:
       address:
@@ -104,6 +163,25 @@ definitions:
         type: string
       url:
         type: string
+    type: object
+  usecase.UpdateCollectionInput:
+    properties:
+      avatar:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      places:
+        items:
+          type: integer
+        type: array
+      visible:
+        type: boolean
     type: object
   usecase.UpdatePlaceInput:
     properties:
@@ -148,6 +226,176 @@ info:
   title: DishDash Dashboard
   version: "1.0"
 paths:
+  /collections:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of collections from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of collections
+          schema:
+            items:
+              $ref: '#/definitions/domain.Collection'
+            type: array
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get collections
+      tags:
+      - collections
+    post:
+      consumes:
+      - application/json
+      description: Create a new collection in the database
+      parameters:
+      - description: Collection data
+        in: body
+        name: collection
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.SaveCollectionInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved collection
+          schema:
+            $ref: '#/definitions/domain.Collection'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Create a collection
+      tags:
+      - collections
+    put:
+      consumes:
+      - application/json
+      description: Update a collection with same id in the database
+      parameters:
+      - description: Collection data
+        in: body
+        name: collection
+        required: true
+        schema:
+          $ref: '#/definitions/usecase.UpdateCollectionInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated collection
+          schema:
+            $ref: '#/definitions/domain.Collection'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Update a collection
+      tags:
+      - collections
+  /collections/id/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a collection with same id in the database
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a collection
+      tags:
+      - collections
+    get:
+      consumes:
+      - application/json
+      description: Get a collection with same id from database
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection
+          schema:
+            $ref: '#/definitions/domain.Collection'
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get a collection
+      tags:
+      - collections
+  /collections/preview:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of collections preveiws from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of collections previews
+          schema:
+            items:
+              $ref: '#/definitions/domain.CollectionPreview'
+            type: array
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get collections previews
+      tags:
+      - collections
+  /collections/preview/id/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a collection preview with same id from database
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection
+          schema:
+            $ref: '#/definitions/domain.CollectionPreview'
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get a collection preview
+      tags:
+      - collections
   /images/upload/by_file:
     post:
       consumes:
@@ -211,32 +459,6 @@ paths:
       summary: UploadByURL a image by url to s3
       tags:
       - images
-  /place/by_url:
-    get:
-      consumes:
-      - application/json
-      description: Get a place from the database by url
-      parameters:
-      - description: place url
-        in: query
-        name: url
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: place data
-          schema: {}
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
-      summary: Get place by url
-      tags:
-      - places
   /places:
     get:
       consumes:
@@ -338,7 +560,33 @@ paths:
       summary: Update a place
       tags:
       - places
-  /places/{id}:
+  /places/by_url:
+    get:
+      consumes:
+      - application/json
+      description: Get a place from the database by url
+      parameters:
+      - description: place url
+        in: query
+        name: url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: place data
+          schema: {}
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get place by url
+      tags:
+      - places
+  /places/id/{id}:
     delete:
       consumes:
       - application/json
@@ -363,6 +611,127 @@ paths:
       summary: Delete a place
       tags:
       - places
+    get:
+      consumes:
+      - application/json
+      description: Get a place from the database by id
+      parameters:
+      - description: Place ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: place data
+          schema: {}
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get place by id
+      tags:
+      - places
+  /places/tag:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of tags from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tags
+          schema:
+            items:
+              $ref: '#/definitions/domain.Tag'
+            type: array
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Get tags
+      tags:
+      - tags
+    post:
+      consumes:
+      - application/json
+      description: Create a new tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Saved tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Create a tag
+      tags:
+      - tags
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tag in the database
+      parameters:
+      - description: Tag data
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated tag
+          schema:
+            $ref: '#/definitions/domain.Tag'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Update a tag
+      tags:
+      - tags
+  /places/tag/id/{id}:
+    delete:
+      description: Delete an existing tag from the database
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tag deleted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a tag
+      tags:
+      - tags
 securityDefinitions:
   ApiKeyAuth:
     in: header

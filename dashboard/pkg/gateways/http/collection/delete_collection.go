@@ -1,4 +1,4 @@
-package lobby
+package collection
 
 import (
 	"net/http"
@@ -7,24 +7,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// DeleteLobby godoc
-// @Summary delete a lobby
-// @Description delete a lobby in the database
-// @Tags lobbies
+// DeleteCollection godoc
+// @Summary Delete a collection
+// @Description Delete a collection with same id in the database
+// @Tags collections
 // @Accept  json
 // @Produce  json
 // @Schemes http https
-// @Param id path string true "lobby id"
+// @Param id path string true "Collection ID"
 // @Success 200
 // @Failure 400 "Bad Request"
 // @Failure 500 "Internal Server Error"
 // @Security ApiKeyAuth
-// @Router /lobbies/{id} [delete]
-func DeleteLobby(lobbyUseCase usecase.Lobby) gin.HandlerFunc {
+// @Router /collections/id/{id} [delete]
+func DeleteCollection(collectionUseCase usecase.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 
-		err := lobbyUseCase.DeleteLobbyByID(c, id)
+		err := collectionUseCase.DeleteCollection(c, id)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

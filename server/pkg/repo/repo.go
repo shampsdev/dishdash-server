@@ -36,7 +36,7 @@ type Place interface {
 }
 
 type PlaceRecommender interface {
-	RecommendClassic(ctx context.Context, opts domain.RecommendationOptsClassic, data domain.RecommendData) ([]*domain.Place, error)
+	RecommendClassicPlaces(ctx context.Context, s domain.ClassicPlacesSettings) ([]*domain.Place, error)
 }
 
 type User interface {
@@ -57,14 +57,25 @@ type Lobby interface {
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
 
-	UpdateLobby(ctx context.Context, lobby *domain.Lobby) error
+	SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
-
-	NearestActiveLobbyID(ctx context.Context, loc domain.Coordinate) (string, float64, error)
 }
 
 type Swipe interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
 	GetSwipesCount(ctx context.Context) (int, error)
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
+}
+
+type Collection interface {
+	SaveCollection(ctx context.Context, collection *domain.Collection) (string, error)
+	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
+	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
+	DeleteCollectionByID(ctx context.Context, collectionID string) error
+	AttachPlacesToCollection(ctx context.Context, placeIDs []int64, collectionID string) error
+	DetachPlacesFromCollection(ctx context.Context, collectionID string) error
+	UpdateCollection(ctx context.Context, collection *domain.Collection) error
+	GetPlacesByCollectionID(ctx context.Context, collectionID string) ([]*domain.Place, error)
+	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
+	GetCollectionWithPlacesByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 }

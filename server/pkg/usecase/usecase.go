@@ -2,19 +2,19 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	algo "dishdash.ru/pkg/algo"
 	"dishdash.ru/pkg/domain"
 )
 
 type Cases struct {
-	Tag      Tag
-	User     User
-	Place    Place
-	Swipe    Swipe
-	Lobby    Lobby
-	RoomRepo RoomRepo
+	Tag        Tag
+	User       User
+	Place      Place
+	Swipe      Swipe
+	Lobby      Lobby
+	RoomRepo   RoomRepo
+	Collection Collection
 }
 
 type Tag interface {
@@ -66,53 +66,46 @@ type Place interface {
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 }
 
-type SaveLobbyInput struct {
-	PriceAvg int               `json:"priceAvg"`
-	Location domain.Coordinate `json:"location"`
-}
-
-type UpdateLobbySettingsInput struct {
-	ID       string
-	PriceAvg int               `json:"priceAvg"`
-	Location domain.Coordinate `json:"location"`
-	Tags     []int64           `json:"tags"`
-	Places   []int64           `json:"places"`
-}
-
-type FindLobbyInput struct {
-	Dist     float64           `json:"dist"`
-	Location domain.Coordinate `json:"location"`
-}
-
-type LobbyOutput struct {
-	ID        string            `json:"id"`
-	State     domain.LobbyState `json:"state"`
-	PriceAvg  int               `json:"priceAvg"`
-	Location  domain.Coordinate `json:"location"`
-	CreatedAt time.Time         `json:"createdAt"`
-
-	Tags  []*domain.Tag  `json:"tags"`
-	Users []*domain.User `json:"users"`
-}
-
 type Lobby interface {
-	SaveLobby(ctx context.Context, lobbyInput SaveLobbyInput) (*LobbyOutput, error)
+	CreateLobby(ctx context.Context, settings domain.LobbySettings) (*domain.Lobby, error)
 	DeleteLobbyByID(ctx context.Context, id string) error
 	GetLobbyByID(ctx context.Context, id string) (*domain.Lobby, error)
-	GetOutputLobbyByID(ctx context.Context, id string) (*LobbyOutput, error)
 
-	FindLobby(ctx context.Context, input FindLobbyInput) (*LobbyOutput, error)
-	NearestActiveLobby(ctx context.Context, loc domain.Coordinate) (*LobbyOutput, float64, error)
-
-	SetLobbySettings(ctx context.Context, lobbyInput UpdateLobbySettingsInput) (*domain.Lobby, error)
+	SetLobbySettings(ctx context.Context, lobbyID string, settings domain.LobbySettings) error
 	SetLobbyState(ctx context.Context, lobbyID string, state domain.LobbyState) error
 	SetLobbyUsers(ctx context.Context, lobbyID string, userIDs []string) ([]*domain.User, error)
+	AttachOrderedPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 }
 
 type Swipe interface {
 	SaveSwipe(ctx context.Context, swipe *domain.Swipe) error
 	GetCount(ctx context.Context) (int, error)
 	GetSwipesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Swipe, error)
+}
+
+type SaveCollectionInput struct {
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Avatar      string  `json:"avatar"`
+	Visible     bool    `json:"visible"`
+	Order       int64   `json:"order"`
+	Places      []int64 `json:"places"`
+}
+
+type UpdateCollectionInput struct {
+	ID string
+	SaveCollectionInput
+}
+
+type Collection interface {
+	SaveCollection(ctx context.Context, saveCollectionInput SaveCollectionInput) (*domain.Collection, error)
+	GetAllCollections(ctx context.Context) ([]*domain.Collection, error)
+	GetAllCollectionsWithPlaces(ctx context.Context) ([]*domain.Collection, error)
+	DeleteCollection(ctx context.Context, collectionID string) error
+	UpdateCollection(ctx context.Context, updateCollectionInput UpdateCollectionInput) (*domain.Collection, error)
+	GetCollectionByID(ctx context.Context, collectionID string) (*domain.Collection, error)
+	GetAllCollectionsPreviews(ctx context.Context) ([]*domain.Collection, error)
+	GetCollectionPreviewByID(ctx context.Context, collectionID string) (*domain.Collection, error)
 }
 
 func UpdatePlaceInputFromDomain(place *domain.Place) UpdatePlaceInput {

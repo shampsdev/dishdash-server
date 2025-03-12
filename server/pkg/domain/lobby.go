@@ -2,33 +2,31 @@ package domain
 
 import (
 	"time"
-
-	"dishdash.ru/pkg/algo"
 )
 
 type Lobby struct {
-	ID        string
-	State     LobbyState
-	PriceAvg  int
-	Location  Coordinate
-	CreatedAt time.Time
+	ID        string     `json:"id"`
+	State     LobbyState `json:"state"`
+	CreatedAt time.Time  `json:"createdAt"`
 
-	Tags   []*Tag
-	Swipes []*Swipe
-	Users  []*User
-	Places []*Place
-}
+	Type     LobbyType     `json:"type"`
+	Settings LobbySettings `json:"settings"`
 
-func (l *Lobby) TagNames() []string {
-	return algo.Map(l.Tags, func(t *Tag) string {
-		return t.Name
-	})
+	Swipes []*Swipe `json:"swipes"`
+	Users  []*User  `json:"users"`
+	Places []*Place `json:"places"`
 }
 
 type LobbyState string
 
 var (
-	InLobby  LobbyState = "lobby"
-	Swiping  LobbyState = "swiping"
-	Finished LobbyState = "finished"
+	InLobby LobbyState = "lobby"
+	Swiping LobbyState = "swiping"
+)
+
+type LobbyType string
+
+var (
+	ClassicPlacesLobbyType    LobbyType = "classicPlaces"
+	CollectionPlacesLobbyType LobbyType = "collectionPlaces"
 )

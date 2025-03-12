@@ -18,27 +18,32 @@ func TestMain(m *testing.M) {
 		event.ErrorEvent,
 		event.UserJoinedEvent,
 		event.SettingsUpdateEvent,
-		event.VoteAnnounceEvent,
-		event.PlaceEvent,
+		event.StartSwipesEvent,
+		event.CardsEvent,
+		event.ResultsEvent,
+		event.MatchEvent,
 	)
+	fw.UseShortener(event.CardsEvent, framework.CardsShortener)
+	fw.UseShortener(event.ResultsEvent, framework.ResultsShortener)
 	fw.TestMain(m)
 }
 
 func Test(t *testing.T) {
 	cli1 := fw.MustNewClient(&domain.User{ID: "id1", Name: "user1", Avatar: "avatar1"})
-	lobby := fw.MustFindLobby()
+	lobby := fw.MustCreateLobby()
 
 	fw.Step("Joining lobby", func() {
 		cli1.JoinLobby(lobby)
-	}, 3)
+	}, 2)
 
 	fw.Step("Settings update", func() {
 		cli1.Emit(event.SettingsUpdate{
-			Location:    lobby.Location,
-			PriceMin:    300,
-			PriceMax:    300,
-			MaxDistance: 4000,
-			Tags:        []int64{4},
+			Type: domain.ClassicPlacesLobbyType,
+			ClassicPlaces: &domain.ClassicPlacesSettings{
+				Location: lobby.Settings.ClassicPlaces.Location,
+				PriceAvg: 300,
+				Tags:     []int64{4},
+			},
 		})
 	}, 1)
 
@@ -52,9 +57,10 @@ func Test(t *testing.T) {
 
 	fw.Step("Swipe like", func() {
 		cli1.Emit(event.Swipe{SwipeType: domain.LIKE})
-	}, 2)
+	}, 3)
 
 	cli1.Emit(event.LeaveLobby{})
+	time.Sleep(1 * time.Second)
 	assert.NoError(t, cli1.Close())
 	time.Sleep(2 * time.Second)
 

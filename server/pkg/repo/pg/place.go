@@ -145,10 +145,15 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 		p.url,
 		p.boost,
 		p.boost_radius,
-		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+		COALESCE(
+			JSON_AGG(
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+			) FILTER (WHERE t.id IS NOT NULL),
+			'[]'
+		) AS tags
 	FROM "place" AS p
-	JOIN "place_tag" AS pt ON p.id = pt.place_id 
-	JOIN "tag" AS t ON pt.tag_id = t.id
+	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
 	WHERE p.id=$1
 	GROUP BY p.id;
 `
@@ -178,10 +183,15 @@ func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Pla
 		p.url,
 		p.boost,
 		p.boost_radius,
-		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+		COALESCE(
+			JSON_AGG(
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+			) FILTER (WHERE t.id IS NOT NULL),
+			'[]'
+		) AS tags
 	FROM "place" AS p
-	JOIN "place_tag" AS pt ON p.id = pt.place_id 
-	JOIN "tag" AS t ON pt.tag_id = t.id
+	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
 	WHERE p.url=$1
 	GROUP BY p.id;
 `
@@ -215,10 +225,15 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 		p.url,
 		p.boost,
 		p.boost_radius,
-		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+		COALESCE(
+			JSON_AGG(
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+			) FILTER (WHERE t.id IS NOT NULL),
+			'[]'
+		) AS tags
 	FROM "place" AS p
-	JOIN "place_tag" AS pt ON p.id = pt.place_id 
-	JOIN "tag" AS t ON pt.tag_id = t.id
+	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
 	GROUP BY p.id;
 `
 	rows, err := pr.db.Query(ctx, getPlacesQuery)
@@ -274,8 +289,8 @@ func (pr *PlaceRepo) DetachPlacesFromLobby(ctx context.Context, placeID string) 
 
 func (pr *PlaceRepo) GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error) {
 	query := `
-	SELECT 
-	    p.id,
+	SELECT
+		p.id,
 		p.title,
 		p.short_description,
 		p.description,
@@ -285,15 +300,20 @@ func (pr *PlaceRepo) GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID stri
 		p.price_avg,
 		p.review_rating,
 		p.review_count,
-		p.updated_at,
+		p.updated_at, 
 		p.source,
 		p.url,
 		p.boost,
 		p.boost_radius,
-		JSON_AGG(JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)) AS tags
+		COALESCE(
+			JSON_AGG(
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+			) FILTER (WHERE t.id IS NOT NULL),
+			'[]'
+		) AS tags
 	FROM "place" AS p
-	JOIN "place_tag" AS pt ON p.id = pt.place_id 
-	JOIN "tag" AS t ON pt.tag_id = t.id
+	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
 	JOIN "place_lobby" AS pl ON p.id = pl.place_id
 	WHERE pl.lobby_id = $1
 	GROUP BY p.id, pl.order

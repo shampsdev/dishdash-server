@@ -1,9 +1,6 @@
 package middlewares
 
 import (
-	"net/http"
-
-	"dishdash.ru/cmd/server/config"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -33,20 +30,5 @@ func Logger() gin.HandlerFunc {
 		log.WithFields(log.Fields{
 			"clientIP": c.ClientIP(),
 		}).Infof("[%s] %s %d", c.Request.Method, c.Request.RequestURI, c.Writer.Status())
-	}
-}
-
-const ApiTokenHeader = "X-API-Token"
-
-func ApiTokenAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		apiToken := c.GetHeader(ApiTokenHeader)
-
-		if apiToken != config.C.Auth.ApiToken {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-			return
-		}
-
-		c.Next()
 	}
 }
