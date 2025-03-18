@@ -343,6 +343,67 @@ func (pr *PlaceRepo) GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID stri
 	return places, nil
 }
 
+func (pr *PlaceRepo) FilterPlaces(ctx context.Context, filter repo.PlacesFilter) ([]*domain.Place, error) {
+	query := `
+	SELECT
+		p.id,
+		p.title,
+		p.short_description,
+		p.description,
+		p.images,
+		p.location,
+		p.address,
+		p.price_avg,
+		p.review_rating,
+		p.review_count,
+		p.updated_at, 
+		p.source,
+		p.url,
+		p.boost,
+		p.boost_radius,
+		COALESCE(
+			JSON_AGG(
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+			) FILTER (WHERE t.id IS NOT NULL),
+			'[]'
+		) AS tags
+	FROM "place" AS p
+	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
+	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
+	WHERE p.title ILIKE '%' || $1 || '%'
+	`
+
+	args := []any{filter.Search}
+
+	if len(filter.Tags) > 0 {
+		query += "\nAND t.name = ANY ($2)"
+		args = append(args, filter.Tags)
+	}
+
+	query += "\nGROUP BY p.id ORDER BY p.updated_at DESC"
+
+	rows, err := pr.db.Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("could not filter places: %w", err)
+	}
+	defer rows.Close()
+
+	places := make([]*domain.Place, 0)
+	for rows.Next() {
+		place, err := scanPlace(rows)
+		if err != nil {
+			return nil, fmt.Errorf("could not filter places: %w", err)
+		}
+		places = append(places, place)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating rows: %w", err)
+	}
+
+	return places, nil
+}
+
 type Scanner interface {
 	Scan(dest ...any) error
 }

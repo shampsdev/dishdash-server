@@ -29,10 +29,16 @@ type Place interface {
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
+	FilterPlaces(ctx context.Context, query PlacesFilter) ([]*domain.Place, error)
 
 	DetachPlacesFromLobby(ctx context.Context, lobbyID string) error
 	AttachOrderedPlacesToLobby(ctx context.Context, placeIDs []int64, lobbyID string) error
 	GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID string) ([]*domain.Place, error)
+}
+
+type PlacesFilter struct {
+	Search string
+	Tags   []string
 }
 
 type PlaceRecommender interface {

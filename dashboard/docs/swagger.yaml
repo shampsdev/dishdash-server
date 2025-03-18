@@ -119,6 +119,15 @@ definitions:
     required:
     - url
     type: object
+  repo.PlacesFilter:
+    properties:
+      search:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
   usecase.SaveCollectionInput:
     properties:
       avatar:
@@ -591,6 +600,35 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get place by url
+      tags:
+      - places
+  /places/filter:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Filter params
+        in: body
+        name: place
+        required: true
+        schema:
+          $ref: '#/definitions/repo.PlacesFilter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Matched places
+          schema:
+            items:
+              $ref: '#/definitions/domain.Place'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Filter places
       tags:
       - places
   /places/id/{id}:

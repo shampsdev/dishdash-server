@@ -5,6 +5,7 @@ import (
 
 	algo "dishdash.ru/pkg/algo"
 	"dishdash.ru/pkg/domain"
+	"dishdash.ru/pkg/repo"
 )
 
 type Cases struct {
@@ -62,6 +63,7 @@ type Place interface {
 	DeletePlace(ctx context.Context, id int64) error
 	GetPlaceByID(ctx context.Context, id int64) (*domain.Place, error)
 	GetPlaceByUrl(ctx context.Context, url string) (*domain.Place, error)
+	FilterPlaces(ctx context.Context, filter repo.PlacesFilter) ([]*domain.Place, error)
 	// GetAllPlaces is very long operation now
 	GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 }
