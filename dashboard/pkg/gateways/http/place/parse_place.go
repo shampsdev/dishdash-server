@@ -31,8 +31,10 @@ func ParsePlace() gin.HandlerFunc {
 			return
 		}
 		p := &domain.Place{
-			Title: "Title",
-			Url:   &req.Url,
+			Title:  "Title",
+			Url:    &req.Url,
+			Images: []string{},
+			Tags:   []*domain.Tag{},
 		}
 		c.JSON(http.StatusOK, p)
 	}

@@ -234,7 +234,8 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 	FROM "place" AS p
 	LEFT JOIN "place_tag" AS pt ON p.id = pt.place_id
 	LEFT JOIN "tag" AS t ON pt.tag_id = t.id
-	GROUP BY p.id;
+	GROUP BY p.id
+	ORDER BY p.updated_at DESC;
 `
 	rows, err := pr.db.Query(ctx, getPlacesQuery)
 	if err != nil {
