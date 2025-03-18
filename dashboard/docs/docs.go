@@ -669,6 +669,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/places/parse": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Parse place with url",
+                "parameters": [
+                    {
+                        "description": "Place URL",
+                        "name": "ParsePlaceRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pkg_gateways_http_place.ParsePlaceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "place data",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/places/tag": {
             "get": {
                 "security": [
@@ -993,6 +1035,17 @@ const docTemplate = `{
                 "directory": {
                     "type": "string"
                 },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "pkg_gateways_http_place.ParsePlaceRequest": {
+            "type": "object",
+            "required": [
+                "url"
+            ],
+            "properties": {
                 "url": {
                     "type": "string"
                 }
