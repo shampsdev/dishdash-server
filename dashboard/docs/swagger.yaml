@@ -112,6 +112,13 @@ definitions:
       url:
         type: string
     type: object
+  pkg_gateways_http_place.ParsePlaceRequest:
+    properties:
+      url:
+        type: string
+    required:
+    - url
+    type: object
   usecase.SaveCollectionInput:
     properties:
       avatar:
@@ -634,6 +641,32 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get place by id
+      tags:
+      - places
+  /places/parse:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Place URL
+        in: body
+        name: ParsePlaceRequest
+        required: true
+        schema:
+          $ref: '#/definitions/pkg_gateways_http_place.ParsePlaceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: place data
+          schema: {}
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: Parse place with url
       tags:
       - places
   /places/tag:

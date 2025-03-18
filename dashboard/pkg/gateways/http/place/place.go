@@ -11,11 +11,13 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	placeGroup := r.Group("places")
 	placeGroup.Use(middlewares.ApiTokenAuth(config.C.Auth.ApiToken))
 
-	placeGroup.GET("by_url", GetPlaceByURL(cases.Place))
-	placeGroup.GET("", GetAllPlaces(cases.Place))
-	placeGroup.POST("", SavePlace(cases.Place))
-	placeGroup.PUT("", UpdatePlace(cases.Place))
-	placeGroup.GET("id/:id", GetPlaceByID(cases.Place))
-	placeGroup.DELETE("id/:id", DeletePlace(cases.Place))
-	placeGroup.PATCH("", PatchPlace(cases.Place))
+	placeGroup.
+		GET("by_url", GetPlaceByURL(cases.Place)).
+		POST("parse", ParsePlace()).
+		GET("", GetAllPlaces(cases.Place)).
+		POST("", SavePlace(cases.Place)).
+		PUT("", UpdatePlace(cases.Place)).
+		GET("id/:id", GetPlaceByID(cases.Place)).
+		DELETE("id/:id", DeletePlace(cases.Place)).
+		PATCH("", PatchPlace(cases.Place))
 }
