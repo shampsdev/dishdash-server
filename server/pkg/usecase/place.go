@@ -119,3 +119,11 @@ func (p PlaceUseCase) GetAllPlaces(ctx context.Context) ([]*domain.Place, error)
 	}
 	return places, nil
 }
+
+func (p PlaceUseCase) FilterPlaces(ctx context.Context, filter repo.PlacesFilter) ([]*domain.Place, error) {
+	places, err := p.pRepo.FilterPlaces(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	return places, nil
+}

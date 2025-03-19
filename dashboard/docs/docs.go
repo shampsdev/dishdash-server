@@ -590,6 +590,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/places/filter": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "places"
+                ],
+                "summary": "Filter places",
+                "parameters": [
+                    {
+                        "description": "Filter params",
+                        "name": "place",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/repo.PlacesFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Matched places",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Place"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/places/id/{id}": {
             "get": {
                 "security": [
@@ -1048,6 +1095,20 @@ const docTemplate = `{
             "properties": {
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "repo.PlacesFilter": {
+            "type": "object",
+            "properties": {
+                "search": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

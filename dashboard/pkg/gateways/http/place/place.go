@@ -14,6 +14,7 @@ func SetupHandlers(r *gin.RouterGroup, cases usecase.Cases) {
 	placeGroup.
 		GET("by_url", GetPlaceByURL(cases.Place)).
 		POST("parse", ParsePlace()).
+		POST("filter", FilterPlaces(cases.Place)).
 		GET("", GetAllPlaces(cases.Place)).
 		POST("", SavePlace(cases.Place)).
 		PUT("", UpdatePlace(cases.Place)).
