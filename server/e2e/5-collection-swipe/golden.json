@@ -35,17 +35,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         }
       ]
@@ -83,6 +83,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -90,6 +91,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -98,7 +100,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               },
               {
@@ -121,6 +123,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -128,6 +131,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -135,6 +139,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -143,7 +148,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               },
               {
@@ -166,6 +171,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "bar.png",
                     "id": 1,
                     "name": "bar",
@@ -173,6 +179,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -180,6 +187,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -188,7 +196,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               }
             ]
@@ -224,6 +232,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -231,6 +240,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -239,7 +249,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               },
               {
@@ -262,6 +272,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -269,6 +280,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -276,6 +288,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -284,7 +297,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               },
               {
@@ -307,6 +320,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "bar.png",
                     "id": 1,
                     "name": "bar",
@@ -314,6 +328,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -321,6 +336,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -329,7 +345,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-11T19:01:21.402947Z",
+                "updatedAt": "2025-03-19T23:01:24.212539Z",
                 "url": null
               }
             ]
@@ -367,6 +383,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -374,6 +391,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -382,7 +400,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -392,7 +410,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }
@@ -432,6 +450,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -439,6 +458,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -447,7 +467,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -457,7 +477,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }
@@ -509,6 +529,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -516,6 +537,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -524,7 +546,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -534,7 +556,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               },
@@ -559,6 +581,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -566,6 +589,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "coffee.png",
                       "id": 3,
                       "name": "coffee",
@@ -573,6 +597,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -581,7 +606,7 @@
                     }
                   ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -591,7 +616,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }
@@ -631,6 +656,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -638,6 +664,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -646,7 +673,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -656,7 +683,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               },
@@ -681,6 +708,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -688,6 +716,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "coffee.png",
                       "id": 3,
                       "name": "coffee",
@@ -695,6 +724,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -703,7 +733,7 @@
                     }
                   ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -713,7 +743,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }
@@ -750,6 +780,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -757,6 +788,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "coffee.png",
                   "id": 3,
                   "name": "coffee",
@@ -764,6 +796,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -772,7 +805,7 @@
                 }
               ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-11T19:01:21.402947Z",
+              "updatedAt": "2025-03-19T23:01:24.212539Z",
               "url": null
             }
           }
@@ -802,6 +835,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -809,6 +843,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "coffee.png",
                       "id": 3,
                       "name": "coffee",
@@ -816,6 +851,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -824,7 +860,7 @@
                     }
                   ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -834,7 +870,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -842,7 +878,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.417158Z"
+                    "updatedAt": "2025-03-19T23:01:24.238049Z"
                   }
                 ]
               },
@@ -867,6 +903,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -874,6 +911,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -882,7 +920,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -892,7 +930,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }
@@ -924,6 +962,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -931,6 +970,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "coffee.png",
                   "id": 3,
                   "name": "coffee",
@@ -938,6 +978,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -946,7 +987,7 @@
                 }
               ],
               "title": "ЛюдиЛюбят",
-              "updatedAt": "2025-03-11T19:01:21.402947Z",
+              "updatedAt": "2025-03-19T23:01:24.212539Z",
               "url": null
             }
           }
@@ -976,6 +1017,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -983,6 +1025,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "coffee.png",
                       "id": 3,
                       "name": "coffee",
@@ -990,6 +1033,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -998,7 +1042,7 @@
                     }
                   ],
                   "title": "ЛюдиЛюбят",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -1008,7 +1052,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   },
                   {
                     "avatar": "avatar2",
@@ -1016,7 +1060,7 @@
                     "id": "id2",
                     "name": "user2",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.417158Z"
+                    "updatedAt": "2025-03-19T23:01:24.238049Z"
                   }
                 ]
               },
@@ -1041,6 +1085,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -1048,6 +1093,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -1056,7 +1102,7 @@
                     }
                   ],
                   "title": "Шавафель",
-                  "updatedAt": "2025-03-11T19:01:21.402947Z",
+                  "updatedAt": "2025-03-19T23:01:24.212539Z",
                   "url": null
                 },
                 "likes": [
@@ -1066,7 +1112,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:21.415582Z"
+                    "updatedAt": "2025-03-19T23:01:24.234597Z"
                   }
                 ]
               }

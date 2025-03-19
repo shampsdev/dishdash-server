@@ -55,7 +55,8 @@ func (pr *PlaceRecommender) RecommendClassicPlaces(
 				'name', t.name,
 				'icon', t.icon,
 				'visible', t.visible,
-				'order', t.order
+				'order', t.order,
+				'excluded', t.excluded
 			)
 		) AS tags
 	FROM place p

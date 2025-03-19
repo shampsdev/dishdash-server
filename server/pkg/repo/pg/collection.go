@@ -154,7 +154,7 @@ func (cr *CollectionRepo) GetPlacesByCollectionID(ctx context.Context, collectio
 			p.boost_radius,
 			COALESCE(
 				JSON_AGG(
-					JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+					JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order, 'excluded', t.excluded)
 				) FILTER (WHERE t.id IS NOT NULL),
 				'[]'
 			) AS tags

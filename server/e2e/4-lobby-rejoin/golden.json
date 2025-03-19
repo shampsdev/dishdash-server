@@ -99,6 +99,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -106,6 +107,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -114,7 +116,7 @@
                   }
                 ],
                 "title": "Шавафель",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               },
               {
@@ -137,6 +139,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -144,6 +147,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -152,7 +156,7 @@
                   }
                 ],
                 "title": "Пловная",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               },
               {
@@ -175,6 +179,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -182,6 +187,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -189,6 +195,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -197,7 +204,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               }
             ]
@@ -234,6 +241,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -241,6 +249,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -248,6 +257,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -256,7 +266,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               }
             ]
@@ -292,6 +302,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -299,6 +310,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -307,7 +319,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-11T19:01:16.488961Z",
+              "updatedAt": "2025-03-19T23:01:19.123098Z",
               "url": null
             }
           }
@@ -337,6 +349,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -344,6 +357,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -352,7 +366,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-03-11T19:01:16.488961Z",
+                  "updatedAt": "2025-03-19T23:01:19.123098Z",
                   "url": null
                 },
                 "likes": [
@@ -362,7 +376,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:16.504682Z"
+                    "updatedAt": "2025-03-19T23:01:19.144424Z"
                   }
                 ]
               }
@@ -393,6 +407,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "bar.png",
                     "id": 1,
                     "name": "bar",
@@ -400,6 +415,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -407,6 +423,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -415,7 +432,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               }
             ]
@@ -456,6 +473,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -463,6 +481,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -470,6 +489,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -478,7 +498,7 @@
                   }
                 ],
                 "title": "Zoomer Coffee",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               },
               {
@@ -501,6 +521,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -508,6 +529,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "coffee.png",
                     "id": 3,
                     "name": "coffee",
@@ -515,6 +537,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -523,7 +546,7 @@
                   }
                 ],
                 "title": "ЛюдиЛюбят",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               },
               {
@@ -546,6 +569,7 @@
                 "source": "manual",
                 "tags": [
                   {
+                    "excluded": false,
                     "icon": "bar.png",
                     "id": 1,
                     "name": "bar",
@@ -553,6 +577,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "cafe.png",
                     "id": 2,
                     "name": "cafe",
@@ -560,6 +585,7 @@
                     "visible": true
                   },
                   {
+                    "excluded": false,
                     "icon": "food.png",
                     "id": 4,
                     "name": "food",
@@ -568,7 +594,7 @@
                   }
                 ],
                 "title": "Cous-Cous",
-                "updatedAt": "2025-03-11T19:01:16.488961Z",
+                "updatedAt": "2025-03-19T23:01:19.123098Z",
                 "url": null
               }
             ]
@@ -599,6 +625,7 @@
                   "source": "manual",
                   "tags": [
                     {
+                      "excluded": false,
                       "icon": "cafe.png",
                       "id": 2,
                       "name": "cafe",
@@ -606,6 +633,7 @@
                       "visible": true
                     },
                     {
+                      "excluded": false,
                       "icon": "food.png",
                       "id": 4,
                       "name": "food",
@@ -614,7 +642,7 @@
                     }
                   ],
                   "title": "Пловная",
-                  "updatedAt": "2025-03-11T19:01:16.488961Z",
+                  "updatedAt": "2025-03-19T23:01:19.123098Z",
                   "url": null
                 },
                 "likes": [
@@ -624,7 +652,7 @@
                     "id": "id1",
                     "name": "user1",
                     "telegram": null,
-                    "updatedAt": "2025-03-11T19:01:16.504682Z"
+                    "updatedAt": "2025-03-19T23:01:19.144424Z"
                   }
                 ]
               }

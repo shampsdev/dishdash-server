@@ -6,4 +6,6 @@ type Tag struct {
 	Icon    string `json:"icon"`
 	Visible bool   `json:"visible"`
 	Order   int    `json:"order"`
+	// Places with excluded tag wont be shown in swipes
+	Excluded bool `json:"excluded"`
 }
