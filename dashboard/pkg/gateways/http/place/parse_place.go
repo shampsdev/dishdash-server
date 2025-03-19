@@ -1,8 +1,12 @@
 package place
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"net/url"
 
+	"dashboard.dishdash.ru/cmd/config"
 	"dishdash.ru/pkg/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -30,12 +34,36 @@ func ParsePlace() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		p := &domain.Place{
-			Title:  "Title",
-			Url:    &req.Url,
-			Images: []string{},
-			Tags:   []*domain.Tag{},
+
+		u, err := url.Parse(config.C.Parser.URL + "/api/parse/" + fmt.Sprintf("?url=%s", req.Url))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
 		}
+
+		r := http.Request{
+			Method: "GET",
+			URL:    u,
+			Header: http.Header{
+				"api-key": []string{config.C.Parser.ApiKey},
+			},
+		}
+
+		client := &http.Client{}
+		resp, err := client.Do(&r)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		defer resp.Body.Close()
+
+		var p domain.Place
+		err = json.NewDecoder(resp.Body).Decode(&p)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		c.JSON(http.StatusOK, p)
 	}
 }
