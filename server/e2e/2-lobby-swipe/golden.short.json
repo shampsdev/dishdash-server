@@ -358,6 +358,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -365,6 +366,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -373,7 +375,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-11T19:01:09.919964Z",
+              "updatedAt": "2025-03-19T23:01:12.432896Z",
               "url": null
             }
           }
@@ -438,6 +440,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -445,6 +448,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -453,7 +457,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-11T19:01:09.919964Z",
+              "updatedAt": "2025-03-19T23:01:12.432896Z",
               "url": null
             }
           }

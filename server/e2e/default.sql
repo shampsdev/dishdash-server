@@ -7,6 +7,11 @@ VALUES
     ('food', 'food.png');
 
 INSERT INTO
+    "tag" (name, icon, excluded)
+VALUES
+    ('excluded', 'excluded', true);
+
+INSERT INTO
     "place" (
         title,
         short_description,
@@ -79,6 +84,18 @@ VALUES
         4.5,
         1000,
         NOW()
+    ),
+    (
+        'Невидимое место',
+        'Невидимое место',
+        'Невидимое место',
+        'Невидимое место',
+        ST_SetSRID(ST_MakePoint(30.3124, 59.9615), 4326),
+        'Кронверкский проспект, 27',
+        320,
+        4.5,
+        1000,
+        NOW()
     );
 
 INSERT INTO "place_tag" (place_id, tag_id) VALUES
@@ -103,6 +120,12 @@ INSERT INTO "place_tag" (place_id, tag_id) VALUES
 INSERT INTO "place_tag" (place_id, tag_id) VALUES
 ((SELECT id FROM place WHERE title = 'Шавафель'), (SELECT id FROM tag WHERE name = 'cafe')),
 ((SELECT id FROM place WHERE title = 'Шавафель'), (SELECT id FROM tag WHERE name = 'food'));
+
+INSERT INTO "place_tag" (place_id, tag_id) VALUES
+((SELECT id FROM place WHERE title = 'Невидимое место'), (SELECT id FROM tag WHERE name = 'bar')),
+((SELECT id FROM place WHERE title = 'Невидимое место'), (SELECT id FROM tag WHERE name = 'cafe')),
+((SELECT id FROM place WHERE title = 'Невидимое место'), (SELECT id FROM tag WHERE name = 'food')),
+((SELECT id FROM place WHERE title = 'Невидимое место'), (SELECT id FROM tag WHERE name = 'excluded'));
 
 
 INSERT INTO "collection" ("id", "name", "description", "avatar", "created_at", "updated_at", "visible", "order")

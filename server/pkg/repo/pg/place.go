@@ -147,7 +147,7 @@ func (pr *PlaceRepo) GetPlaceByID(ctx context.Context, id int64) (*domain.Place,
 		p.boost_radius,
 		COALESCE(
 			JSON_AGG(
-				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order, 'excluded', t.excluded)
 			) FILTER (WHERE t.id IS NOT NULL),
 			'[]'
 		) AS tags
@@ -185,7 +185,7 @@ func (pr *PlaceRepo) GetPlaceByUrl(ctx context.Context, url string) (*domain.Pla
 		p.boost_radius,
 		COALESCE(
 			JSON_AGG(
-				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order, 'excluded', t.excluded)
 			) FILTER (WHERE t.id IS NOT NULL),
 			'[]'
 		) AS tags
@@ -227,7 +227,7 @@ func (pr *PlaceRepo) GetAllPlaces(ctx context.Context) ([]*domain.Place, error) 
 		p.boost_radius,
 		COALESCE(
 			JSON_AGG(
-				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order, 'excluded', t.excluded)
 			) FILTER (WHERE t.id IS NOT NULL),
 			'[]'
 		) AS tags
@@ -308,7 +308,7 @@ func (pr *PlaceRepo) GetOrderedPlacesByLobbyID(ctx context.Context, lobbyID stri
 		p.boost_radius,
 		COALESCE(
 			JSON_AGG(
-				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order)
+				JSON_BUILD_OBJECT('id', t.id, 'name', t.name, 'icon', t.icon, 'visible', t.visible, 'order', t.order, 'excluded', t.excluded)
 			) FILTER (WHERE t.id IS NOT NULL),
 			'[]'
 		) AS tags

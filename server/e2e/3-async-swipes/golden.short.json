@@ -124,6 +124,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -131,6 +132,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -139,7 +141,7 @@
                 }
               ],
               "title": "Шавафель",
-              "updatedAt": "2025-03-11T19:01:12.301146Z",
+              "updatedAt": "2025-03-19T23:01:14.814209Z",
               "url": null
             }
           }
@@ -208,6 +210,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -215,6 +218,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "coffee.png",
                   "id": 3,
                   "name": "coffee",
@@ -222,6 +226,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -230,7 +235,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-03-11T19:01:12.301146Z",
+              "updatedAt": "2025-03-19T23:01:14.814209Z",
               "url": null
             }
           }
@@ -340,17 +345,17 @@
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar1",
-            "id": "id1",
-            "name": "user1"
+            "avatar": "avatar2",
+            "id": "id2",
+            "name": "user2"
           }
         },
         {
           "Event": "userJoined",
           "Data": {
-            "avatar": "avatar2",
-            "id": "id2",
-            "name": "user2"
+            "avatar": "avatar1",
+            "id": "id1",
+            "name": "user1"
           }
         },
         {
@@ -476,6 +481,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -483,6 +489,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "coffee.png",
                   "id": 3,
                   "name": "coffee",
@@ -490,6 +497,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -498,7 +506,7 @@
                 }
               ],
               "title": "Zoomer Coffee",
-              "updatedAt": "2025-03-11T19:01:12.301146Z",
+              "updatedAt": "2025-03-19T23:01:14.814209Z",
               "url": null
             }
           }

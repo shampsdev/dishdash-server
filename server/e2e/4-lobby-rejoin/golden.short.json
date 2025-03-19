@@ -142,6 +142,7 @@
               "source": "manual",
               "tags": [
                 {
+                  "excluded": false,
                   "icon": "cafe.png",
                   "id": 2,
                   "name": "cafe",
@@ -149,6 +150,7 @@
                   "visible": true
                 },
                 {
+                  "excluded": false,
                   "icon": "food.png",
                   "id": 4,
                   "name": "food",
@@ -157,7 +159,7 @@
                 }
               ],
               "title": "Пловная",
-              "updatedAt": "2025-03-11T19:01:16.488961Z",
+              "updatedAt": "2025-03-19T23:01:19.123098Z",
               "url": null
             }
           }

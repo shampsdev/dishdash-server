@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"dishdash.ru/cmd/server/config"
+	"dishdash.ru/pkg/algo"
 	"dishdash.ru/pkg/domain"
 	"dishdash.ru/pkg/geo"
 	"dishdash.ru/pkg/repo"
@@ -81,7 +82,17 @@ func (pr *PlaceRecommender) RecommendPlaces(
 		return nil, fmt.Errorf("unsupported recommendation type: %s", settings.Type)
 	}
 
+	dbPlaces = algo.Filter(dbPlaces, placeIncluded)
 	return dbPlaces, nil
+}
+
+func placeIncluded(p *domain.Place) bool {
+	for _, tag := range p.Tags {
+		if tag.Excluded {
+			return false
+		}
+	}
+	return true
 }
 
 func defaultRecommendationOpts() *domain.RecommendationOpts {
