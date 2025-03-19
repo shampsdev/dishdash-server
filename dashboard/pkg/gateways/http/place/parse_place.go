@@ -35,11 +35,15 @@ func ParsePlace() gin.HandlerFunc {
 			return
 		}
 
-		u, err := url.Parse(config.C.Parser.URL + "/api/parse/" + fmt.Sprintf("?url=%s", req.Url))
+		u, err := url.Parse(fmt.Sprintf("%s/api/parse/", config.C.Parser.URL))
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+
+		q := u.Query()
+		q.Set("url", req.Url)
+		u.RawQuery = q.Encode()
 
 		r := http.Request{
 			Method: "GET",
