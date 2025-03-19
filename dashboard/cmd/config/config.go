@@ -26,6 +26,10 @@ type Config struct {
 	Auth struct {
 		ApiToken string `envconfig:"API_TOKEN"`
 	}
+	Parser struct {
+		URL    string `envconfig:"PARSER_URL"`
+		ApiKey string `envconfig:"PARSER_API_KEY"`
+	}
 	S3 S3Config
 }
 
