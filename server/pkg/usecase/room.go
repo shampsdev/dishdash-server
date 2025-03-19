@@ -97,6 +97,7 @@ func (r *Room) load() error {
 	if err != nil {
 		return fmt.Errorf("failed to get swipes: %w", err)
 	}
+	r.log.Debugf("got %d swipes", len(r.swipes))
 
 	users, err := r.userUseCase.GetUsersByLobbyID(context.Background(), r.lobby.ID)
 	if err != nil {
@@ -105,6 +106,7 @@ func (r *Room) load() error {
 	for _, user := range users {
 		r.usersMap[user.ID] = user
 	}
+	r.log.Debugf("got %d users", len(r.usersMap))
 
 	err = r.evalUserCards()
 	if err != nil {
@@ -115,6 +117,7 @@ func (r *Room) load() error {
 	if err != nil {
 		return fmt.Errorf("failed to eval results: %w", err)
 	}
+	r.log.Debugf("got results with %d places in top", len(r.results.Top))
 
 	return nil
 }
