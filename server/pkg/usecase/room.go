@@ -53,10 +53,10 @@ func NewRoom(
 
 		usersMap:       make(map[string]*domain.User),
 		connectedUsers: make(map[string]*domain.User),
-		cards:          make([]*domain.Place, 0),
+		cards:          lobby.Places,
 		userSwiped:     make(map[string]int),
 		userCardsSeen:  make(map[string]int),
-		swipes:         make([]*domain.Swipe, 0),
+		swipes:         lobby.Swipes,
 		log:            log.WithFields(log.Fields{"room": lobby.ID}),
 	}
 
@@ -92,21 +92,11 @@ func (r *Room) load() error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
-	var err error
-	r.swipes, err = r.swipeUseCase.GetSwipesByLobbyID(context.Background(), r.lobby.ID)
-	if err != nil {
-		return fmt.Errorf("failed to get swipes: %w", err)
-	}
-
-	users, err := r.userUseCase.GetUsersByLobbyID(context.Background(), r.lobby.ID)
-	if err != nil {
-		return fmt.Errorf("failed to get users: %w", err)
-	}
-	for _, user := range users {
+	for _, user := range r.lobby.Users {
 		r.usersMap[user.ID] = user
 	}
 
-	err = r.evalUserCards()
+	err := r.evalUserCards()
 	if err != nil {
 		return fmt.Errorf("failed to eval user cards: %w", err)
 	}
